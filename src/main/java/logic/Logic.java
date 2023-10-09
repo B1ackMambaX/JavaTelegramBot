@@ -41,7 +41,7 @@ public class Logic {
             questions = new Storage();
             solvedCounter = 0;
             currentQuestion = questions.getQuestionByIndex(solvedCounter);
-            return currentQuestion.getQuestionText();
+            return "Тест по ЯП JavaScript, состоит из " + questions.getSize() + " вопросов\n\n" + currentQuestion.getQuestionText();
         } else if (solvedCounter < questions.getSize() - 1) {
             String checkResponse = currentQuestion.checkCorrectness(message);
             currentQuestion = questions.getQuestionByIndex(++solvedCounter);

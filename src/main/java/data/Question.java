@@ -38,6 +38,6 @@ public class Question {
 
     public String checkCorrectness(String answer) {
         return answer.equals(this.questionAnswer) ? "Вы ответили правильно!\n" :
-                "Вы ответили неправильно!\n";
+                "Вы ответили неправильно! Правильный ответ:" + this.questionAnswer + '\n';
     }
 }

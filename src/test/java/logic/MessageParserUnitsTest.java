@@ -1,7 +1,6 @@
-package main;
+package logic;
 import data.Question;
 import data.Storage;
-import logic.Logic;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,11 +31,11 @@ public class MessageParserUnitsTest {
         Assert.assertEquals("/start command", startMessage, logic.messageHandler("/start"));
         Assert.assertEquals("unknown command", unknownCommand, logic.messageHandler("/some"));
         Assert.assertEquals("help command", startMessage, logic.messageHandler("/help"));
-        Assert.assertEquals("starting quiz", questions.get(0).getQuestionText(), logic.messageHandler("/quiz"));
+        Assert.assertEquals("starting quiz", "Тест по ЯП JavaScript, состоит из " + questions.size() + " вопросов\n\n" + questions.get(0).getQuestionText(), logic.messageHandler("/quiz"));
         Assert.assertEquals("stop command", stopCommand, logic.messageHandler("/stop"));
-        Assert.assertEquals("starting quiz", questions.get(0).getQuestionText(), logic.messageHandler("/quiz"));
+        Assert.assertEquals("starting quiz", "Тест по ЯП JavaScript, состоит из " + questions.size() + " вопросов\n\n" + questions.get(0).getQuestionText(), logic.messageHandler("/quiz"));
         for (int i = 0; i < questions.size() - 1; i++) {
-            Assert.assertEquals("answer:" + i, rightAnswer + questions.get(i + 1).getQuestionText(), logic.messageHandler(questions.get(i).getQuestionAnswer()));
+            Assert.assertEquals("answer:" + i, questions.get(i).checkCorrectness(questions.get(i).getQuestionAnswer()) + questions.get(i + 1).getQuestionText(), logic.messageHandler(questions.get(i).getQuestionAnswer()));
         }
         Assert.assertEquals("help in quiz", startMessage, logic.messageHandler("/help"));
         Assert.assertEquals("final question", rightAnswer + "Тест закончен!", logic.messageHandler(questions.get(questions.size() - 1).getQuestionAnswer()));
