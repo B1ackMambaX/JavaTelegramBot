@@ -39,6 +39,3 @@ build/
 
 ### ENV ###
 .env
-
-### IntelliJ Idea ###
-.idea/
