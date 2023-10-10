@@ -15,7 +15,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <junit.version>3.8.1</junit.version>
+    <junit.version>4.13.2</junit.version>
     <dotenv.version>3.0.0</dotenv.version>
     <telegrambots.version>6.8.0</telegrambots.version>
   </properties>
@@ -36,6 +36,12 @@
       <groupId>org.telegram</groupId>
       <artifactId>telegrambots</artifactId>
       <version>${telegrambots.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>RELEASE</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
