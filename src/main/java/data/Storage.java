@@ -2,6 +2,9 @@ package data;
 
 import java.util.ArrayList;
 
+/**
+ * Класс, который реализует временное хранилище вопросов
+ */
 public class Storage {
     private final ArrayList<Question> questions;
     private final int size;

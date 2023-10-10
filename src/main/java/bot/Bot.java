@@ -7,6 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import logic.Logic;
 
+/**
+ * Класс реализации телеграмм бота
+ */
 public class Bot extends TelegramLongPollingBot {
     final private String BOT_TOKEN = main.Config.getTelegramBotToken();
     final private String BOT_USERNAME = main.Config.getTelegramBotUsername();
@@ -22,6 +25,10 @@ public class Bot extends TelegramLongPollingBot {
         return BOT_TOKEN;
     }
 
+    /**
+     * Обработчик обновлений в боте
+     * @param update - объект обработки обновлений
+     */
     @Override
     public void onUpdateReceived(Update update) {
         try {

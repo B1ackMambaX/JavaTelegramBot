@@ -2,6 +2,9 @@ package logic;
 import data.Storage;
 import data.Question;
 
+/**
+ * Класс реализуемый логику работы бота
+ */
 public class Logic {
     private boolean isQuiz;
     private Storage questions;
@@ -12,6 +15,12 @@ public class Logic {
         isQuiz = false;
         solvedCounter = -1;
     }
+
+    /**
+     * Обработчик сообщений пользователя
+     * @param message сообщение пользователя
+     * @return ответ в зависимости от сообщения
+     */
     public String messageHandler(String message) {
         message = message.toLowerCase();
 
@@ -36,6 +45,11 @@ public class Logic {
         }
     }
 
+    /**
+     * Обработчик квиза
+     * @param message сообщение пользователя
+     * @return правильность ответа и следующий вопрос ИЛИ конец квиза
+     */
     private String quizHandler(String message) {
         if (solvedCounter == -1) {
             questions = new Storage();
