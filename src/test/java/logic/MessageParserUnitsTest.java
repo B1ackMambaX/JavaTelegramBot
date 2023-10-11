@@ -1,15 +1,37 @@
 package logic;
-import data.Question;
-import data.Storage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 public class MessageParserUnitsTest {
-    Logic logic;
-    ArrayList<Question> questions;
+    private Logic logic;
+    private final String[] quizExpectedPhrases = {
+            "Тест по ЯП JavaScript, состоит из 10 вопросов\n\nКакой метод используется для фильтрации массива?",
+            "Вы ответили правильно!\nКакое ключевое слово используется для обозначения наследования классов?",
+            "Вы ответили неправильно! Правильный ответ:extends\nКакой метод добавляет элемент в конец массива?",
+            "Вы ответили правильно!\nКакой метод удаляет последний элемент массива?",
+            "Вы ответили правильно!\nКакой метод используется для разбиения строки на массив подстрок?",
+            "Вы ответили правильно!\nКакой метод используется для объединения элементов массива в строку?",
+            "Вы ответили правильно!\nКакой оператор используется для проверки на равенство с учетом типа данных?",
+            "Вы ответили неправильно! Правильный ответ:===\nКакой оператор используется для логического И?",
+            "Вы ответили правильно!\nКакой оператор используется для логического ИЛИ?",
+            "Вы ответили правильно!\nКакой метод используется для поиска индекса элемента в массиве?",
+            "Вы ответили правильно!\nТест закончен!"
+    };
+
+    private final String[] quizMessageForParser = {
+            "/quiz",
+            "filter",
+            "hfhhfhf",
+            "PUSH",
+            "pop",
+            "SpliT",
+            "join",
+            "==",
+            "&&",
+            "||",
+            "indexOf"
+    };
     private final String startMessage = """
                     Привет, я помогу тебе поднять теорию по языкам программирования!
                     Пока я умею не так много, но могу задать тебе вопросы по JavaSctipt.\s
@@ -18,12 +40,10 @@ public class MessageParserUnitsTest {
                     Чтобы остановить тест введи /stop""";
     private final String unknownCommand = "Я не понимаю вас, посмотреть список доступных комманд можно с помощью /help";
     private final String stopCommand = "Тест завершен, чтобы начать заново введите /quiz";
-    private final String rightAnswer = "Вы ответили правильно!\n";
 
     @Before
     public void setUp() {
         logic = new Logic();
-        questions = new Storage().getAllQuestions();
     }
 
     @Test
@@ -31,13 +51,12 @@ public class MessageParserUnitsTest {
         Assert.assertEquals("/start command", startMessage, logic.messageHandler("/start"));
         Assert.assertEquals("unknown command", unknownCommand, logic.messageHandler("/some"));
         Assert.assertEquals("help command", startMessage, logic.messageHandler("/help"));
-        Assert.assertEquals("starting quiz", "Тест по ЯП JavaScript, состоит из " + questions.size() + " вопросов\n\n" + questions.get(0).getQuestionText(), logic.messageHandler("/quiz"));
+        Assert.assertEquals("starting quiz", quizExpectedPhrases[0], logic.messageHandler(quizMessageForParser[0]));
         Assert.assertEquals("stop command", stopCommand, logic.messageHandler("/stop"));
-        Assert.assertEquals("starting quiz", "Тест по ЯП JavaScript, состоит из " + questions.size() + " вопросов\n\n" + questions.get(0).getQuestionText(), logic.messageHandler("/quiz"));
-        for (int i = 0; i < questions.size() - 1; i++) {
-            Assert.assertEquals("answer:" + i, questions.get(i).checkCorrectness(questions.get(i).getQuestionAnswer()) + questions.get(i + 1).getQuestionText(), logic.messageHandler(questions.get(i).getQuestionAnswer()));
-        }
+        Assert.assertEquals("starting quiz", quizExpectedPhrases[0], logic.messageHandler(quizMessageForParser[0]));
         Assert.assertEquals("help in quiz", startMessage, logic.messageHandler("/help"));
-        Assert.assertEquals("final question", rightAnswer + "Тест закончен!", logic.messageHandler(questions.get(questions.size() - 1).getQuestionAnswer()));
+        for (int i = 1; i < quizExpectedPhrases.length; i++) {
+            Assert.assertEquals("answer:" + i, quizExpectedPhrases[i], logic.messageHandler(quizMessageForParser[i]));
+        }
     }
 }
