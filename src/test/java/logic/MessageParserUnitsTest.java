@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+/**
+ * Проверка ответа бота в зависимости от ответа пользователя
+ */
 public class MessageParserUnitsTest {
     Logic logic;
     ArrayList<Question> questions;
@@ -26,6 +29,9 @@ public class MessageParserUnitsTest {
         questions = new Storage().getAllQuestions();
     }
 
+    /**
+     * Запуск теста
+     */
     @Test
     public void testParser() {
         Assert.assertEquals("/start command", startMessage, logic.messageHandler("/start"));

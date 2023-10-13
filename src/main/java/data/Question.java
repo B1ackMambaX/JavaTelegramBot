@@ -2,7 +2,7 @@ package data;
 
 
 /**
- * Класс, который реализует вопрос в квизе
+ * Вопрос в квизе
  */
 public class Question {
     private final int id;
@@ -47,12 +47,13 @@ public class Question {
     }
 
     /**
-     *
+     * Проверка правильности ответа пользователя
      * @param answer ответ пользователя
      * @return текстовое описание, правильно ли ответил пользователь или нет
      */
     public String checkCorrectness(String answer) {
-        return answer.equals(this.questionAnswer) ? "Вы ответили правильно!\n" :
-                "Вы ответили неправильно! Правильный ответ:" + this.questionAnswer + '\n';
+        return answer.equals(this.questionAnswer)
+                ? "Вы ответили правильно!\n"
+                : "Вы ответили неправильно! Правильный ответ:" + this.questionAnswer + '\n';
     }
 }

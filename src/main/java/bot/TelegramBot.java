@@ -10,7 +10,7 @@ import logic.Logic;
 /**
  * Класс реализации телеграмм бота
  */
-public class Bot extends TelegramLongPollingBot {
+public class TelegramBot extends TelegramLongPollingBot {
     final private String BOT_TOKEN = main.Config.getTelegramBotToken();
     final private String BOT_USERNAME = main.Config.getTelegramBotUsername();
     final private Logic botLogic = new Logic();
