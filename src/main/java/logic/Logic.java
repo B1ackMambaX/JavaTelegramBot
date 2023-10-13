@@ -1,19 +1,14 @@
 package logic;
-import data.Storage;
-import data.Question;
 
 /**
- * Класс реализуемый логику работы бота
+ * Класс реализующий логику работы бота
  */
 public class Logic {
     private boolean isQuiz;
-    private Storage questions;
-    private int solvedCounter;
-    private Question currentQuestion;
+    QuizHandler quiz;
 
     public Logic() {
         isQuiz = false;
-        solvedCounter = -1;
     }
 
     /**
@@ -25,7 +20,7 @@ public class Logic {
         message = message.toLowerCase();
 
         if (isQuiz && !message.equals("/help") && !message.equals("/stop")) {
-            return quizHandler(message);
+            return quiz.answerHandler(message);
         } else if (message.equals("/start") || message.equals("/help")) {
             return """
                     Привет, я помогу тебе поднять теорию по языкам программирования!
@@ -34,11 +29,11 @@ public class Logic {
                     Для начала введи /quiz
                     Чтобы остановить тест введи /stop""";
         } else if (message.equals("/quiz") && !isQuiz) {
+            quiz = new QuizHandler(this);
             isQuiz = true;
-            return quizHandler(message);
+            return quiz.answerHandler(message);
         } else if (message.equals("/stop") && isQuiz) {
             isQuiz = false;
-            solvedCounter = -1;
             return "Тест завершен, чтобы начать заново введите /quiz";
         } else {
             return "Я не понимаю вас, посмотреть список доступных комманд можно с помощью /help";
@@ -46,27 +41,10 @@ public class Logic {
     }
 
     /**
-     * Обработчик квиза
-     * @param message сообщение пользователя
-     * @return правильность ответа и следующий вопрос ИЛИ конец квиза
+     * Метод позволяющий изменять значение isQuiz внутри других классов пакета logic
+     * @param isQuiz новое значение
      */
-    private String quizHandler(String message) {
-        if (solvedCounter == -1) {
-            questions = new Storage();
-            solvedCounter = 0;
-            currentQuestion = questions.getQuestionByIndex(solvedCounter);
-            return "Тест по ЯП JavaScript, состоит из " + questions.getSize() + " вопросов\n\n" + currentQuestion.getQuestionText();
-        } else if (solvedCounter < questions.getSize() - 1) {
-            String checkResponse = currentQuestion.checkCorrectness(message);
-            currentQuestion = questions.getQuestionByIndex(++solvedCounter);
-            return checkResponse + currentQuestion.getQuestionText();
-        } else if (solvedCounter == questions.getSize() - 1) {
-            isQuiz = false;
-            solvedCounter = -1;
-            String checkResponse = currentQuestion.checkCorrectness(message);
-            return checkResponse + "Тест закончен!";
-        } else {
-            throw new RuntimeException("Error in quiz logic");
-        }
+    protected void setQuiz(boolean isQuiz) {
+        this.isQuiz = isQuiz;
     }
 }
