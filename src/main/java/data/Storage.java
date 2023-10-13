@@ -1,13 +1,13 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс, который реализует временное хранилище вопросов
  */
 public class Storage {
-    private final ArrayList<Question> questions;
-    private final int size;
+    private final List<Question> questions;
     public Storage() {
         questions = new ArrayList<>();
         questions.add(new Question(0, 0, "Какой метод используется для фильтрации массива?", "filter", "text"));
@@ -20,16 +20,15 @@ public class Storage {
         questions.add(new Question(7, 0, "Какой оператор используется для логического И?", "&&", "text"));
         questions.add(new Question(8, 0, "Какой оператор используется для логического ИЛИ?", "||", "text"));
         questions.add(new Question(9, 0, "Какой метод используется для поиска индекса элемента в массиве?", "indexof", "text"));
-        size = questions.size();
     }
 
     public Question getQuestionByIndex(int index) {
-        return this.questions.get(index);
+        return questions.get(index);
     }
-    public ArrayList<Question> getAllQuestions() {
-        return this.questions;
+    public List<Question> getAllQuestions() {
+        return questions;
     }
     public int getSize() {
-        return this.size;
+        return questions.size();
     }
 }
