@@ -46,17 +46,4 @@ public class TelegramBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
-//    public String parseMessage(String textMsg) {
-//        String response = null;
-//
-//        if (textMsg.equals("/start")) {
-//            response = "Привет, я помогу тебе поднять теорию по языкам программирования!";
-//        }
-//        else {
-//            response = "я тебя не понимать....";
-//        }
-//
-//        return response;
-//    }
 }
