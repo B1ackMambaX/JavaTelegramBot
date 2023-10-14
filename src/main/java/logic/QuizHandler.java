@@ -1,8 +1,10 @@
 package logic;
 
-import data.Question;
+import data.question.Question;
 import data.Storage;
-
+/**
+* Обработчик вопросов квиза
+*/
 public class QuizHandler {
     private Storage questions;
     private int solvedCounter;
@@ -10,7 +12,6 @@ public class QuizHandler {
     private Logic logic;
 
     /**
-     * Обработчик вопросов квиза
      * @param logic экземпляр класса Logic с которым связан данный обработчик
      * @return правильность ответа и следующий вопрос ИЛИ конец квиза
      */
