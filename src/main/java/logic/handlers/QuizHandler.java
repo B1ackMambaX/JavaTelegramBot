@@ -1,24 +1,18 @@
-package logic;
+package logic.handlers;
 
 import data.question.Question;
 import data.Storage;
 /**
-* Обработчик вопросов квиза
+* Обработчик квиза
 */
 public class QuizHandler {
     private Storage questions;
     private int solvedCounter;
     private Question currentQuestion;
-    private Logic logic;
 
-    /**
-     * @param logic экземпляр класса Logic с которым связан данный обработчик
-     * @return правильность ответа и следующий вопрос ИЛИ конец квиза
-     */
-    protected QuizHandler(Logic logic) {
+    public QuizHandler() {
         questions = new Storage();
         solvedCounter = -1;
-        this.logic = logic;
     }
 
     /**
@@ -26,7 +20,9 @@ public class QuizHandler {
      * @param message сообщение пользователя
      * @return правильность ответа и следующий вопрос ИЛИ конец квиза
      */
-    protected String answerHandler(String message) {
+    public String answerHandler(String message) {
+        message = message.toLowerCase();
+
         if (solvedCounter == -1) {
             solvedCounter = 0;
             questions = new Storage();
@@ -39,7 +35,6 @@ public class QuizHandler {
         } else if (solvedCounter == questions.getSize() - 1) {
             solvedCounter = 0;
             String checkResponse = checkCorrectness(message);
-            logic.setQuiz(false);
             return checkResponse + "Тест закончен!";
         } else {
             throw new RuntimeException("Error in quiz logic");

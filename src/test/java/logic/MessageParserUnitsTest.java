@@ -1,4 +1,5 @@
 package logic;
+import logic.handlers.MainHandler;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +8,7 @@ import org.junit.Test;
  * Проверка ответа бота в зависимости от ответа пользователя
  */
 public class MessageParserUnitsTest {
-    private Logic logic;
+    private MainHandler logic;
     private final String[] quizExpectedPhrases = {
             "Тест по ЯП JavaScript, состоит из 10 вопросов\n\nКакой метод используется для фильтрации массива?",
             "Вы ответили правильно!\nКакое ключевое слово используется для обозначения наследования классов?",
@@ -30,7 +31,7 @@ public class MessageParserUnitsTest {
 
     @Before
     public void setUp() {
-        logic = new Logic();
+        logic = new MainHandler();
     }
 
     /**

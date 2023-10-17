@@ -4,9 +4,14 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import main.Config;
-import logic.Logic;
+import logic.stateManager.StateManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс реализации телеграмм бота
@@ -14,7 +19,8 @@ import logic.Logic;
 public class TelegramBot extends TelegramLongPollingBot {
     final private String BOT_TOKEN = Config.getTelegramBotToken();
     final private String BOT_USERNAME = Config.getTelegramBotUsername();
-    final private Logic botLogic = new Logic();
+    final private StateManager stateManager = new StateManager();
+
 
     @Override
     public String getBotUsername() {
@@ -28,12 +34,13 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * Обработчик обновлений в боте
+     *
      * @param update - объект обработки обновлений
      */
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            if (update.hasMessage() && update.getMessage().hasText()){
+            if (update.hasMessage() && update.getMessage().hasText()) {
                 Message inMess = update.getMessage();
                 String chatId = inMess.getChatId().toString();
                 String response = parseMessage(inMess.getText());
@@ -50,13 +57,14 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * Обработчик входящих сообщений
+     *
      * @param message сообщение от пользователя
      * @return ответ на сообщение
      */
     private String parseMessage(String message) {
         String response;
         try {
-            response = botLogic.messageHandler(message);
+            response = stateManager.chooseHandler(message);
         } catch (RuntimeException e) {
             response = "Произошла ошибка, попробуйте позже...";
             System.out.println(e.getMessage());
