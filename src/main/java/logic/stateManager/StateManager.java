@@ -48,4 +48,15 @@ public class StateManager {
                 throw new RuntimeException("Error in state manager");
         }
     }
+
+    public String[] keyboardTextInitializer() {
+        switch (state) {
+            case IDLE:
+                return new String[] {"/help", "/quiz"};
+            case QUIZ:
+                return new String[] {"/stop"};
+            default:
+                throw new RuntimeException("Error in keyboard text initializer");
+        }
+    }
 }

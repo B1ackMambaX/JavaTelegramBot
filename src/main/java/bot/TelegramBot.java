@@ -48,6 +48,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 SendMessage outMess = new SendMessage();
                 outMess.setChatId(chatId);
                 outMess.setText(response);
+                outMess.setReplyMarkup(initKeyboard());
                 execute(outMess);
             }
         } catch (TelegramApiException e) {
@@ -70,5 +71,24 @@ public class TelegramBot extends TelegramLongPollingBot {
             System.out.println(e.getMessage());
         }
         return response;
+    }
+
+    /**
+     * Инициализация разметки клавиатуры для бота
+     * @return Объект разметки клавиатуры
+     */
+    private ReplyKeyboardMarkup initKeyboard() {
+        String[] keyboardText = stateManager.keyboardTextInitializer();
+
+        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        List<KeyboardRow> rows = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        rows.add(row);
+
+        for (String text : keyboardText) {
+            row.add(new KeyboardButton(text));
+        }
+        keyboard.setKeyboard(rows);
+        return keyboard;
     }
 }
