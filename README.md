@@ -5,7 +5,7 @@
 ## Completed Task
 
 1. [Task 1](https://github.com/B1ackMambaX/JavaTelegramBot/issues/2) -  Реализовать бота в Telegram, который задает тестовые вопросы по программированию, проверяет их правильность.
-п
+2. [Task 2](https://github.com/B1ackMambaX/JavaTelegramBot/issues/5) - Переработка архитектуры и подключение базы данных.
 
 ## How to run bot
 
