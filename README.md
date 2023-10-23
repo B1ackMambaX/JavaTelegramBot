@@ -21,3 +21,16 @@
 Сделать билд, запустить проект и радоваться!
 
 ### Docker
+#### Docker Compose
+1. Настройка networks и volums
+```shell
+docker network create javabot_net
+```
+```shell
+docker volume create javabot_database_data
+```
+2. Запуск
+```shell
+docker compose up -d
+```
+#### Docker, каждый контейнер по отдельности
