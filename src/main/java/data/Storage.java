@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class Storage {
     private final List<Question> questions;
+    //TODO: Здесь сделать обращение к БД для получения вопросов
     public Storage() {
         questions = new ArrayList<>();
         questions.add(new Question(0, 0, "Какой метод используется для фильтрации массива?", "filter", QuestionType.TEXT));

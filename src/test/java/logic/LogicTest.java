@@ -1,4 +1,6 @@
 package logic;
+import data.User;
+import logic.stateManager.StateManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -6,8 +8,9 @@ import org.junit.Test;
 /**
  * Проверка ответа бота в зависимости от ответа пользователя
  */
-public class MessageParserUnitsTest {
-    private Logic logic;
+public class LogicTest {
+    private StateManager logic;
+    private User testUser;
     private final String[] quizExpectedPhrases = {
             "Тест по ЯП JavaScript, состоит из 10 вопросов\n\nКакой метод используется для фильтрации массива?",
             "Вы ответили правильно!\nКакое ключевое слово используется для обозначения наследования классов?",
@@ -30,23 +33,26 @@ public class MessageParserUnitsTest {
 
     @Before
     public void setUp() {
-        logic = new Logic();
+        logic = new StateManager();
+        testUser = new User(-1);
     }
 
     /**
-     * Метод тестирующй парсер сообщений
+     * Метод тестирующй логику бота
      */
     @Test
     public void testParser() {
-        Assert.assertEquals("/start command", startMessage, logic.messageHandler("/start"));
-        Assert.assertEquals("unknown command", unknownCommand, logic.messageHandler("/some"));
-        Assert.assertEquals("help command", startMessage, logic.messageHandler("/help"));
-        Assert.assertEquals("starting quiz", quizExpectedPhrases[0], logic.messageHandler(quizMessageForParser[0]));
-        Assert.assertEquals("stop command", stopCommand, logic.messageHandler("/stop"));
-        Assert.assertEquals("starting quiz", quizExpectedPhrases[0], logic.messageHandler(quizMessageForParser[0]));
-        Assert.assertEquals("help in quiz", startMessage, logic.messageHandler("/help"));
+        Assert.assertEquals("/start command", startMessage, logic.chooseHandler("/start", testUser));
+        Assert.assertEquals("unknown command", unknownCommand, logic.chooseHandler("/some", testUser));
+        Assert.assertEquals("help command", startMessage, logic.chooseHandler("/help", testUser));
+        Assert.assertEquals("starting quiz", quizExpectedPhrases[0],
+                logic.chooseHandler(quizMessageForParser[0], testUser));
+        Assert.assertEquals("stop command", stopCommand, logic.chooseHandler("/stop", testUser));
+        Assert.assertEquals("starting quiz", quizExpectedPhrases[0],
+                logic.chooseHandler(quizMessageForParser[0], testUser));
         for (int i = 1; i < quizExpectedPhrases.length; i++) {
-            Assert.assertEquals("answer:" + i, quizExpectedPhrases[i], logic.messageHandler(quizMessageForParser[i]));
+            Assert.assertEquals("answer:" + i, quizExpectedPhrases[i],
+                    logic.chooseHandler(quizMessageForParser[i], testUser));
         }
     }
 }
