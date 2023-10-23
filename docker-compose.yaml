@@ -6,7 +6,7 @@ services:
     volumes:
       - javabot_database_data:/var/lib/postgresql/data
     env_file: &env
-      - .env.prod # .env.dev
+      - .env
     networks: &network
       - discord_net
     restart: &restart unless-stopped
