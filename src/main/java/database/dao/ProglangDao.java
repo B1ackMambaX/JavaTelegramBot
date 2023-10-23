@@ -2,14 +2,20 @@ package database.dao;
 
 import database.models.Proglang;
 import database.models.Progquiz;
+import org.hibernate.QueryException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import database.utils.HibernateSessionFactoryUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProglangDao {
     public Proglang findByProglangId(Integer proglang_id) {
-        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Proglang.class, proglang_id);
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Proglang proglang = session.get(Proglang.class, proglang_id);
+        session.close();
+        return proglang;
     }
 
     public void save(Proglang proglang) {
@@ -31,17 +37,35 @@ public class ProglangDao {
     public void delete(Proglang proglang) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
-        session.delete(proglang);
+        session.remove(proglang);
         tx1.commit();
         session.close();
     }
 
-    public Progquiz findProgquizByProglangId(Integer proglang_id) {
-        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Progquiz.class, proglang_id);
+    public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        List<Progquiz> progquizzes = new ArrayList<Progquiz>();
+        try {
+            progquizzes = session.createQuery(
+                            "select Progquiz " +
+                                    "from Progquiz " +
+                                    "where proglang_id = :proglang_id",
+                            Progquiz.class)
+                    .setParameter("proglang_id", proglang_id)
+                    .getResultList();
+        } catch (Exception e) {
+            System.out.println("Zero length!: " + e);
+        }
+        session.close();
+        return progquizzes;
     }
 
     public List<Proglang> findAll() {
-        List<Proglang> proglangs = (List<Proglang>)  HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("from Proglang").list();
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        List<Proglang> proglangs = session.createQuery(
+                "from Proglang")
+                .getResultList();
+        session.close();
         return proglangs;
     }
 }

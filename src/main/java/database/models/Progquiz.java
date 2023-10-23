@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "progquiz")
 public class Progquiz {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int progquiz_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,7 +22,7 @@ public class Progquiz {
     private String question;
 
     @Enumerated(EnumType.STRING)
-    @Column (name = "asnwer_type")
+    @Column (name = "answer_type")
     private AnswerType answer_type;
     @Column (name = "answer_value")
     private String answer_value;

@@ -32,7 +32,7 @@ public class ProglangService {
         return proglangDao.findAll();
     }
 
-    public Progquiz findProgquizByProglangId(Integer proglang_id) {
-        return proglangDao.findProgquizByProglangId(proglang_id);
+    public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
+        return proglangDao.findProgquizzesByProglangId(proglang_id);
     }
 }
