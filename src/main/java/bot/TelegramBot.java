@@ -23,7 +23,6 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
     final private String BOT_TOKEN = Config.getTelegramBotToken();
     final private String BOT_USERNAME = Config.getTelegramBotUsername();
     final private StateManager stateManager = new StateManager();
-
     private Map<Long, User> activeUsers = new HashMap<>();
 
 
@@ -110,6 +109,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
      * @param chatId id чата
      * @return пользователь
      */
+    //TODO: Здесь вместо временного решения с хэшмапом лучше сделать обращние к БД
     public User login(long chatId) {
         if(!activeUsers.containsKey(chatId)) {
             activeUsers.put(chatId, new User(chatId));
