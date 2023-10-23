@@ -1,4 +1,4 @@
-# Java Telegram Bot
+# JavaTelegramBot
 
 **Authors:** Артемий Чудиновских([@b1ackmambax](https://t.me/b1ackmambax)) and Перминов Никита([@begenFys](https://t.me/begenFys))
 
