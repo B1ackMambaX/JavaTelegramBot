@@ -1,15 +1,15 @@
 package logic.handlers;
 
 /**
- * Класс реализующий логику работы бота
+ * Обработчик основных сообщений
  */
 public class MainHandler {
     /**
-     * Обработчик сообщений пользователя
+     * Обработчик сообщений пользователя в состоянии IDLE
      * @param message сообщение пользователя
      * @return ответ в зависимости от сообщения
      */
-    public static String messageHandler(String message) {
+    public String messageHandler(String message) {
         message = message.toLowerCase();
 
          if (message.equals("/start") || message.equals("/help")) {
@@ -19,8 +19,6 @@ public class MainHandler {
                     В ответ на вопрос присылай мне одно слово.
                     Для начала введи /quiz
                     Чтобы остановить тест введи /stop""";
-        } if (message.equals("/stop")) {
-            return "Тест завершен, чтобы начать заново введите /quiz";
         } else {
             return "Я не понимаю вас, посмотреть список доступных комманд можно с помощью /help";
         }

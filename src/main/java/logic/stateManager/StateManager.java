@@ -1,46 +1,47 @@
 package logic.stateManager;
 
+import data.User;
 import logic.handlers.MainHandler;
 import logic.handlers.QuizHandler;
 
+/**
+ * Машина состояний
+ */
 public class StateManager {
-    private State state;
     private final MainHandler mainHandler;
     private QuizHandler quizHandler;
 
     public StateManager() {
-        state = State.IDLE;
         mainHandler = new MainHandler();
     }
 
-    public State getState() {
-        return state;
-    }
-
-    private void setState(State state) {
-        this.state = state;
-    }
-
-    public String chooseHandler(String message) {
+    /**
+     * Метод, который выбирает обработчик сообщения в зависимости от состояния пользователя
+     * @param message сообщение
+     * @param currentUser пользователь
+     * @return Ответ на сообщение
+     */
+    public String chooseHandler(String message, User currentUser) {
         String response;
+        State state = currentUser.getUserState();
         switch (state) {
             case IDLE:
                 if (message.equals("/quiz")) {
-                    setState(State.QUIZ);
+                    currentUser.setUserState(State.QUIZ);
                     quizHandler = new QuizHandler();
-                    response = quizHandler.answerHandler(message);
+                    response = quizHandler.answerHandler(message, currentUser);
                 } else {
                     response = mainHandler.messageHandler(message);
                 }
                 return response;
             case QUIZ:
                 if (message.equals("/stop")) {
-                    setState(State.IDLE);
-                    response = mainHandler.messageHandler(message);
+                    currentUser.setUserState(State.IDLE);
+                    response = quizHandler.answerHandler(message, currentUser);
                 } else {
-                    response = quizHandler.answerHandler(message);
+                    response = quizHandler.answerHandler(message, currentUser);
                     if (response.contains("Тест закончен!")) {
-                        setState(State.IDLE);
+                        currentUser.setUserState(State.IDLE);
                     }
                 }
                 return response;
@@ -49,7 +50,14 @@ public class StateManager {
         }
     }
 
-    public String[] keyboardTextInitializer() {
+    /**
+     * Метод, который создает сообщения для клавиатуры в зависимости от состояния пользователя
+     * @param currentUser пользователь
+     * @return Сообщения для клавиатуры
+     */
+    public String[] keyboardTextInitializer(User currentUser) {
+        State state = currentUser.getUserState();
+
         switch (state) {
             case IDLE:
                 return new String[] {"/help", "/quiz"};
