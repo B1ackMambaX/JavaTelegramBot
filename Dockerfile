@@ -1,14 +1,12 @@
-FROM eclipse-temurin:17-jdk-jammy AS build
-ENV HOME=/usr/app
-RUN mkdir -p $HOME
-WORKDIR $HOME
-ADD . $HOME
-RUN --mount=type=cache,target=/root/.m2/ -f $HOME/pom.xml clean package
+FROM maven:3.8.4-openjdk-17 AS build
+WORKDIR /usr/app
+COPY . .
+RUN mvn clean package
 
 #
 # Package stage
 #
-FROM eclipse-temurin:17-jdk-jammy
+FROM openjdk:17-oracle
 ARG JAR_FILE=/usr/app/target/*.jar
 COPY --from=build $JAR_FILE /app/runner.jar
 ENTRYPOINT ["java", "-jar", "/app/runner.jar"]
