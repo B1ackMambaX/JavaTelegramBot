@@ -8,5 +8,7 @@ RUN mvn clean compile assembly:single
 #
 FROM openjdk:17-oracle
 ARG JAR_FILE=/usr/app/target/*.jar
-COPY --from=build $JAR_FILE /app/runner.jar
-ENTRYPOINT ["java", "-jar", "/app/runner.jar"]
+WORKDIR /app
+COPY .env .
+COPY --from=build $JAR_FILE runner.jar
+ENTRYPOINT ["java", "-jar", "runner.jar"]

@@ -5,13 +5,16 @@ import database.models.Progquiz;
 
 import java.util.List;
 
+/**
+ * Слой сервиса который предоставляет CRUD операции для таблицы вопросов
+ */
 public class ProgquizService {
     private ProgquizDao progquizDao = new ProgquizDao();
 
     public ProgquizService() {
     }
 
-    public Progquiz findProgquiz(Integer progquiz_id){
+    public Progquiz findProgquizById(Integer progquiz_id){
         return progquizDao.findByProgquizId(progquiz_id);
     }
 

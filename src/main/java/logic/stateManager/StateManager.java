@@ -1,18 +1,21 @@
 package logic.stateManager;
 
-import data.User;
-import logic.handlers.MainHandler;
+import database.models.User;
+import database.services.UserService;
+import logic.handlers.TextHandler;
 import logic.handlers.QuizHandler;
+import database.models.types.State;
 
 /**
  * Машина состояний
  */
 public class StateManager {
-    private final MainHandler mainHandler;
+    private final UserService userService = new UserService();
+    private final TextHandler mainHandler;
     private QuizHandler quizHandler;
 
     public StateManager() {
-        mainHandler = new MainHandler();
+        mainHandler = new TextHandler();
     }
 
     /**
@@ -23,25 +26,29 @@ public class StateManager {
      */
     public String chooseHandler(String message, User currentUser) {
         String response;
-        State state = currentUser.getUserState();
+        State state = currentUser.getState();
         switch (state) {
             case IDLE:
                 if (message.equals("/quiz")) {
-                    currentUser.setUserState(State.QUIZ);
-                    quizHandler = new QuizHandler();
+                    currentUser.setState(State.QUIZ);
+                    userService.updateUser(currentUser);
+                    quizHandler = new QuizHandler(1);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
                     response = mainHandler.messageHandler(message);
                 }
                 return response;
             case QUIZ:
+                quizHandler = new QuizHandler(1);
                 if (message.equals("/stop")) {
-                    currentUser.setUserState(State.IDLE);
+                    currentUser.setState(State.IDLE);
+                    userService.updateUser(currentUser);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
                     response = quizHandler.answerHandler(message, currentUser);
                     if (response.contains("Тест закончен!")) {
-                        currentUser.setUserState(State.IDLE);
+                        currentUser.setState(State.IDLE);
+                        userService.updateUser(currentUser);
                     }
                 }
                 return response;
@@ -56,7 +63,7 @@ public class StateManager {
      * @return Сообщения для клавиатуры
      */
     public String[] keyboardTextInitializer(User currentUser) {
-        State state = currentUser.getUserState();
+        State state = currentUser.getState();
 
         switch (state) {
             case IDLE:

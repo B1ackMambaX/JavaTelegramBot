@@ -1,5 +1,7 @@
 package bot;
 
+import database.models.types.Plathform;
+import database.services.UserService;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import data.User;
+import database.models.User;
 
 /**
  * Класс реализации телеграмм бота
@@ -23,7 +25,10 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
     final private String BOT_TOKEN = Config.getTelegramBotToken();
     final private String BOT_USERNAME = Config.getTelegramBotUsername();
     final private StateManager stateManager = new StateManager();
-    private Map<Long, User> activeUsers = new HashMap<>();
+
+    final private Plathform plathform = Plathform.TG;
+
+    final private UserService userService = new UserService();
 
 
     @Override
@@ -76,6 +81,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
         } catch (RuntimeException e) {
             response = "Произошла ошибка, попробуйте позже...";
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
@@ -89,6 +95,8 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             String[] keyboardText = stateManager.keyboardTextInitializer(currentUser);
 
             ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+            keyboard.setResizeKeyboard(true);
+            keyboard.setOneTimeKeyboard(true);
             List<KeyboardRow> rows = new ArrayList<>();
             KeyboardRow row = new KeyboardRow();
             rows.add(row);
@@ -100,6 +108,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             return keyboard;
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -109,11 +118,13 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
      * @param chatId id чата
      * @return пользователь
      */
-    //TODO: Здесь вместо временного решения с хэшмапом лучше сделать обращние к БД
     public User login(long chatId) {
-        if(!activeUsers.containsKey(chatId)) {
-            activeUsers.put(chatId, new User(chatId));
+        User currentUser = userService.findUserByPlathformAndId(this.plathform, chatId);
+        if(currentUser == null) {
+            // TODO: Допилить метод регистрации пользователя
+            currentUser = new User(this.plathform, chatId);
+            userService.saveUser(currentUser);
         }
-        return activeUsers.get(chatId);
+        return currentUser;
     }
 }

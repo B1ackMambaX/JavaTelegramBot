@@ -1,6 +1,7 @@
 package bot;
 
-import data.User;
+import database.models.User;
+import database.models.types.Plathform;
 
 public interface IBot {
     String parseMessage(String message, User currentUser);

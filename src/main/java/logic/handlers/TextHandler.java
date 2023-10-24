@@ -3,7 +3,7 @@ package logic.handlers;
 /**
  * Обработчик основных сообщений
  */
-public class MainHandler {
+public class TextHandler {
     /**
      * Обработчик сообщений пользователя в состоянии IDLE
      * @param message сообщение пользователя

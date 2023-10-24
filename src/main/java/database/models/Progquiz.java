@@ -26,4 +26,36 @@ public class Progquiz {
     private AnswerType answer_type;
     @Column (name = "answer_value")
     private String answer_value;
+
+    public Proglang getProglang() {
+        return proglang;
+    }
+
+    public void setProglang(Proglang proglang) {
+        this.proglang = proglang;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public AnswerType getAnswerType() {
+        return answer_type;
+    }
+
+    public void setAnswerType(AnswerType answer_type) {
+        this.answer_type = answer_type;
+    }
+
+    public String getAnswerValue() {
+        return answer_value;
+    }
+
+    public void setAnswerValue(String answer_value) {
+        this.answer_value = answer_value;
+    }
 }

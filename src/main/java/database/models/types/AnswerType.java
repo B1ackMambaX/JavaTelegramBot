@@ -1,6 +1,9 @@
 package database.models.types;
 
+/**
+ * Тип вопроса текстовый или вопрос с кодом
+ */
 public enum AnswerType {
-    QUIZ,
-    IDLE
+    TEXT,
+    CODE
 }

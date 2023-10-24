@@ -1,6 +1,10 @@
 package main;
 
 import io.github.cdimascio.dotenv.Dotenv;
+
+/**
+ * Конфиг файл позволяющий получить основные переменные
+ */
 public class Config {
     private static final Dotenv dotenv = Dotenv.load();
     public static String getTelegramBotToken() {

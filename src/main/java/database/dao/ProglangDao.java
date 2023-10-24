@@ -2,7 +2,6 @@ package database.dao;
 
 import database.models.Proglang;
 import database.models.Progquiz;
-import org.hibernate.QueryException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import database.utils.HibernateSessionFactoryUtil;
@@ -10,6 +9,9 @@ import database.utils.HibernateSessionFactoryUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object для таблицы с языками программирования
+ */
 public class ProglangDao {
     public Proglang findByProglangId(Integer proglang_id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
@@ -17,7 +19,6 @@ public class ProglangDao {
         session.close();
         return proglang;
     }
-
     public void save(Proglang proglang) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
@@ -42,19 +43,25 @@ public class ProglangDao {
         session.close();
     }
 
+    /**
+     * Найти все вопросы по языку программирования
+     * @param proglang_id id ЯП
+     * @return лист вопросов
+     */
     public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         List<Progquiz> progquizzes = new ArrayList<Progquiz>();
         try {
             progquizzes = session.createQuery(
-                            "select Progquiz " +
-                                    "from Progquiz " +
-                                    "where proglang_id = :proglang_id",
+                            "select p " +
+                                    "from Progquiz p " +
+                                    "where p.proglang.proglang_id = :proglang_id",
                             Progquiz.class)
                     .setParameter("proglang_id", proglang_id)
                     .getResultList();
         } catch (Exception e) {
             System.out.println("Zero length!: " + e);
+            e.printStackTrace();
         }
         session.close();
         return progquizzes;
