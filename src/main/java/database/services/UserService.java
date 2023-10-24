@@ -2,6 +2,7 @@ package database.services;
 
 import database.dao.UserDao;
 import database.models.User;
+import database.models.types.Plathform;
 
 import java.util.List;
 
@@ -29,5 +30,13 @@ public class UserService {
 
     public List<User> findAllUsers() {
         return userDao.findAll();
+    }
+
+    public List<User> findAllUsersByPlathform(Plathform plathform) {
+        return userDao.findByPlathform(plathform);
+    }
+
+    public User findUserByPlathformAndId(Plathform plathform, Long plathform_id) {
+        return userDao.findOneByPlathformAndId(plathform, plathform_id);
     }
 }

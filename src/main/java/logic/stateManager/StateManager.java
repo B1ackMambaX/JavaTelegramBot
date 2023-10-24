@@ -1,7 +1,7 @@
 package logic.stateManager;
 
 import database.models.User;
-import logic.handlers.MainHandler;
+import logic.handlers.TextHandler;
 import logic.handlers.QuizHandler;
 import database.models.types.State;
 
@@ -9,11 +9,11 @@ import database.models.types.State;
  * Машина состояний
  */
 public class StateManager {
-    private final MainHandler mainHandler;
+    private final TextHandler mainHandler;
     private QuizHandler quizHandler;
 
     public StateManager() {
-        mainHandler = new MainHandler();
+        mainHandler = new TextHandler();
     }
 
     /**
@@ -29,7 +29,7 @@ public class StateManager {
             case IDLE:
                 if (message.equals("/quiz")) {
                     currentUser.setState(State.QUIZ);
-                    quizHandler = new QuizHandler();
+                    quizHandler = new QuizHandler(1);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
                     response = mainHandler.messageHandler(message);

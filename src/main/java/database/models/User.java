@@ -1,5 +1,6 @@
 package database.models;
 
+import com.fasterxml.classmate.types.TypePlaceHolder;
 import database.models.types.Plathform;
 import database.models.types.State;
 
@@ -13,14 +14,14 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int user_id;
+    private Integer user_id;
 
     @Enumerated(EnumType.STRING)
     @Column (name = "plathform")
     private Plathform plathform;
 
     @Column (name = "plathform_id")
-    private Integer plathform_id;
+    private Long plathform_id;
 
     @Column (name = "plathform_username")
     private String plathform_username;
@@ -49,6 +50,13 @@ public class User {
 
     @Column (name = "setting_field_5")
     private String setting_field_5;
+
+    public User(Plathform plathform, Long plathform_id) {
+        this.plathform = plathform;
+        this.plathform_id = plathform_id;
+        this.state = State.IDLE;
+        this.setting_field_1 = "-1";
+    }
 
     public Plathform getPlathform() {
         return plathform;
@@ -98,43 +106,43 @@ public class User {
         this.state = state;
     }
 
-    public String getSetting_field_1() {
+    public String getSettingField1() {
         return setting_field_1;
     }
 
-    public void setSetting_field_1(String setting_field_1) {
+    public void setSettingField1(String setting_field_1) {
         this.setting_field_1 = setting_field_1;
     }
 
-    public String getSetting_field_2() {
+    public String getSettingField2() {
         return setting_field_2;
     }
 
-    public void setSetting_field_2(String setting_field_2) {
+    public void setSettingField2(String setting_field_2) {
         this.setting_field_2 = setting_field_2;
     }
 
-    public String getSetting_field_3() {
+    public String getSettingField3() {
         return setting_field_3;
     }
 
-    public void setSetting_field_3(String setting_field_3) {
+    public void setSettingField3(String setting_field_3) {
         this.setting_field_3 = setting_field_3;
     }
 
-    public String getSetting_field_4() {
+    public String getSettingField4() {
         return setting_field_4;
     }
 
-    public void setSetting_field_4(String setting_field_4) {
+    public void setSettingField4(String setting_field_4) {
         this.setting_field_4 = setting_field_4;
     }
 
-    public String getSetting_field_5() {
+    public String getSettingField5() {
         return setting_field_5;
     }
 
-    public void setSetting_field_5(String setting_field_5) {
+    public void setSettingField5(String setting_field_5) {
         this.setting_field_5 = setting_field_5;
     }
 }

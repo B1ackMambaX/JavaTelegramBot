@@ -1,10 +1,12 @@
 package database.dao;
 
 import database.models.User;
+import database.models.types.Plathform;
 import database.utils.HibernateSessionFactoryUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao {
@@ -13,6 +15,43 @@ public class UserDao {
         User user = session.get(User.class, user_id);
         session.close();
         return user;
+    }
+
+    public User findOneByPlathformAndId(Plathform plathform, Long plathform_id) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        User user = null;
+        try {
+            user = session.createQuery(
+                            "select User " +
+                                    "from User " +
+                                    "where plathform = :plathform and plathform_id = :plathform_id",
+                            User.class)
+                    .setParameter("plathform", plathform)
+                    .setParameter("plathform_id", plathform_id)
+                    .getSingleResult();
+        } catch (Exception e) {
+            System.out.println("Don't find this user: " + e);
+        }
+        session.close();
+        return user;
+    }
+
+    public List<User> findByPlathform(Plathform plathform) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        List<User> users = new ArrayList<User>();
+        try {
+            users = session.createQuery(
+                            "select User " +
+                                    "from User " +
+                                    "where plathform = :plathform",
+                            User.class)
+                    .setParameter("plathform", plathform)
+                    .getResultList();
+        } catch (Exception e) {
+            System.out.println("Zero length users by plathform!: " + e);
+        }
+        session.close();
+        return users;
     }
 
     public void save(User user) {

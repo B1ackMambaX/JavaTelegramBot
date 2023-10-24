@@ -11,7 +11,7 @@ public class ProgquizService {
     public ProgquizService() {
     }
 
-    public Progquiz findProgquiz(Integer progquiz_id){
+    public Progquiz findProgquizById(Integer progquiz_id){
         return progquizDao.findByProgquizId(progquiz_id);
     }
 
