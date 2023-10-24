@@ -18,6 +18,8 @@
     <junit.version>4.13.2</junit.version>
     <dotenv.version>3.0.0</dotenv.version>
     <telegrambots.version>6.8.0</telegrambots.version>
+    <postgresql.version>42.6.0</postgresql.version>
+    <hibernate.version>5.6.15.Final</hibernate.version>
   </properties>
 
   <dependencies>
@@ -37,5 +39,43 @@
       <artifactId>telegrambots</artifactId>
       <version>${telegrambots.version}</version>
     </dependency>
+    <dependency> <!-- Driver for PostgreSQL  -->
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
+    </dependency>
+    <dependency> <!-- ORM  -->
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
+
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>main.App</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
