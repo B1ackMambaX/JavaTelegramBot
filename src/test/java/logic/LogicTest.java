@@ -1,5 +1,6 @@
 package logic;
-import data.User;
+import database.models.User;
+import database.models.types.Plathform;
 import logic.stateManager.StateManager;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class LogicTest {
     @Before
     public void setUp() {
         logic = new StateManager();
-        testUser = new User(-1);
+        testUser = new User(Plathform.TG, (long) -1);
     }
 
     /**

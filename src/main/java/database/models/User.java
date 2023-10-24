@@ -1,6 +1,5 @@
 package database.models;
 
-import com.fasterxml.classmate.types.TypePlaceHolder;
 import database.models.types.Plathform;
 import database.models.types.State;
 
@@ -51,6 +50,9 @@ public class User {
     @Column (name = "setting_field_5")
     private String setting_field_5;
 
+    public User(){
+    }
+
     public User(Plathform plathform, Long plathform_id) {
         this.plathform = plathform;
         this.plathform_id = plathform_id;
@@ -66,11 +68,11 @@ public class User {
         this.plathform = plathform;
     }
 
-    public Integer getPlathform_id() {
+    public Long getPlathform_id() {
         return plathform_id;
     }
 
-    public void setPlathform_id(Integer plathform_id) {
+    public void setPlathform_id(Long plathform_id) {
         this.plathform_id = plathform_id;
     }
 
