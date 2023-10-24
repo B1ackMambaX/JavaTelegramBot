@@ -41,7 +41,8 @@ public class QuizHandler {
         } else if (solvedCounter == -1) {
             solvedCounter = 0;
             currentQuestion = progquizStorage.get(solvedCounter);
-            response = "Тест по ЯП JavaScript, состоит из " + questions.getSize() + " вопросов\n\n" + currentQuestion.questionText();
+            response = "Тест по ЯП JavaScript, состоит из " + progquizStorage.size()
+                    + " вопросов\n\n" + currentQuestion.getQuestion();
 
         } else if (solvedCounter < progquizStorage.size() - 1) {
             String checkResponse = checkCorrectness(message, currentQuestion);
