@@ -10,6 +10,9 @@ import database.models.Progquiz;
 import database.models.User;
 
 
+/**
+ * Фабрика сессий
+ */
 public class HibernateSessionFactoryUtil {
     private static SessionFactory sessionFactory;
 

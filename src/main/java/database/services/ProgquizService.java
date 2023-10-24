@@ -5,6 +5,9 @@ import database.models.Progquiz;
 
 import java.util.List;
 
+/**
+ * Слой сервиса который предоставляет CRUD операции для таблицы вопросов
+ */
 public class ProgquizService {
     private ProgquizDao progquizDao = new ProgquizDao();
 

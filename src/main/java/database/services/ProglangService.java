@@ -6,6 +6,9 @@ import database.models.Progquiz;
 
 import java.util.List;
 
+/**
+ * Слой сервиса который предоставляет CRUD операции для таблицы языков программирования
+ */
 public class ProglangService {
     private ProglangDao proglangDao = new ProglangDao();
 

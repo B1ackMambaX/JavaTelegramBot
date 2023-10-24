@@ -39,6 +39,7 @@ public class StateManager {
                 }
                 return response;
             case QUIZ:
+                quizHandler = new QuizHandler(1);
                 if (message.equals("/stop")) {
                     currentUser.setState(State.IDLE);
                     userService.updateUser(currentUser);

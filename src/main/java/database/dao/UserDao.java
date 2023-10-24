@@ -9,6 +9,9 @@ import org.hibernate.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object для таблицы пользователей
+ */
 public class UserDao {
     public User findByUserId(Integer user_id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();

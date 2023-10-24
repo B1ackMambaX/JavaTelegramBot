@@ -9,6 +9,9 @@ import database.utils.HibernateSessionFactoryUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object для таблицы с языками программирования
+ */
 public class ProglangDao {
     public Proglang findByProglangId(Integer proglang_id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();

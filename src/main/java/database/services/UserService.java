@@ -6,6 +6,9 @@ import database.models.types.Plathform;
 
 import java.util.List;
 
+/**
+ * Слой сервиса который предоставляет CRUD операции для таблицы польщователей
+ */
 public class UserService {
     private UserDao userDao = new UserDao();
 

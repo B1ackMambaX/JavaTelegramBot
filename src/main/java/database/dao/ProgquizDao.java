@@ -9,6 +9,9 @@ import org.hibernate.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object для таблицы с вопросами
+ */
 public class ProgquizDao {
     public Progquiz findByProgquizId(Integer progquiz_id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();

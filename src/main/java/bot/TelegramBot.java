@@ -81,6 +81,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
         } catch (RuntimeException e) {
             response = "Произошла ошибка, попробуйте позже...";
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
@@ -94,6 +95,8 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             String[] keyboardText = stateManager.keyboardTextInitializer(currentUser);
 
             ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+            keyboard.setResizeKeyboard(true);
+            keyboard.setOneTimeKeyboard(true);
             List<KeyboardRow> rows = new ArrayList<>();
             KeyboardRow row = new KeyboardRow();
             rows.add(row);
@@ -105,6 +108,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             return keyboard;
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
