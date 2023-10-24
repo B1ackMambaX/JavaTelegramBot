@@ -19,7 +19,6 @@ public class ProglangDao {
         session.close();
         return proglang;
     }
-
     public void save(Proglang proglang) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
@@ -44,6 +43,11 @@ public class ProglangDao {
         session.close();
     }
 
+    /**
+     * Найти все вопросы по языку программирования
+     * @param proglang_id id ЯП
+     * @return лист вопросов
+     */
     public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         List<Progquiz> progquizzes = new ArrayList<Progquiz>();

@@ -20,6 +20,11 @@ public class UserDao {
         return user;
     }
 
+    /**
+     * @param plathform платформа на которой зарегистрирован пользователь
+     * @param plathform_id id пользователя на этой плафторме
+     * @return нужный пользователь
+     */
     public User findOneByPlathformAndId(Plathform plathform, Long plathform_id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         User user = null;
