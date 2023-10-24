@@ -1,6 +1,7 @@
 package logic.stateManager;
 
 import database.models.User;
+import database.services.UserService;
 import logic.handlers.TextHandler;
 import logic.handlers.QuizHandler;
 import database.models.types.State;
@@ -9,6 +10,7 @@ import database.models.types.State;
  * Машина состояний
  */
 public class StateManager {
+    private final UserService userService = new UserService();
     private final TextHandler mainHandler;
     private QuizHandler quizHandler;
 
@@ -29,6 +31,7 @@ public class StateManager {
             case IDLE:
                 if (message.equals("/quiz")) {
                     currentUser.setState(State.QUIZ);
+                    userService.updateUser(currentUser);
                     quizHandler = new QuizHandler(1);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
@@ -38,11 +41,13 @@ public class StateManager {
             case QUIZ:
                 if (message.equals("/stop")) {
                     currentUser.setState(State.IDLE);
+                    userService.updateUser(currentUser);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
                     response = quizHandler.answerHandler(message, currentUser);
                     if (response.contains("Тест закончен!")) {
                         currentUser.setState(State.IDLE);
+                        userService.updateUser(currentUser);
                     }
                 }
                 return response;

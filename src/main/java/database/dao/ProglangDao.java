@@ -2,7 +2,6 @@ package database.dao;
 
 import database.models.Proglang;
 import database.models.Progquiz;
-import org.hibernate.QueryException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import database.utils.HibernateSessionFactoryUtil;
@@ -47,14 +46,15 @@ public class ProglangDao {
         List<Progquiz> progquizzes = new ArrayList<Progquiz>();
         try {
             progquizzes = session.createQuery(
-                            "select Progquiz " +
-                                    "from Progquiz " +
-                                    "where proglang_id = :proglang_id",
+                            "select p " +
+                                    "from Progquiz p " +
+                                    "where p.proglang.proglang_id = :proglang_id",
                             Progquiz.class)
                     .setParameter("proglang_id", proglang_id)
                     .getResultList();
         } catch (Exception e) {
             System.out.println("Zero length!: " + e);
+            e.printStackTrace();
         }
         session.close();
         return progquizzes;

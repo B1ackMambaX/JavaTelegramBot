@@ -22,15 +22,16 @@ public class UserDao {
         User user = null;
         try {
             user = session.createQuery(
-                            "select User " +
-                                    "from User " +
-                                    "where plathform = :plathform and plathform_id = :plathform_id",
+                            "select u " +
+                                    "from User u " +
+                                    "where u.plathform = :plathform and u.plathform_id = :plathform_id",
                             User.class)
                     .setParameter("plathform", plathform)
                     .setParameter("plathform_id", plathform_id)
                     .getSingleResult();
         } catch (Exception e) {
             System.out.println("Don't find this user: " + e);
+            e.printStackTrace();
         }
         session.close();
         return user;
@@ -43,12 +44,13 @@ public class UserDao {
             users = session.createQuery(
                             "select User " +
                                     "from User " +
-                                    "where plathform = :plathform",
+                                    "where User.plathform = :plathform",
                             User.class)
                     .setParameter("plathform", plathform)
                     .getResultList();
         } catch (Exception e) {
             System.out.println("Zero length users by plathform!: " + e);
+            e.printStackTrace();
         }
         session.close();
         return users;

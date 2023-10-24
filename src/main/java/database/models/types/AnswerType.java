@@ -1,6 +1,6 @@
 package database.models.types;
 
 public enum AnswerType {
-    QUIZ,
-    IDLE
+    TEXT,
+    CODE
 }

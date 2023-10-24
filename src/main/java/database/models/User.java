@@ -9,7 +9,7 @@ import javax.persistence.*;
  * Модель, отражающая сущности таблицы user
  */
 @Entity
-@Table(name = "user")
+@Table(name = "public.user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +61,7 @@ public class User {
     }
 
     public Plathform getPlathform() {
-        return plathform;
+        return this.plathform;
     }
 
     public void setPlathform(Plathform plathform) {

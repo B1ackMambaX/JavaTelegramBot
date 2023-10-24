@@ -3,6 +3,7 @@ package logic.handlers;
 import database.models.User;
 import database.models.Progquiz;
 import database.services.ProglangService;
+import database.services.UserService;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 */
 public class QuizHandler {
     private final ProglangService proglangService = new ProglangService();
+    private final UserService userService = new UserService();
     private List<Progquiz> progquizStorage;
 
     public QuizHandler(Integer proglang_id) {
@@ -49,7 +51,7 @@ public class QuizHandler {
             currentQuestion = progquizStorage.get(++solvedCounter);
             response =  checkResponse + currentQuestion.getQuestion();
         } else if (solvedCounter == progquizStorage.size() - 1) {
-            currentUser.setSettingField1("-1");
+            solvedCounter = -1;
             String checkResponse = checkCorrectness(message, currentQuestion);
             response =  checkResponse + "Тест закончен!";
         } else {
@@ -57,6 +59,7 @@ public class QuizHandler {
         }
 
         currentUser.setSettingField1(Integer.toString(solvedCounter));
+        userService.updateUser(currentUser);
         return  response;
     }
 
