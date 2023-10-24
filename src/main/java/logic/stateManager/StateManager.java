@@ -1,8 +1,9 @@
 package logic.stateManager;
 
-import data.User;
+import database.models.User;
 import logic.handlers.MainHandler;
 import logic.handlers.QuizHandler;
+import database.models.types.State;
 
 /**
  * Машина состояний
@@ -23,11 +24,11 @@ public class StateManager {
      */
     public String chooseHandler(String message, User currentUser) {
         String response;
-        State state = currentUser.getUserState();
+        State state = currentUser.getState();
         switch (state) {
             case IDLE:
                 if (message.equals("/quiz")) {
-                    currentUser.setUserState(State.QUIZ);
+                    currentUser.setState(State.QUIZ);
                     quizHandler = new QuizHandler();
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
@@ -36,12 +37,12 @@ public class StateManager {
                 return response;
             case QUIZ:
                 if (message.equals("/stop")) {
-                    currentUser.setUserState(State.IDLE);
+                    currentUser.setState(State.IDLE);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
                     response = quizHandler.answerHandler(message, currentUser);
                     if (response.contains("Тест закончен!")) {
-                        currentUser.setUserState(State.IDLE);
+                        currentUser.setState(State.IDLE);
                     }
                 }
                 return response;
@@ -56,7 +57,7 @@ public class StateManager {
      * @return Сообщения для клавиатуры
      */
     public String[] keyboardTextInitializer(User currentUser) {
-        State state = currentUser.getUserState();
+        State state = currentUser.getState();
 
         switch (state) {
             case IDLE:
