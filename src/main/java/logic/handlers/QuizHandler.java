@@ -15,6 +15,9 @@ public class QuizHandler {
     private final UserService userService = new UserService();
     private List<Progquiz> progquizStorage;
 
+    /**
+     * @param proglang_id id языка программирования по которому проходится тест
+     */
     public QuizHandler(Integer proglang_id) {
         this.progquizStorage = proglangService.findProgquizzesByProglangId(proglang_id);
     }

@@ -12,7 +12,6 @@ import database.models.types.State;
 public class StateManager {
     private final UserService userService = new UserService();
     private final TextHandler mainHandler;
-    private QuizHandler quizHandler;
 
     public StateManager() {
         mainHandler = new TextHandler();
@@ -32,14 +31,14 @@ public class StateManager {
                 if (message.equals("/quiz")) {
                     currentUser.setState(State.QUIZ);
                     userService.updateUser(currentUser);
-                    quizHandler = new QuizHandler(1);
+                    QuizHandler quizHandler = new QuizHandler(1);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
                     response = mainHandler.messageHandler(message);
                 }
                 return response;
             case QUIZ:
-                quizHandler = new QuizHandler(1);
+                QuizHandler quizHandler = new QuizHandler(1);
                 if (message.equals("/stop")) {
                     currentUser.setState(State.IDLE);
                     userService.updateUser(currentUser);

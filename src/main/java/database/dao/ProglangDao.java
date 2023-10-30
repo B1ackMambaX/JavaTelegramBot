@@ -62,8 +62,10 @@ public class ProglangDao {
         } catch (Exception e) {
             System.out.println("Zero length!: " + e);
             e.printStackTrace();
+        } finally {
+            session.close();
         }
-        session.close();
+
         return progquizzes;
     }
 

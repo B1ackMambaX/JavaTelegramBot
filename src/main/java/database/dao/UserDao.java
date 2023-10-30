@@ -40,8 +40,9 @@ public class UserDao {
         } catch (Exception e) {
             System.out.println("Don't find this user: " + e);
             e.printStackTrace();
+        } finally {
+            session.close();
         }
-        session.close();
         return user;
     }
 
@@ -59,8 +60,9 @@ public class UserDao {
         } catch (Exception e) {
             System.out.println("Zero length users by plathform!: " + e);
             e.printStackTrace();
+        } finally {
+            session.close();
         }
-        session.close();
         return users;
     }
 

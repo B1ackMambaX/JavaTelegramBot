@@ -43,16 +43,16 @@ public class LogicTest {
      */
     @Test
     public void testParser() {
-        Assert.assertEquals("/start command", startMessage, logic.chooseHandler("/start", testUser));
-        Assert.assertEquals("unknown command", unknownCommand, logic.chooseHandler("/some", testUser));
-        Assert.assertEquals("help command", startMessage, logic.chooseHandler("/help", testUser));
-        Assert.assertEquals("starting quiz", quizExpectedPhrases[0],
+        Assert.assertEquals("Ответ бота на команду /start", startMessage, logic.chooseHandler("/start", testUser));
+        Assert.assertEquals("Ответ бота на неизвестную команду", unknownCommand, logic.chooseHandler("/some", testUser));
+        Assert.assertEquals("Ответ бота на команду /help", startMessage, logic.chooseHandler("/help", testUser));
+        Assert.assertEquals("Ответ бота на команду /quiz", quizExpectedPhrases[0],
                 logic.chooseHandler(quizMessageForParser[0], testUser));
-        Assert.assertEquals("stop command", stopCommand, logic.chooseHandler("/stop", testUser));
-        Assert.assertEquals("starting quiz", quizExpectedPhrases[0],
+        Assert.assertEquals("Ответ бота на команду /stop", stopCommand, logic.chooseHandler("/stop", testUser));
+        Assert.assertEquals("Ответ бота на команду /quiz", quizExpectedPhrases[0],
                 logic.chooseHandler(quizMessageForParser[0], testUser));
         for (int i = 1; i < quizExpectedPhrases.length; i++) {
-            Assert.assertEquals("answer:" + i, quizExpectedPhrases[i],
+            Assert.assertEquals("Ответ бота на вопрос " + i + " ", quizExpectedPhrases[i],
                     logic.chooseHandler(quizMessageForParser[i], testUser));
         }
     }
