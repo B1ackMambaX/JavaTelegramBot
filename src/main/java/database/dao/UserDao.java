@@ -69,33 +69,58 @@ public class UserDao {
     public void save(User user) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
-        session.save(user);
-        tx1.commit();
-        session.close();
+        try {
+            session.save(user);
+            tx1.commit();
+        } catch (final Exception e) {
+            tx1.rollback();
+            throw new RuntimeException(e);
+        } finally {
+            session.close();
+        }
     }
 
     public void update(User user) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
-        session.update(user);
-        tx1.commit();
-        session.close();
+        try {
+            session.update(user);
+            tx1.commit();
+        } catch (final Exception e) {
+            tx1.rollback();
+            throw new RuntimeException(e);
+        } finally {
+            session.close();
+        }
     }
 
     public void delete(User user) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
-        session.delete(user);
-        tx1.commit();
-        session.close();
+        try {
+            session.remove(user);
+            tx1.commit();
+        } catch (final Exception e) {
+            tx1.rollback();
+            throw new RuntimeException(e);
+        } finally {
+            session.close();
+        }
     }
 
     public List<User> findAll() {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        List<User> users = session.createQuery(
-                        "from User")
-                .getResultList();
-        session.close();
+        List<User> users = new ArrayList<User>();
+        try {
+            users = session.createQuery(
+                            "from User")
+                    .getResultList();
+        } catch (final Exception e) {
+            System.out.println("Error: " + e);
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
         return users;
     }
 }
