@@ -15,23 +15,23 @@ public class ProglangService {
     public ProglangService() {
     }
 
-    public Proglang findProglang(Integer proglang_id){
+    public Proglang find(Integer proglang_id){
         return proglangDao.findByProglangId(proglang_id);
     }
 
-    public void saveProglang(Proglang proglang) {
+    public void save(Proglang proglang) {
         proglangDao.save(proglang);
     }
 
-    public void deleteProglang(Proglang proglang) {
+    public void delete(Proglang proglang) {
         proglangDao.delete(proglang);
     }
 
-    public void updateProglang(Proglang proglang) {
+    public void update(Proglang proglang) {
         proglangDao.update(proglang);
     }
 
-    public List<Proglang> findAllProglangs() {
+    public List<Proglang> findAll() {
         return proglangDao.findAll();
     }
 

@@ -123,7 +123,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
         if(currentUser == null) {
             // TODO: Допилить метод регистрации пользователя
             currentUser = new User(this.plathform, chatId);
-            userService.saveUser(currentUser);
+            userService.save(currentUser);
         }
         return currentUser;
     }

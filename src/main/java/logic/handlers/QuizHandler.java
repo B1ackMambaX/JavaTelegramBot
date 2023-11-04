@@ -62,7 +62,7 @@ public class QuizHandler {
         }
 
         currentUser.setSettingField1(Integer.toString(solvedCounter));
-        userService.updateUser(currentUser);
+        userService.update(currentUser);
         return  response;
     }
 
