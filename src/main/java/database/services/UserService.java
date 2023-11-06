@@ -15,27 +15,27 @@ public class UserService {
     public UserService() {
     }
 
-    public User findUser(Integer user_id){
+    public User find(Integer user_id){
         return userDao.findByUserId(user_id);
     }
 
-    public void saveUser(User user) {
+    public void save(User user) {
         userDao.save(user);
     }
 
-    public void deleteUser(User user) {
+    public void delete(User user) {
         userDao.delete(user);
     }
 
-    public void updateUser(User user) {
+    public void update(User user) {
         userDao.update(user);
     }
 
-    public List<User> findAllUsers() {
+    public List<User> findAll() {
         return userDao.findAll();
     }
 
-    public List<User> findAllUsersByPlathform(Plathform plathform) {
+    public List<User> findAllByPlathform(Plathform plathform) {
         return userDao.findByPlathform(plathform);
     }
 

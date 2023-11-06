@@ -14,23 +14,23 @@ public class ProgquizService {
     public ProgquizService() {
     }
 
-    public Progquiz findProgquizById(Integer progquiz_id){
+    public Progquiz findById(Integer progquiz_id){
         return progquizDao.findByProgquizId(progquiz_id);
     }
 
-    public void saveProgquiz(Progquiz progquiz) {
+    public void save(Progquiz progquiz) {
         progquizDao.save(progquiz);
     }
 
-    public void deleteProgquiz(Progquiz progquiz) {
+    public void delete(Progquiz progquiz) {
         progquizDao.delete(progquiz);
     }
 
-    public void updateProgquiz(Progquiz progquiz) {
+    public void update(Progquiz progquiz) {
         progquizDao.update(progquiz);
     }
 
-    public List<Progquiz> findAllProgquizzes() {
+    public List<Progquiz> findAll() {
         return progquizDao.findAll();
     }
 }

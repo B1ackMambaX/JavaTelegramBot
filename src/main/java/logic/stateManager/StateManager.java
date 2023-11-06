@@ -30,7 +30,7 @@ public class StateManager {
             case IDLE:
                 if (message.equals("/quiz")) {
                     currentUser.setState(State.QUIZ);
-                    userService.updateUser(currentUser);
+                    userService.update(currentUser);
                     QuizHandler quizHandler = new QuizHandler(1);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
@@ -41,13 +41,13 @@ public class StateManager {
                 QuizHandler quizHandler = new QuizHandler(1);
                 if (message.equals("/stop")) {
                     currentUser.setState(State.IDLE);
-                    userService.updateUser(currentUser);
+                    userService.update(currentUser);
                     response = quizHandler.answerHandler(message, currentUser);
                 } else {
                     response = quizHandler.answerHandler(message, currentUser);
                     if (response.contains("Тест закончен!")) {
                         currentUser.setState(State.IDLE);
-                        userService.updateUser(currentUser);
+                        userService.update(currentUser);
                     }
                 }
                 return response;
