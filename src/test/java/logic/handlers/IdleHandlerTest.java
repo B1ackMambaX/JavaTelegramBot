@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Тестирование обработчика состояния IDLE
+ */
 class IdleHandlerTest {
     private IdleHandler idleHandler;
     @BeforeEach
@@ -11,6 +14,9 @@ class IdleHandlerTest {
         idleHandler = new IdleHandler();
     }
 
+    /**
+     * Команда /start
+     */
     @Test
     void start() {
         String response = idleHandler.getResponse("/start");
@@ -22,6 +28,9 @@ class IdleHandlerTest {
                     Чтобы остановить тест введи /stop""", response);
     }
 
+    /**
+     * Команда /help
+     */
     @Test
     void help() {
         String response = idleHandler.getResponse("/help");
@@ -33,6 +42,9 @@ class IdleHandlerTest {
                     Чтобы остановить тест введи /stop""", response);
     }
 
+    /**
+     * Неизвестная команда
+     */
     @Test
     void unknownCommand() {
         String response = idleHandler.getResponse("/fhdhfjdshfd");
