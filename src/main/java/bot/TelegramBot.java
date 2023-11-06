@@ -13,17 +13,17 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import main.Config;
 import logic.stateManager.StateManager;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import database.models.User;
 
 /**
  * Класс реализации телеграмм бота
  */
 public class TelegramBot extends TelegramLongPollingBot implements IBot {
-    final private String BOT_TOKEN = Config.getTelegramBotToken();
-    final private String BOT_USERNAME = Config.getTelegramBotUsername();
+
+    final private Config config = new Config();
+    final private String BOT_TOKEN = config.getTelegramBotToken();
+    final private String BOT_USERNAME = config.getTelegramBotUsername();
     final private StateManager stateManager = new StateManager();
 
     final private Plathform plathform = Plathform.TG;
@@ -52,7 +52,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             if (update.hasMessage() && update.getMessage().hasText()) {
                 Message inMess = update.getMessage();
                 long chatId = inMess.getChatId();
-                User currentUser = login(chatId);
+                User currentUser = userService.login(this.plathform, chatId);
 
 
                 String response = parseMessage(inMess.getText(), currentUser);
@@ -73,7 +73,6 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
      * @param message сообщение от пользователя
      * @return ответ на сообщение
      */
-
     public String parseMessage(String message, User currentUser) {
         String response;
         try {
@@ -111,20 +110,5 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             e.printStackTrace();
             return null;
         }
-    }
-
-    /**
-     * Добавление нового пользователя либо получение уже существующего
-     * @param chatId id чата
-     * @return пользователь
-     */
-    public User login(long chatId) {
-        User currentUser = userService.findUserByPlathformAndId(this.plathform, chatId);
-        if(currentUser == null) {
-            // TODO: Допилить метод регистрации пользователя
-            currentUser = new User(this.plathform, chatId);
-            userService.saveUser(currentUser);
-        }
-        return currentUser;
     }
 }

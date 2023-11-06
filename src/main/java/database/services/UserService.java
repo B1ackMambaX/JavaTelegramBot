@@ -42,4 +42,18 @@ public class UserService {
     public User findUserByPlathformAndId(Plathform plathform, Long plathform_id) {
         return userDao.findOneByPlathformAndId(plathform, plathform_id);
     }
+    /**
+     * Добавление нового пользователя либо получение уже существующего
+     * @param plathformId id пользователя на платформе
+     * @param plathform платформа с которой пользователь использует бота
+     * @return пользователь
+     */
+    public User login(Plathform plathform, long plathformId) {
+        User currentUser = userDao.findOneByPlathformAndId(plathform, plathformId);
+        if (currentUser == null) {
+            currentUser = new User(plathform, plathformId);
+            userDao.save(currentUser);
+        }
+        return currentUser;
+    }
 }

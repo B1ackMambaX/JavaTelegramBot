@@ -15,16 +15,17 @@ import database.models.User;
  */
 public class HibernateSessionFactoryUtil {
     private static SessionFactory sessionFactory;
+    private static Config config = new Config();
 
-    private HibernateSessionFactoryUtil() {}
+    public HibernateSessionFactoryUtil() {}
 
-    public static SessionFactory getSessionFactory() {
+    public SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             try {
                 Configuration configuration = new Configuration().configure();
-                configuration.setProperty("hibernate.connection.url", "jdbc:postgresql://" + Config.getDatabaseHost() + ":" + Config.getDatabasePort() + "/" + Config.getDatabaseName());
-                configuration.setProperty("hibernate.connection.username", Config.getDatabaseUser());
-                configuration.setProperty("hibernate.connection.password", Config.getDatabasePass());
+                configuration.setProperty("hibernate.connection.url", "jdbc:postgresql://" + config.getDatabaseHost() + ":" + config.getDatabasePort() + "/" + config.getDatabaseName());
+                configuration.setProperty("hibernate.connection.username", config.getDatabaseUser());
+                configuration.setProperty("hibernate.connection.password", config.getDatabasePass());
                 configuration.addAnnotatedClass(Proglang.class);
                 configuration.addAnnotatedClass(Progquiz.class);
                 configuration.addAnnotatedClass(User.class);

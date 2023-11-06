@@ -13,8 +13,9 @@ import java.util.List;
  * Data access object для таблицы пользователей
  */
 public class UserDao {
+    private final HibernateSessionFactoryUtil sessionFactoryUtil = new HibernateSessionFactoryUtil();
     public User findByUserId(Integer user_id) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         User user = session.get(User.class, user_id);
         session.close();
         return user;
@@ -26,7 +27,7 @@ public class UserDao {
      * @return нужный пользователь
      */
     public User findOneByPlathformAndId(Plathform plathform, Long plathform_id) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         User user = null;
         try {
             user = session.createQuery(
@@ -47,7 +48,7 @@ public class UserDao {
     }
 
     public List<User> findByPlathform(Plathform plathform) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         List<User> users = new ArrayList<User>();
         try {
             users = session.createQuery(
@@ -67,7 +68,7 @@ public class UserDao {
     }
 
     public void save(User user) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         session.save(user);
         tx1.commit();
@@ -75,7 +76,7 @@ public class UserDao {
     }
 
     public void update(User user) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         session.update(user);
         tx1.commit();
@@ -83,7 +84,7 @@ public class UserDao {
     }
 
     public void delete(User user) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         session.delete(user);
         tx1.commit();
@@ -91,7 +92,7 @@ public class UserDao {
     }
 
     public List<User> findAll() {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         List<User> users = session.createQuery(
                         "from User")
                 .getResultList();
