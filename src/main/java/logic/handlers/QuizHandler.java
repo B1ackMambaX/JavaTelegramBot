@@ -23,16 +23,15 @@ public class QuizHandler {
     }
 
     /**
-     * Обработчик квиза (сообщений в состоянии QUIZ)
-     * Для хранения id последнего вопроса в квизе используется setting_field_1 в User
+     * Получение ответа на сообщение в состоянии QUIZ
      * @param message сообщение пользователя
      * @param currentUser пользователь который отправил сообщение
      * @return правильность ответа и следующий вопрос ИЛИ конец квиза
      */
-    public String answerHandler(String message, User currentUser) {
+    public String getResponse(String message, User currentUser) {
         message = message.toLowerCase();
 
-        Integer solvedCounter = Integer.parseInt(currentUser.getSettingField1());
+        Integer solvedCounter = Integer.parseInt(currentUser.getQurrentQuestion());
         Progquiz currentQuestion = null;
         String response;
 
@@ -61,7 +60,7 @@ public class QuizHandler {
             throw new RuntimeException("Error in quiz logic");
         }
 
-        currentUser.setSettingField1(Integer.toString(solvedCounter));
+        currentUser.setQurrentQuestion(Integer.toString(solvedCounter));
         userService.update(currentUser);
         return  response;
     }

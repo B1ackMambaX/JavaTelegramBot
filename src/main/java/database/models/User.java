@@ -36,7 +36,7 @@ public class User {
     private State state;
 
     @Column (name = "setting_field_1")
-    private String setting_field_1;
+    private String currentQuestion;
 
     @Column (name = "setting_field_2")
     private String setting_field_2;
@@ -57,7 +57,7 @@ public class User {
         this.plathform = plathform;
         this.plathform_id = plathform_id;
         this.state = State.IDLE;
-        this.setting_field_1 = "-1";
+        this.currentQuestion = "-1";
     }
 
     public Plathform getPlathform() {
@@ -108,12 +108,12 @@ public class User {
         this.state = state;
     }
 
-    public String getSettingField1() {
-        return setting_field_1;
+    public String getQurrentQuestion() {
+        return currentQuestion;
     }
 
-    public void setSettingField1(String setting_field_1) {
-        this.setting_field_1 = setting_field_1;
+    public void setQurrentQuestion(String qurrentQuestion) {
+        this.currentQuestion = qurrentQuestion;
     }
 
     public String getSettingField2() {

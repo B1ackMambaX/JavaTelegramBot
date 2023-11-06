@@ -1,29 +1,30 @@
-package logic.stateManager;
+package logic.handlersManager;
 
 import database.models.User;
 import database.services.UserService;
-import logic.handlers.TextHandler;
+import logic.handlers.IdleHandler;
 import logic.handlers.QuizHandler;
 import database.models.types.State;
 
 /**
- * Машина состояний
+ * Класс, который реализует выбор обработчика сообщения в зависимости от состояния пользователя
  */
-public class StateManager {
+public class handlersManager {
     private final UserService userService = new UserService();
-    private final TextHandler mainHandler;
+    private final IdleHandler mainHandler;
 
-    public StateManager() {
-        mainHandler = new TextHandler();
+    public handlersManager() {
+        mainHandler = new IdleHandler();
     }
 
     /**
-     * Метод, который выбирает обработчик сообщения в зависимости от состояния пользователя
+     * Метод, который выбирает обработчик сообщения в зависимости
+     * от состояния пользователя, передает обработчику сообщение и возвращает ответ
      * @param message сообщение
      * @param currentUser пользователь
      * @return Ответ на сообщение
      */
-    public String chooseHandler(String message, User currentUser) {
+    public String getResponseFromHandler(String message, User currentUser) {
         String response;
         State state = currentUser.getState();
         switch (state) {
@@ -32,9 +33,9 @@ public class StateManager {
                     currentUser.setState(State.QUIZ);
                     userService.update(currentUser);
                     QuizHandler quizHandler = new QuizHandler(1);
-                    response = quizHandler.answerHandler(message, currentUser);
+                    response = quizHandler.getResponse(message, currentUser);
                 } else {
-                    response = mainHandler.messageHandler(message);
+                    response = mainHandler.getResponse(message);
                 }
                 return response;
             case QUIZ:
@@ -42,9 +43,9 @@ public class StateManager {
                 if (message.equals("/stop")) {
                     currentUser.setState(State.IDLE);
                     userService.update(currentUser);
-                    response = quizHandler.answerHandler(message, currentUser);
+                    response = quizHandler.getResponse(message, currentUser);
                 } else {
-                    response = quizHandler.answerHandler(message, currentUser);
+                    response = quizHandler.getResponse(message, currentUser);
                     if (response.contains("Тест закончен!")) {
                         currentUser.setState(State.IDLE);
                         userService.update(currentUser);

@@ -1,7 +1,7 @@
 package logic;
 import database.models.User;
 import database.models.types.Plathform;
-import logic.stateManager.StateManager;
+import logic.handlersManager.handlersManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import org.junit.Test;
  * Проверка ответа бота в зависимости от ответа пользователя
  */
 public class LogicTest {
-    private StateManager logic;
+    private handlersManager logic;
     private User testUser;
     private final String[] quizExpectedPhrases = {
             "Тест по ЯП JavaScript, состоит из 10 вопросов\n\nКакой метод используется для фильтрации массива?",
@@ -34,7 +34,7 @@ public class LogicTest {
 
     @Before
     public void setUp() {
-        logic = new StateManager();
+        logic = new handlersManager();
         testUser = new User(Plathform.TG, (long) -1);
     }
 
@@ -43,17 +43,17 @@ public class LogicTest {
      */
     @Test
     public void testParser() {
-        Assert.assertEquals("Ответ бота на команду /start", startMessage, logic.chooseHandler("/start", testUser));
-        Assert.assertEquals("Ответ бота на неизвестную команду", unknownCommand, logic.chooseHandler("/some", testUser));
-        Assert.assertEquals("Ответ бота на команду /help", startMessage, logic.chooseHandler("/help", testUser));
+        Assert.assertEquals("Ответ бота на команду /start", startMessage, logic.getResponseFromHandler("/start", testUser));
+        Assert.assertEquals("Ответ бота на неизвестную команду", unknownCommand, logic.getResponseFromHandler("/some", testUser));
+        Assert.assertEquals("Ответ бота на команду /help", startMessage, logic.getResponseFromHandler("/help", testUser));
         Assert.assertEquals("Ответ бота на команду /quiz", quizExpectedPhrases[0],
-                logic.chooseHandler(quizMessageForParser[0], testUser));
-        Assert.assertEquals("Ответ бота на команду /stop", stopCommand, logic.chooseHandler("/stop", testUser));
+                logic.getResponseFromHandler(quizMessageForParser[0], testUser));
+        Assert.assertEquals("Ответ бота на команду /stop", stopCommand, logic.getResponseFromHandler("/stop", testUser));
         Assert.assertEquals("Ответ бота на команду /quiz", quizExpectedPhrases[0],
-                logic.chooseHandler(quizMessageForParser[0], testUser));
+                logic.getResponseFromHandler(quizMessageForParser[0], testUser));
         for (int i = 1; i < quizExpectedPhrases.length; i++) {
             Assert.assertEquals("Ответ бота на вопрос " + i + " ", quizExpectedPhrases[i],
-                    logic.chooseHandler(quizMessageForParser[i], testUser));
+                    logic.getResponseFromHandler(quizMessageForParser[i], testUser));
         }
     }
 }

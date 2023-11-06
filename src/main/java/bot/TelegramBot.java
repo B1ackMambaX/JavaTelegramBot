@@ -11,11 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import main.Config;
-import logic.stateManager.StateManager;
+import logic.handlersManager.handlersManager;
 import java.util.ArrayList;
 import java.util.List;
 import database.models.User;
-import database.services.UserService;
 
 /**
  * Класс реализации телеграмм бота
@@ -24,7 +23,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
     final private  Config config = new Config();
     final private String BOT_TOKEN = config.getTelegramBotToken();
     final private String BOT_USERNAME = config.getTelegramBotUsername();
-    final private StateManager stateManager = new StateManager();
+    final private handlersManager handlersManager = new handlersManager();
 
     final private Plathform plathform = Plathform.TG;
 
@@ -55,7 +54,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
                 User currentUser = userService.login(plathform, chatId);
 
 
-                String response = parseMessage(inMess.getText(), currentUser);
+                String response = getResponse(inMess.getText(), currentUser);
                 SendMessage outMess = new SendMessage();
                 outMess.setChatId(chatId);
                 outMess.setText(response);
@@ -68,16 +67,15 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
     }
 
     /**
-     * Обработчик входящих сообщений
-     *
-     * @param message сообщение от пользователя
+     * Метод, который получает ответ на сообщение от пользователя
+     * @param message сообщение
+     * @param currentUser пользователь, от которого пришло сообщение
      * @return ответ на сообщение
      */
-
-    public String parseMessage(String message, User currentUser) {
+    public String getResponse(String message, User currentUser) {
         String response;
         try {
-            response = stateManager.chooseHandler(message, currentUser);
+            response = handlersManager.getResponseFromHandler(message, currentUser);
         } catch (RuntimeException e) {
             response = "Произошла ошибка, попробуйте позже...";
             System.out.println(e.getMessage());
@@ -92,7 +90,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
      */
     public ReplyKeyboardMarkup initKeyboard(User currentUser) {
         try {
-            String[] keyboardText = stateManager.keyboardTextInitializer(currentUser);
+            String[] keyboardText = handlersManager.keyboardTextInitializer(currentUser);
 
             ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
             keyboard.setResizeKeyboard(true);

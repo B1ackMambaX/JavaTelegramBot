@@ -3,13 +3,13 @@ package logic.handlers;
 /**
  * Обработчик основных сообщений
  */
-public class TextHandler {
+public class IdleHandler {
     /**
      * Обработчик сообщений пользователя в состоянии IDLE
      * @param message сообщение пользователя
      * @return ответ в зависимости от сообщения
      */
-    public String messageHandler(String message) {
+    public String getResponse(String message) {
         message = message.toLowerCase();
 
          if (message.equals("/start") || message.equals("/help")) {
