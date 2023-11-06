@@ -60,6 +60,19 @@ public class User {
         this.currentQuestion = "-1";
     }
 
+    /**
+     * Конструктор для тестов
+     * @param plathform платформа
+     * @param plathform_id id пользователя на платформе
+     * @param currentQuestion текущий вопрос
+     */
+    public User(Plathform plathform, Long plathform_id, String currentQuestion) {
+        this.plathform = plathform;
+        this.plathform_id = plathform_id;
+        this.state = State.IDLE;
+        this.currentQuestion = currentQuestion;
+    }
+
     public Plathform getPlathform() {
         return this.plathform;
     }

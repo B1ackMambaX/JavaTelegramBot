@@ -15,19 +15,26 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <junit.version>4.13.2</junit.version>
+    <junit.version>5.10.0</junit.version>
     <dotenv.version>3.0.0</dotenv.version>
     <telegrambots.version>6.8.0</telegrambots.version>
     <postgresql.version>42.6.0</postgresql.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
     <hibernate-types.version>3.5.1</hibernate-types.version>
+    <mockito.version>5.7.0</mockito.version>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+    <dependency> <!--  Tests  -->
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
       <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency> <!--  Work with .env file  -->

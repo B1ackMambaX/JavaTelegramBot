@@ -27,6 +27,20 @@ public class Progquiz {
     @Column (name = "answer_value")
     private String answer_value;
 
+    public Progquiz() {}
+
+    /**
+     * Конструктор для тестов
+     * @param question Вопрос
+     * @param answer_value Ответ
+     */
+    public Progquiz(String question, String answer_value) {
+        proglang = new Proglang();
+        this.question = question;
+        answer_type = AnswerType.TEXT;
+        this.answer_value = answer_value;
+    }
+
     public Proglang getProglang() {
         return proglang;
     }

@@ -5,21 +5,40 @@ import database.models.Progquiz;
 import database.services.ProglangService;
 import database.services.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
 * Обработчик квиза
 */
 public class QuizHandler {
-    private final ProglangService proglangService = new ProglangService();
-    private final UserService userService = new UserService();
+    private final ProglangService proglangService;
+    private final UserService userService;
     private List<Progquiz> progquizStorage;
 
     /**
      * @param proglang_id id языка программирования по которому проходится тест
      */
     public QuizHandler(Integer proglang_id) {
+        proglangService = new ProglangService();
+        userService = new UserService();
+
         this.progquizStorage = proglangService.findProgquizzesByProglangId(proglang_id);
+    }
+
+    /**
+     * Конструктор который используется только в тестах
+     * @param proglangService мок сервиса proglang
+     * @param userService мок сервиса user
+     * @param proglang_id айди языка программирования
+     */
+    protected QuizHandler(ProglangService proglangService, UserService userService, Integer proglang_id) {
+        this.proglangService = proglangService;
+        this.userService = userService;
+        this.progquizStorage = new ArrayList<>();
+        progquizStorage.add(new Progquiz("Какой метод используется для фильтрации массива?", "filter"));
+        progquizStorage.add(new Progquiz("Какое ключевое слово используется для обозначения наследования классов?",
+                "extends"));
     }
 
     /**
