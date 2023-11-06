@@ -13,8 +13,9 @@ import java.util.List;
  * Data access object для таблицы с вопросами
  */
 public class ProgquizDao {
+    private final HibernateSessionFactoryUtil sessionFactoryUtil = new HibernateSessionFactoryUtil();
     public Progquiz findByProgquizId(Integer progquiz_id) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Progquiz progquiz = null;
         try {
             progquiz = session.get(Progquiz.class, progquiz_id);
@@ -28,7 +29,7 @@ public class ProgquizDao {
     }
 
     public void save(Progquiz progquiz) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         try {
             session.save(progquiz);
@@ -42,7 +43,7 @@ public class ProgquizDao {
     }
 
     public void update(Progquiz progquiz) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         try {
             session.update(progquiz);
@@ -56,7 +57,7 @@ public class ProgquizDao {
     }
 
     public void delete(Progquiz progquiz) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         try {
             session.remove(progquiz);
@@ -70,7 +71,7 @@ public class ProgquizDao {
     }
 
     public List<Progquiz> findAll() {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         List<Progquiz> progquizs = new ArrayList<Progquiz>();
         try {
             progquizs = session.createQuery(

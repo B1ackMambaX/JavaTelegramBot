@@ -13,8 +13,9 @@ import java.util.List;
  * Data access object для таблицы с языками программирования
  */
 public class ProglangDao {
+    private final HibernateSessionFactoryUtil sessionFactoryUtil = new HibernateSessionFactoryUtil();
     public Proglang findByProglangId(Integer proglang_id) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Proglang proglang = null;
         try {
             proglang = session.get(Proglang.class, proglang_id);
@@ -27,7 +28,7 @@ public class ProglangDao {
         return proglang;
     }
     public void save(Proglang proglang) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         try {
             session.save(proglang);
@@ -41,7 +42,7 @@ public class ProglangDao {
     }
 
     public void update(Proglang proglang) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         try {
             session.update(proglang);
@@ -55,7 +56,7 @@ public class ProglangDao {
     }
 
     public void delete(Proglang proglang) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
         try {
             session.remove(proglang);
@@ -74,7 +75,7 @@ public class ProglangDao {
      * @return лист вопросов
      */
     public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         List<Progquiz> progquizzes = new ArrayList<Progquiz>();
         try {
             progquizzes = session.createQuery(
@@ -95,7 +96,7 @@ public class ProglangDao {
     }
 
     public List<Proglang> findAll() {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         List<Proglang> proglangs = new ArrayList<Proglang>();
         try {
             proglangs = session.createQuery(
