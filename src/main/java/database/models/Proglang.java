@@ -23,7 +23,9 @@ public class Proglang {
     }
 
     /**
-     * @param proglang_name
+     * Конструктор для тестов
+     * @param proglang_name имя ЯП
+     * @param proglang_id id ЯП
      */
     public Proglang(String proglang_name, int proglang_id) {
         this.proglang_name = proglang_name;

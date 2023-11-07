@@ -82,6 +82,9 @@ public class QuizHandlerTest {
                 questionWrong.message(), "Проверка на неправильный ответ + конец + статистика");
     }
 
+    /**
+     * Тестирование разметки клавиатуры в различных ситуациях
+     */
     @Test
     void keyboardMarkup() {
         List<String> keyboardStop = new ArrayList<>();
