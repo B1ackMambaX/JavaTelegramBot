@@ -66,6 +66,9 @@ public class User {
      * @param plathform платформа
      * @param plathform_id id пользователя на платформе
      * @param currentQuestion текущий вопрос
+     * @param currentQuizStats текущая стата в квизе
+     * @param state состояние пользователя
+     * @param currentProglang ЯП по которому проходится тест
      */
     public User(Plathform plathform, Long plathform_id, State state, String currentQuestion,
                 String currentQuizStats, String currentProglang) {
