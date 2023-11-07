@@ -38,4 +38,22 @@ public class ProglangService {
     public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
         return proglangDao.findProgquizzesByProglangId(proglang_id);
     }
+
+    public int getSizeOfProglang(Integer proglang_id) {
+        return proglangDao.findProgquizzesByProglangId(proglang_id).size();
+    }
+
+    public Progquiz getQuestionByLang(Integer progalng_id, int index) {
+        return proglangDao.findProgquizzesByProglangId(progalng_id).get(index);
+    }
+
+    public int checkExistenceOfProglang(String proglang_name) {
+        final List<Proglang> proglangs = proglangDao.findAll();
+        for(Proglang lang : proglangs) {
+            if (lang.getName().toLowerCase().equals(proglang_name)) {
+                return lang.getId();
+            }
+        }
+        return -1;
+    }
 }

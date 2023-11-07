@@ -42,7 +42,7 @@ public class User {
     private String currentQuizStats;
 
     @Column (name = "setting_field_3")
-    private String setting_field_3;
+    private String currentProglang;
 
     @Column (name = "setting_field_4")
     private String setting_field_4;
@@ -139,12 +139,12 @@ public class User {
         this.currentQuizStats = currentQuizStats;
     }
 
-    public String getSettingField3() {
-        return setting_field_3;
+    public String getCurrentProglang() {
+        return currentProglang;
     }
 
-    public void setSettingField3(String setting_field_3) {
-        this.setting_field_3 = setting_field_3;
+    public void setCurrentProglang(String currentProglang) {
+        this.currentProglang = currentProglang;
     }
 
     public String getSettingField4() {
