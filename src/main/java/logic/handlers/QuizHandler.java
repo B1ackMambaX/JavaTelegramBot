@@ -35,10 +35,7 @@ public class QuizHandler {
     protected QuizHandler(ProglangService proglangService, UserService userService, Integer proglang_id) {
         this.proglangService = proglangService;
         this.userService = userService;
-        this.progquizStorage = new ArrayList<>();
-        progquizStorage.add(new Progquiz("Какой метод используется для фильтрации массива?", "filter"));
-        progquizStorage.add(new Progquiz("Какое ключевое слово используется для обозначения наследования классов?",
-                "extends"));
+        this.progquizStorage = proglangService.findProgquizzesByProglangId(proglang_id);
     }
 
     /**
