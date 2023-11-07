@@ -3,6 +3,7 @@ package bot;
 import database.models.types.Plathform;
 import database.services.UserService;
 import logic.Response;
+import main.App;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -15,6 +16,8 @@ import main.Config;
 import logic.handlersManager.handlersManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
 import database.models.User;
 
 /**
@@ -48,10 +51,12 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
+        Logger logger = Logger.getLogger(TelegramBot.class.getName());
         try {
             if (update.hasMessage() && update.getMessage().hasText()) {
                 Message inMess = update.getMessage();
                 long chatId = inMess.getChatId();
+                logger.info("Get new message from: " + chatId + " message: " + inMess);
                 User currentUser = userService.login(plathform, chatId);
 
                 Response response = getResponse(inMess.getText(), currentUser);
@@ -72,9 +77,11 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
                 outMess.setReplyMarkup(keyboard);
                 outMess.setChatId(chatId);
                 outMess.setText(response.message());
+                logger.info("Response to: " + chatId + ", message: " + outMess.getText());
                 execute(outMess);
             }
         } catch (TelegramApiException e) {
+            logger.severe(e.toString());
             e.printStackTrace();
         }
     }
@@ -87,6 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
      * @return ответ на сообщение
      */
     public Response getResponse(String message, User currentUser) {
+        Logger logger = Logger.getLogger(TelegramBot.class.getName());
         Response response;
         try {
             response = handlersManager.getResponseFromHandler(message, currentUser);
@@ -96,6 +104,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             keyboardMessages.add("/quiz");
             response = new Response("Произошла ошибка попробуйте позже", keyboardMessages);
             System.out.println(e.getMessage());
+            logger.severe(e.toString());
             e.printStackTrace();
         }
         return response;
