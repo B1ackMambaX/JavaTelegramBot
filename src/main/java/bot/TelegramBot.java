@@ -1,20 +1,35 @@
 package bot;
 
+import database.models.types.Plathform;
+import database.services.UserService;
+import logic.Response;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import main.Config;
-import logic.Logic;
+import logic.handlersManager.handlersManager;
+import java.util.ArrayList;
+import java.util.List;
+import database.models.User;
 
 /**
  * Класс реализации телеграмм бота
  */
-public class TelegramBot extends TelegramLongPollingBot {
-    final private String BOT_TOKEN = Config.getTelegramBotToken();
-    final private String BOT_USERNAME = Config.getTelegramBotUsername();
-    final private Logic botLogic = new Logic();
+public class TelegramBot extends TelegramLongPollingBot implements IBot {
+    final private Config config = new Config();
+    final private String BOT_TOKEN = config.getTelegramBotToken();
+    final private String BOT_USERNAME = config.getTelegramBotUsername();
+    final private handlersManager handlersManager = new handlersManager();
+
+    final private Plathform plathform = Plathform.TG;
+
+    final private UserService userService = new UserService();
+
 
     @Override
     public String getBotUsername() {
@@ -28,19 +43,35 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * Обработчик обновлений в боте
+     *
      * @param update - объект обработки обновлений
      */
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            if (update.hasMessage() && update.getMessage().hasText()){
+            if (update.hasMessage() && update.getMessage().hasText()) {
                 Message inMess = update.getMessage();
-                String chatId = inMess.getChatId().toString();
-                String response = parseMessage(inMess.getText());
+                long chatId = inMess.getChatId();
+                User currentUser = userService.login(plathform, chatId);
 
+                Response response = getResponse(inMess.getText(), currentUser);
                 SendMessage outMess = new SendMessage();
+
+                ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+                keyboard.setResizeKeyboard(true);
+                keyboard.setOneTimeKeyboard(true);
+                List<KeyboardRow> rows = new ArrayList<>();
+                KeyboardRow row = new KeyboardRow();
+                rows.add(row);
+
+                for (String text : response.keyboardMessages()) {
+                    row.add(new KeyboardButton(text));
+                }
+                keyboard.setKeyboard(rows);
+
+                outMess.setReplyMarkup(keyboard);
                 outMess.setChatId(chatId);
-                outMess.setText(response);
+                outMess.setText(response.message());
                 execute(outMess);
             }
         } catch (TelegramApiException e) {
@@ -49,17 +80,23 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     /**
-     * Обработчик входящих сообщений
-     * @param message сообщение от пользователя
+     * Метод, который получает ответ на сообщение от пользователя
+     *
+     * @param message     сообщение
+     * @param currentUser пользователь, от которого пришло сообщение
      * @return ответ на сообщение
      */
-    private String parseMessage(String message) {
-        String response;
+    public Response getResponse(String message, User currentUser) {
+        Response response;
         try {
-            response = botLogic.messageHandler(message);
+            response = handlersManager.getResponseFromHandler(message, currentUser);
         } catch (RuntimeException e) {
-            response = "Произошла ошибка, попробуйте позже...";
+            List<String> keyboardMessages = new ArrayList<>();
+            keyboardMessages.add("/help");
+            keyboardMessages.add("/quiz");
+            response = new Response("Произошла ошибка попробуйте позже", keyboardMessages);
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }

@@ -1,0 +1,29 @@
+version: '3'
+services:
+  database:
+    image: postgres:15
+    container_name: javabot_database
+    volumes:
+      - javabot_database_data:/var/lib/postgresql/data
+    env_file: &env
+      - .env
+    networks: &network
+      - javabot_net
+    restart: &restart unless-stopped
+
+  app:
+    container_name: javabot_app
+    build:
+      dockerfile: ./Dockerfile
+    env_file: *env
+    networks: *network
+    depends_on:
+      - database
+    restart: *restart
+
+networks:
+  javabot_net:
+    external: true
+volumes:
+  javabot_database_data:
+    external: true
