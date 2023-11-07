@@ -2,6 +2,7 @@ package logic.handlersManager;
 
 import database.models.User;
 import database.services.UserService;
+import logic.Response;
 import logic.handlers.IdleHandler;
 import logic.handlers.QuizHandler;
 import database.models.types.State;
@@ -39,8 +40,8 @@ public class HandlersManager {
      * @param currentUser пользователь
      * @return Ответ на сообщение
      */
-    public String getResponseFromHandler(String message, User currentUser) {
-        String response;
+    public Response getResponseFromHandler(String message, User currentUser) {
+        Response response;
         State state = currentUser.getState();
         switch (state) {
             case IDLE:
@@ -59,7 +60,7 @@ public class HandlersManager {
                     response = quizHandler.getResponse(message, currentUser);
                 } else {
                     response = quizHandler.getResponse(message, currentUser);
-                    if (response.contains("Тест закончен!")) {
+                    if (response.message().contains("Тест закончен!")) {
                         currentUser.setState(State.IDLE);
                         userService.update(currentUser);
                     }

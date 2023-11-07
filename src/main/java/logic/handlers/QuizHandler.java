@@ -4,6 +4,7 @@ import database.models.User;
 import database.models.Progquiz;
 import database.services.ProglangService;
 import database.services.UserService;
+import logic.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +31,15 @@ public class QuizHandler {
      * @param currentUser пользователь который отправил сообщение
      * @return правильность ответа и следующий вопрос ИЛИ конец квиза
      */
-    public String getResponse(String message, User currentUser) {
+    public Response getResponse(String message, User currentUser) {
         message = message.toLowerCase();
 
         Integer solvedCounter = Integer.parseInt(currentUser.getQurrentQuestion());
         Integer quizStat = Integer.parseInt(currentUser.getCurrentQuizStats());
         Integer quizProglang = Integer.parseInt(currentUser.getCurrentProglang());
         Progquiz currentQuestion = null;
-        String response;
+        List<String> keyboardMessages = new ArrayList<>();
+        Response response;
 
 
         if (solvedCounter != -1) {
@@ -45,25 +47,31 @@ public class QuizHandler {
         }
 
         if (quizProglang == -1) {
-            response = "Выберите язык программирования";
+            response = new Response("Выберите язык программирования", proglangService.getAllProglangNames());
             quizProglang = 0;
         } else if (message.equals("/stop")) {
             solvedCounter = -1;
             quizStat = -1;
             quizProglang = -1;
-            response =  "Тест завершен, чтобы начать заново введите /quiz";
+            keyboardMessages.add("/help");
+            keyboardMessages.add("/quiz");
+            response =  new Response("Тест завершен, чтобы начать заново введите /quiz", keyboardMessages);
         } else if (solvedCounter == -1) {
             if (proglangService.checkExistenceOfProglang(message) != -1) {
                 quizProglang = proglangService.checkExistenceOfProglang(message);
             } else {
-                return "Язык программирования не найден";
+                keyboardMessages.add("/help");
+                keyboardMessages.add("/quiz");
+                return new Response("Язык программирования не найден", keyboardMessages);
             }
 
             solvedCounter = 0;
             quizStat = 0;
             currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
-            response = "Тест по ЯП JavaScript, состоит из " + proglangService.getSizeOfProglang(quizProglang)
+            String resonseText = "Тест по ЯП JavaScript, состоит из " + proglangService.getSizeOfProglang(quizProglang)
                     + " вопросов\n\n" + currentQuestion.getQuestion();
+            keyboardMessages.add("/stop");
+            response = new Response(resonseText, keyboardMessages);
 
         } else if (solvedCounter < proglangService.getSizeOfProglang(quizProglang) - 1) {
             String checkResponse = checkCorrectness(message, currentQuestion);
@@ -71,7 +79,9 @@ public class QuizHandler {
                 quizStat++;
             }
             currentQuestion = proglangService.getQuestionByLang(quizProglang, ++solvedCounter);
-            response =  checkResponse + currentQuestion.getQuestion();
+            String responseText =  checkResponse + currentQuestion.getQuestion();
+            keyboardMessages.add("/stop");
+            response = new Response(responseText, keyboardMessages);
         } else if (solvedCounter == proglangService.getSizeOfProglang(quizProglang) - 1) {
             String checkResponse = checkCorrectness(message, currentQuestion);
             if(checkResponse.contains("Вы ответили правильно!")) {
@@ -80,7 +90,10 @@ public class QuizHandler {
             String testStats = "Количество правильных ответов:" +
                     quizStat + "/" +
                     proglangService.findProgquizzesByProglangId(quizProglang).size();
-            response =  checkResponse + "Тест закончен!\n" + testStats;
+            String responseText =  checkResponse + "Тест закончен!\n" + testStats;
+            keyboardMessages.add("/help");
+            keyboardMessages.add("/quiz");
+            response = new Response(responseText, keyboardMessages);
 
             solvedCounter = -1;
             quizStat = -1;
