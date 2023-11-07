@@ -16,15 +16,22 @@ public class QuizHandler {
     private final ProglangService proglangService;
     private final UserService userService;
 
-    /**
-     * @param proglang_id id языка программирования по которому проходится тест
-     */
-    public QuizHandler(Integer proglang_id) {
+
+    public QuizHandler() {
         proglangService = new ProglangService();
         userService = new UserService();
     }
 
 
+    /**
+     * Конструктор для тестов
+     * @param proglangService мок сервиса ЯП
+     * @param userService мок сервиса пользователя
+     */
+    public QuizHandler(ProglangService proglangService, UserService userService) {
+        this.proglangService = proglangService;
+        this.userService = userService;
+    }
     /**
      * Получение ответа на сообщение в состоянии QUIZ
      * @param message сообщение пользователя
@@ -43,7 +50,7 @@ public class QuizHandler {
 
 
         if (solvedCounter != -1) {
-            currentQuestion = proglangService.findProgquizzesByProglangId(quizProglang).get(solvedCounter);
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
         }
 
         if (quizProglang == -1) {
@@ -60,16 +67,17 @@ public class QuizHandler {
             if (proglangService.checkExistenceOfProglang(message) != -1) {
                 quizProglang = proglangService.checkExistenceOfProglang(message);
             } else {
-                keyboardMessages.add("/help");
-                keyboardMessages.add("/quiz");
-                return new Response("Язык программирования не найден", keyboardMessages);
+                return new Response("Язык программирования не найден", proglangService.getAllProglangNames());
             }
 
             solvedCounter = 0;
             quizStat = 0;
             currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
-            String resonseText = "Тест по ЯП JavaScript, состоит из " + proglangService.getSizeOfProglang(quizProglang)
+            String resonseText = "Тест по ЯП " +
+                    proglangService.find(quizProglang).getName() + ", состоит из " +
+                    proglangService.getSizeOfProglang(quizProglang)
                     + " вопросов\n\n" + currentQuestion.getQuestion();
+
             keyboardMessages.add("/stop");
             response = new Response(resonseText, keyboardMessages);
 
@@ -89,7 +97,7 @@ public class QuizHandler {
             }
             String testStats = "Количество правильных ответов:" +
                     quizStat + "/" +
-                    proglangService.findProgquizzesByProglangId(quizProglang).size();
+                    proglangService.getSizeOfProglang(quizProglang);
             String responseText =  checkResponse + "Тест закончен!\n" + testStats;
             keyboardMessages.add("/help");
             keyboardMessages.add("/quiz");

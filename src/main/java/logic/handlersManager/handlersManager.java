@@ -33,14 +33,14 @@ public class handlersManager {
                 if (message.equals("/quiz")) {
                     currentUser.setState(State.QUIZ);
                     userService.update(currentUser);
-                    QuizHandler quizHandler = new QuizHandler(1);
+                    QuizHandler quizHandler = new QuizHandler();
                     response = quizHandler.getResponse(message, currentUser);
                 } else {
                     response = mainHandler.getResponse(message);
                 }
                 return response;
             case QUIZ:
-                QuizHandler quizHandler = new QuizHandler(1);
+                QuizHandler quizHandler = new QuizHandler();
                 if (message.equals("/stop")) {
                     currentUser.setState(State.IDLE);
                     userService.update(currentUser);
