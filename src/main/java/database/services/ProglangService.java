@@ -4,6 +4,7 @@ import database.dao.ProglangDao;
 import database.models.Proglang;
 import database.models.Progquiz;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,5 +56,14 @@ public class ProglangService {
             }
         }
         return -1;
+    }
+
+    public List<String> getAllProglangNames() {
+        final List<Proglang> proglangs = proglangDao.findAll();
+        final List<String> names = new ArrayList<>();
+        for(Proglang lang: proglangs) {
+            names.add(lang.getName());
+        }
+        return names;
     }
 }

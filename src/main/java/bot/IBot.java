@@ -2,6 +2,8 @@ package bot;
 
 import database.models.User;
 
+import java.util.List;
+
 /**
  * Интерфейс бота
  */
@@ -12,12 +14,11 @@ public interface IBot {
      * @param currentUser пользователь, от которого пришло сообщение
      * @return ответ на сообщение
      */
-    String getResponse(String message, User currentUser);
-
+    Object getResponse(String message, User currentUser);
     /**
      * Метод, который инициализирует клавиатуру с кнопками на чат-бот платформе
-     * @param user пользователь, от которого пришло сообщение
+     * @param keyboardText объект сообщения
      * @return объект разметки клавиатуры
      */
-    Object initKeyboard(User user);
+    Object initKeyboard(List<String> keyboardText);
 }
