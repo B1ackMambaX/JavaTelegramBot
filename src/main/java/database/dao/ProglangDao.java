@@ -12,8 +12,11 @@ import java.util.List;
 /**
  * Data access object для таблицы с языками программирования
  */
-public class ProglangDao extends Dao {
-    private final HibernateSessionFactoryUtil sessionFactoryUtil = new HibernateSessionFactoryUtil();
+public class ProglangDao extends BaseDao<Proglang> {
+    public ProglangDao() {
+        super(Proglang.class);
+    }
+
     public Proglang findByProglangId(Integer proglang_id) {
         return processSession(session ->
                 session.get(Proglang.class, proglang_id));
@@ -46,20 +49,6 @@ public class ProglangDao extends Dao {
         }
     }
 
-    public void delete(Proglang proglang) {
-        Session session = sessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        try {
-            session.remove(proglang);
-            tx1.commit();
-        } catch (final Exception e) {
-            tx1.rollback();
-            throw new RuntimeException(e);
-        } finally {
-            session.close();
-        }
-    }
-
     /**
      * Найти все вопросы по языку программирования
      * @param proglang_id id ЯП
@@ -76,15 +65,5 @@ public class ProglangDao extends Dao {
                          .getResultList());
 
         return progquizzes;
-    }
-
-    public List<Proglang> findAll() {
-        List<Proglang> proglangs = new ArrayList<Proglang>();
-
-        proglangs = processSession(session -> session.createQuery(
-                "from Proglang")
-                            .getResultList());
-
-        return proglangs;
     }
 }
