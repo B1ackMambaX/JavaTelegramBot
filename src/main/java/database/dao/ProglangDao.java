@@ -12,20 +12,11 @@ import java.util.List;
 /**
  * Data access object для таблицы с языками программирования
  */
-public class ProglangDao {
+public class ProglangDao extends Dao {
     private final HibernateSessionFactoryUtil sessionFactoryUtil = new HibernateSessionFactoryUtil();
     public Proglang findByProglangId(Integer proglang_id) {
-        Session session = sessionFactoryUtil.getSessionFactory().openSession();
-        Proglang proglang = null;
-        try {
-            proglang = session.get(Proglang.class, proglang_id);
-        } catch (final Exception e) {
-            System.out.println("Error: " + e);
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return proglang;
+        return processSession(session ->
+                session.get(Proglang.class, proglang_id));
     }
     public void save(Proglang proglang) {
         Session session = sessionFactoryUtil.getSessionFactory().openSession();
@@ -75,39 +66,25 @@ public class ProglangDao {
      * @return лист вопросов
      */
     public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
-        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         List<Progquiz> progquizzes = new ArrayList<Progquiz>();
-        try {
-            progquizzes = session.createQuery(
-                            "select p " +
-                                    "from Progquiz p " +
-                                    "where p.proglang.proglang_id = :proglang_id",
-                            Progquiz.class)
-                    .setParameter("proglang_id", proglang_id)
-                    .getResultList();
-        } catch (final Exception e) {
-            System.out.println("Zero length!: " + e);
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+        progquizzes = processSession(session -> session.createQuery(
+                     "select p " +
+                             "from Progquiz p " +
+                             "where p.proglang.proglang_id = :proglang_id",
+                     Progquiz.class)
+                         .setParameter("proglang_id", proglang_id)
+                         .getResultList());
 
         return progquizzes;
     }
 
     public List<Proglang> findAll() {
-        Session session = sessionFactoryUtil.getSessionFactory().openSession();
         List<Proglang> proglangs = new ArrayList<Proglang>();
-        try {
-            proglangs = session.createQuery(
-                                    "from Proglang")
-                                        .getResultList();
-        } catch (final Exception e) {
-            System.out.println("Error: " + e);
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+
+        proglangs = processSession(session -> session.createQuery(
+                "from Proglang")
+                            .getResultList());
+
         return proglangs;
     }
 }
