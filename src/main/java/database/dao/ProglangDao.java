@@ -17,36 +17,14 @@ public class ProglangDao extends BaseDao<Proglang> {
         super(Proglang.class);
     }
 
+    /**
+     * Найти язык программирования по его id в БД
+     * @param proglang_id id ЯП в БД
+     * @return язык программирования
+     */
     public Proglang findByProglangId(Integer proglang_id) {
         return processSession(session ->
                 session.get(Proglang.class, proglang_id));
-    }
-    public void save(Proglang proglang) {
-        Session session = sessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        try {
-            session.save(proglang);
-            tx1.commit();
-        } catch (final Exception e) {
-            tx1.rollback();
-            throw new RuntimeException(e);
-        } finally {
-            session.close();
-        }
-    }
-
-    public void update(Proglang proglang) {
-        Session session = sessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        try {
-            session.update(proglang);
-            tx1.commit();
-        } catch (final Exception e) {
-            tx1.rollback();
-            throw new RuntimeException(e);
-        } finally {
-            session.close();
-        }
     }
 
     /**
