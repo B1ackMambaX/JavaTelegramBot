@@ -14,8 +14,8 @@ import database.models.User;
  * Фабрика сессий
  */
 public class HibernateSessionFactoryUtil {
-    private static SessionFactory sessionFactory;
-    private static Config config = new Config();
+    private SessionFactory sessionFactory;
+    private Config config = new Config();
 
     public HibernateSessionFactoryUtil() {}
 

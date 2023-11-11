@@ -9,12 +9,27 @@ import database.models.types.State;
 /**
  * Класс, который реализует выбор обработчика сообщения в зависимости от состояния пользователя
  */
-public class handlersManager {
-    private final UserService userService = new UserService();
-    private final IdleHandler mainHandler;
+public class HandlersManager {
+    private final UserService userService;
+    private final IdleHandler idleHandler;
+    private final  QuizHandler quizHandler;
 
-    public handlersManager() {
-        mainHandler = new IdleHandler();
+    public HandlersManager() {
+        idleHandler = new IdleHandler();
+        quizHandler = new QuizHandler();
+        userService = new UserService();
+    }
+
+    /**
+     * Конструктор для тестов
+     * @param idleHandler мок обработчика состояния IDLE
+     * @param quizHandler мок обработчика состояния QUIZ
+     * @param userService мок сервиса пользователя
+     */
+    public HandlersManager(IdleHandler idleHandler, QuizHandler quizHandler, UserService userService) {
+        this.idleHandler = idleHandler;
+        this.quizHandler = quizHandler;
+        this.userService = userService;
     }
 
     /**
@@ -32,14 +47,12 @@ public class handlersManager {
                 if (message.equals("/quiz")) {
                     currentUser.setState(State.QUIZ);
                     userService.update(currentUser);
-                    QuizHandler quizHandler = new QuizHandler(1);
                     response = quizHandler.getResponse(message, currentUser);
                 } else {
-                    response = mainHandler.getResponse(message);
+                    response = idleHandler.getResponse(message);
                 }
                 return response;
             case QUIZ:
-                QuizHandler quizHandler = new QuizHandler(1);
                 if (message.equals("/stop")) {
                     currentUser.setState(State.IDLE);
                     userService.update(currentUser);

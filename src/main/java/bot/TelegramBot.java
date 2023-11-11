@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import main.Config;
-import logic.handlersManager.handlersManager;
+import logic.handlersManager.HandlersManager;
 import java.util.ArrayList;
 import java.util.List;
 import database.models.User;
@@ -23,7 +23,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
     final private  Config config = new Config();
     final private String BOT_TOKEN = config.getTelegramBotToken();
     final private String BOT_USERNAME = config.getTelegramBotUsername();
-    final private handlersManager handlersManager = new handlersManager();
+    final private HandlersManager handlersManager = new HandlersManager();
 
     final private Plathform plathform = Plathform.TG;
 

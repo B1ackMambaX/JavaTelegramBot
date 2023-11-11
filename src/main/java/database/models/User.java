@@ -65,11 +65,12 @@ public class User {
      * @param plathform платформа
      * @param plathform_id id пользователя на платформе
      * @param currentQuestion текущий вопрос
+     * @param state состояние пользователя
      */
-    public User(Plathform plathform, Long plathform_id, String currentQuestion) {
+    public User(Plathform plathform, Long plathform_id, State state, String currentQuestion) {
         this.plathform = plathform;
         this.plathform_id = plathform_id;
-        this.state = State.IDLE;
+        this.state = state;
         this.currentQuestion = currentQuestion;
     }
 

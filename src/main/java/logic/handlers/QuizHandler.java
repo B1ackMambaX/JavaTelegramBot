@@ -16,26 +16,22 @@ public class QuizHandler {
     private final UserService userService;
     private List<Progquiz> progquizStorage;
 
-    /**
-     * @param proglang_id id языка программирования по которому проходится тест
-     */
-    public QuizHandler(Integer proglang_id) {
+
+    public QuizHandler() {
         proglangService = new ProglangService();
         userService = new UserService();
-
-        this.progquizStorage = proglangService.findProgquizzesByProglangId(proglang_id);
+        progquizStorage = proglangService.findProgquizzesByProglangId(1);
     }
 
     /**
      * Конструктор который используется только в тестах
      * @param proglangService мок сервиса proglang
      * @param userService мок сервиса user
-     * @param proglang_id айди языка программирования
      */
-    protected QuizHandler(ProglangService proglangService, UserService userService, Integer proglang_id) {
+    protected QuizHandler(ProglangService proglangService, UserService userService) {
         this.proglangService = proglangService;
         this.userService = userService;
-        this.progquizStorage = proglangService.findProgquizzesByProglangId(proglang_id);
+        this.progquizStorage = proglangService.findProgquizzesByProglangId(1);
     }
 
     /**

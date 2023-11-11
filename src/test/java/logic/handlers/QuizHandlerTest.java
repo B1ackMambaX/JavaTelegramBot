@@ -6,6 +6,7 @@ import database.models.types.Plathform;
 import database.services.ProglangService;
 import database.services.UserService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,12 +18,13 @@ import java.util.List;
  * Тестирование обработчика квиза
  */
 public class QuizHandlerTest {
-    final List<Progquiz> questions = new ArrayList<>();
-    UserService userService;
-    ProglangService proglangService;
+    private List<Progquiz> questions;
+    private UserService userService;
+    private ProglangService proglangService;
 
     @BeforeEach
     void setUp() {
+        questions = new ArrayList<>();
         questions.add(new Progquiz("Какой метод используется для фильтрации массива?", "filter"));
         questions.add(new Progquiz("Какое ключевое слово используется для обозначения наследования классов?",
                 "extends"));
@@ -41,7 +43,7 @@ public class QuizHandlerTest {
         User testUser = new User(Plathform.TG, 0L);
         Mockito.doNothing().when(userService).update(testUser);
 
-        QuizHandler quizHandler = new QuizHandler(proglangService , userService, 1);
+        QuizHandler quizHandler = new QuizHandler(proglangService , userService);
 
         String quizCommand = quizHandler.getResponse("/quiz", testUser);
         Assertions.assertEquals(
@@ -67,7 +69,7 @@ public class QuizHandlerTest {
         User testUser = new User(Plathform.TG, 0L);
         Mockito.doNothing().when(userService).update(testUser);
 
-        QuizHandler quizHandler = new QuizHandler(proglangService , userService, 1);
+        QuizHandler quizHandler = new QuizHandler(proglangService , userService);
 
         String quizCommand = quizHandler.getResponse("/quiz", testUser);
         Assertions.assertEquals(
