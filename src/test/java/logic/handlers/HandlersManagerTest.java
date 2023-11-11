@@ -58,4 +58,26 @@ public class HandlersManagerTest {
         String responseEndOfTest = handlersManager.getResponseFromHandler("End test", testUser);
         Assertions.assertEquals(testUser.getState(), State.IDLE, "Тест на конец квиза");
     }
+
+    @Test
+    void testKeyboardInIdle() {
+        User testUser = new User(Plathform.TG, 1L, State.IDLE, "-1");
+        HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService);
+
+        String[] keyboardMessages = handlersManager.keyboardTextInitializer(testUser);
+        String[] actualKeyboardMessages = {"/help", "/quiz"};
+
+        Assertions.assertArrayEquals(keyboardMessages, actualKeyboardMessages, "Проверка клавиатуры в IDLE");
+    }
+
+    @Test
+    void testKeyboardInQuiz() {
+        User testUser = new User(Plathform.TG, 1L, State.QUIZ, "-1");
+        HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService);
+
+        String[] keyboardMessages = handlersManager.keyboardTextInitializer(testUser);
+        String[] actualKeyboardMessages = {"/stop"};
+
+        Assertions.assertArrayEquals(keyboardMessages, actualKeyboardMessages, "Проверка клавиатуры в IDLE");
+    }
 }
