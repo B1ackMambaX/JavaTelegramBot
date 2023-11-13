@@ -25,7 +25,7 @@ public abstract class BaseDao<DAOEntity> {
      * Функция выполняющая работу с сессией
      * @return результат работы с сессией
      */
-    public <T> T processSession(Function<Session, T> function) {
+    protected  <T> T processSession(Function<Session, T> function) {
         HibernateSessionFactoryUtil sessionFactoryUtil = new HibernateSessionFactoryUtil();
 
         Session session = sessionFactoryUtil.getSessionFactory().openSession();
@@ -44,7 +44,7 @@ public abstract class BaseDao<DAOEntity> {
      * Функция работающая с транзакцией
      * @return результат работы с транзакцией
      */
-    public <R> R processTransction(Function<Session, R> function) {
+    protected  <R> R processTransction(Function<Session, R> function) {
         HibernateSessionFactoryUtil sessionFactoryUtil = new HibernateSessionFactoryUtil();
 
         Session session = sessionFactoryUtil.getSessionFactory().openSession();
