@@ -39,7 +39,7 @@ public class User {
     private String currentQuestion;
 
     @Column (name = "setting_field_2")
-    private String setting_field_2;
+    private String currentQuizStats;
 
     @Column (name = "setting_field_3")
     private String setting_field_3;
@@ -58,6 +58,7 @@ public class User {
         this.plathform_id = plathform_id;
         this.state = State.IDLE;
         this.currentQuestion = "-1";
+        this.currentQuizStats = "-1";
     }
 
     /**
@@ -65,13 +66,13 @@ public class User {
      * @param plathform платформа
      * @param plathform_id id пользователя на платформе
      * @param currentQuestion текущий вопрос
-     * @param state состояние пользователя
      */
-    public User(Plathform plathform, Long plathform_id, State state, String currentQuestion) {
+    public User(Plathform plathform, Long plathform_id, State state, String currentQuestion, String currentQuizStats) {
         this.plathform = plathform;
         this.plathform_id = plathform_id;
         this.state = state;
         this.currentQuestion = currentQuestion;
+        this.currentQuizStats = currentQuizStats;
     }
 
     public Plathform getPlathform() {
@@ -130,12 +131,12 @@ public class User {
         this.currentQuestion = qurrentQuestion;
     }
 
-    public String getSettingField2() {
-        return setting_field_2;
+    public String getCurrentQuizStats() {
+        return currentQuizStats;
     }
 
-    public void setSettingField2(String setting_field_2) {
-        this.setting_field_2 = setting_field_2;
+    public void setCurrentQuizStats(String currentQuizStats) {
+        this.currentQuizStats = currentQuizStats;
     }
 
     public String getSettingField3() {

@@ -44,6 +44,7 @@ public class QuizHandler {
         message = message.toLowerCase();
 
         Integer solvedCounter = Integer.parseInt(currentUser.getQurrentQuestion());
+        Integer quizStat = Integer.parseInt(currentUser.getCurrentQuizStats());
         Progquiz currentQuestion = null;
         String response;
 
@@ -53,26 +54,39 @@ public class QuizHandler {
 
         if(message.equals("/stop")) {
             solvedCounter = -1;
+            quizStat = -1;
             response =  "Тест завершен, чтобы начать заново введите /quiz";
         } else if (solvedCounter == -1) {
             solvedCounter = 0;
+            quizStat = 0;
             currentQuestion = progquizStorage.get(solvedCounter);
             response = "Тест по ЯП JavaScript, состоит из " + progquizStorage.size()
                     + " вопросов\n\n" + currentQuestion.getQuestion();
 
         } else if (solvedCounter < progquizStorage.size() - 1) {
             String checkResponse = checkCorrectness(message, currentQuestion);
+            if (checkResponse.contains("Вы ответили правильно!")) {
+                quizStat++;
+            }
             currentQuestion = progquizStorage.get(++solvedCounter);
             response =  checkResponse + currentQuestion.getQuestion();
         } else if (solvedCounter == progquizStorage.size() - 1) {
-            solvedCounter = -1;
             String checkResponse = checkCorrectness(message, currentQuestion);
-            response =  checkResponse + "Тест закончен!";
+            if(checkResponse.contains("Вы ответили правильно!")) {
+                quizStat ++;
+            }
+
+            String testStats = "Количество правильных ответов:" + quizStat + "/" + progquizStorage.size();
+            response =  checkResponse + "Тест закончен!" + "\n" + testStats;
+
+            solvedCounter = -1;
+            quizStat = -1;
         } else {
             throw new RuntimeException("Error in quiz logic");
         }
 
         currentUser.setQurrentQuestion(Integer.toString(solvedCounter));
+        currentUser.setCurrentQuizStats(Integer.toString(quizStat));
         userService.update(currentUser);
         return  response;
     }
