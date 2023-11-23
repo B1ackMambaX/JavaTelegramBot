@@ -21,7 +21,7 @@ import database.models.User;
  * Класс реализации телеграмм бота
  */
 public class TelegramBot extends TelegramLongPollingBot implements IBot {
-    final private  Config config = new Config();
+    final private Config config = new Config();
     final private String BOT_TOKEN = config.getTelegramBotToken();
     final private String BOT_USERNAME = config.getTelegramBotUsername();
     final private HandlersManager handlersManager = new HandlersManager();
@@ -54,9 +54,24 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
                 long chatId = inMess.getChatId();
                 User currentUser = userService.login(plathform, chatId);
 
+                Response response = getResponse(inMess.getText(), currentUser);
+                SendMessage outMess = new SendMessage();
 
-                SendMessage outMess = getResponse(inMess.getText(), currentUser);
+                ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+                keyboard.setResizeKeyboard(true);
+                keyboard.setOneTimeKeyboard(true);
+                List<KeyboardRow> rows = new ArrayList<>();
+                KeyboardRow row = new KeyboardRow();
+                rows.add(row);
 
+                for (String text : response.keyboardMessages()) {
+                    row.add(new KeyboardButton(text));
+                }
+                keyboard.setKeyboard(rows);
+
+                outMess.setReplyMarkup(keyboard);
+                outMess.setChatId(chatId);
+                outMess.setText(response.message());
                 execute(outMess);
             }
         } catch (TelegramApiException e) {
@@ -66,48 +81,23 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
 
     /**
      * Метод, который получает ответ на сообщение от пользователя
-     * @param message сообщение
+     *
+     * @param message     сообщение
      * @param currentUser пользователь, от которого пришло сообщение
      * @return ответ на сообщение
      */
-    public SendMessage getResponse(String message, User currentUser) {
-        SendMessage outMess = new SendMessage();
+    public Response getResponse(String message, User currentUser) {
         Response response;
         try {
             response = handlersManager.getResponseFromHandler(message, currentUser);
-            outMess.setChatId(currentUser.getPlathform_id());
-            outMess.setText(response.message());
-            outMess.setReplyMarkup(initKeyboard(response.keyboardMessages()));
         } catch (RuntimeException e) {
-            outMess.setText("Произошла ошибка, попробуйте позже");
+            List<String> keyboardMessages = new ArrayList<>();
+            keyboardMessages.add("/help");
+            keyboardMessages.add("/quiz");
+            response = new Response("Произошла ошибка попробуйте позже", keyboardMessages);
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-        return outMess;
-    }
-
-    /**
-     * Инициализация разметки клавиатуры для бота
-     * @return Объект разметки клавиатуры
-     */
-    public ReplyKeyboardMarkup initKeyboard(List<String> keyboardText) {
-        try {
-            ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
-            keyboard.setResizeKeyboard(true);
-            keyboard.setOneTimeKeyboard(true);
-            List<KeyboardRow> rows = new ArrayList<>();
-            KeyboardRow row = new KeyboardRow();
-            rows.add(row);
-
-            for (String text : keyboardText) {
-                row.add(new KeyboardButton(text));
-            }
-            keyboard.setKeyboard(rows);
-            return keyboard;
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
+        return response;
     }
 }

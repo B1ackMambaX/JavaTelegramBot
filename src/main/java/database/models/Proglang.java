@@ -25,8 +25,9 @@ public class Proglang {
     /**
      * @param proglang_name
      */
-    public Proglang(String proglang_name) {
+    public Proglang(String proglang_name, int proglang_id) {
         this.proglang_name = proglang_name;
+        this.proglang_id = proglang_id;
     }
 
     public Integer getId() {
