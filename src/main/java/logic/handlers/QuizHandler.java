@@ -14,25 +14,15 @@ import java.util.List;
 public class QuizHandler {
     private final ProglangService proglangService;
     private final UserService userService;
-    private List<Progquiz> progquizStorage;
-
-
-    public QuizHandler() {
-        proglangService = new ProglangService();
-        userService = new UserService();
-        progquizStorage = proglangService.findProgquizzesByProglangId(1);
-    }
 
     /**
-     * Конструктор который используется только в тестах
-     * @param proglangService мок сервиса proglang
-     * @param userService мок сервиса user
+     * @param proglang_id id языка программирования по которому проходится тест
      */
-    protected QuizHandler(ProglangService proglangService, UserService userService) {
-        this.proglangService = proglangService;
-        this.userService = userService;
-        this.progquizStorage = proglangService.findProgquizzesByProglangId(1);
+    public QuizHandler(Integer proglang_id) {
+        proglangService = new ProglangService();
+        userService = new UserService();
     }
+
 
     /**
      * Получение ответа на сообщение в состоянии QUIZ
@@ -45,48 +35,63 @@ public class QuizHandler {
 
         Integer solvedCounter = Integer.parseInt(currentUser.getQurrentQuestion());
         Integer quizStat = Integer.parseInt(currentUser.getCurrentQuizStats());
+        Integer quizProglang = Integer.parseInt(currentUser.getCurrentProglang());
         Progquiz currentQuestion = null;
         String response;
 
+
         if (solvedCounter != -1) {
-            currentQuestion = progquizStorage.get(solvedCounter);
+            currentQuestion = proglangService.findProgquizzesByProglangId(quizProglang).get(solvedCounter);
         }
 
-        if(message.equals("/stop")) {
+        if (quizProglang == -1) {
+            response = "Выберите язык программирования";
+            quizProglang = 0;
+        } else if (message.equals("/stop")) {
             solvedCounter = -1;
             quizStat = -1;
+            quizProglang = -1;
             response =  "Тест завершен, чтобы начать заново введите /quiz";
         } else if (solvedCounter == -1) {
+            if (proglangService.checkExistenceOfProglang(message) != -1) {
+                quizProglang = proglangService.checkExistenceOfProglang(message);
+            } else {
+                return "Язык программирования не найден";
+            }
+
             solvedCounter = 0;
             quizStat = 0;
-            currentQuestion = progquizStorage.get(solvedCounter);
-            response = "Тест по ЯП JavaScript, состоит из " + progquizStorage.size()
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
+            response = "Тест по ЯП JavaScript, состоит из " + proglangService.getSizeOfProglang(quizProglang)
                     + " вопросов\n\n" + currentQuestion.getQuestion();
 
-        } else if (solvedCounter < progquizStorage.size() - 1) {
+        } else if (solvedCounter < proglangService.getSizeOfProglang(quizProglang) - 1) {
             String checkResponse = checkCorrectness(message, currentQuestion);
             if (checkResponse.contains("Вы ответили правильно!")) {
                 quizStat++;
             }
-            currentQuestion = progquizStorage.get(++solvedCounter);
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, ++solvedCounter);
             response =  checkResponse + currentQuestion.getQuestion();
-        } else if (solvedCounter == progquizStorage.size() - 1) {
+        } else if (solvedCounter == proglangService.getSizeOfProglang(quizProglang) - 1) {
             String checkResponse = checkCorrectness(message, currentQuestion);
             if(checkResponse.contains("Вы ответили правильно!")) {
                 quizStat ++;
             }
-
-            String testStats = "Количество правильных ответов:" + quizStat + "/" + progquizStorage.size();
-            response =  checkResponse + "Тест закончен!" + "\n" + testStats;
+            String testStats = "Количество правильных ответов:" +
+                    quizStat + "/" +
+                    proglangService.findProgquizzesByProglangId(quizProglang).size();
+            response =  checkResponse + "Тест закончен!\n" + testStats;
 
             solvedCounter = -1;
             quizStat = -1;
+            quizProglang = -1;
         } else {
             throw new RuntimeException("Error in quiz logic");
         }
 
         currentUser.setQurrentQuestion(Integer.toString(solvedCounter));
         currentUser.setCurrentQuizStats(Integer.toString(quizStat));
+        currentUser.setCurrentProglang(Integer.toString(quizProglang));
         userService.update(currentUser);
         return  response;
     }
