@@ -59,6 +59,7 @@ public class User {
         this.state = State.IDLE;
         this.currentQuestion = "-1";
         this.currentQuizStats = "-1";
+        this.currentProglang = "-1";
     }
 
     /**

@@ -16,10 +16,7 @@ public class QuizHandler {
     private final ProglangService proglangService;
     private final UserService userService;
 
-    /**
-     * @param proglang_id id языка программирования по которому проходится тест
-     */
-    public QuizHandler(Integer proglang_id) {
+    public QuizHandler() {
         proglangService = new ProglangService();
         userService = new UserService();
     }
@@ -76,7 +73,7 @@ public class QuizHandler {
             quizStat = 0;
             currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
             String resonseText = "Тест по ЯП " +
-                    proglangService.find(quizProglang).getName() + ", состоит из " +
+                    proglangService.findProglang(quizProglang).getName() + ", состоит из " +
                     proglangService.getSizeOfProglang(quizProglang)
                     + " вопросов\n\n" + currentQuestion.getQuestion();
 

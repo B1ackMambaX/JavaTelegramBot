@@ -16,8 +16,8 @@ public class ProglangService {
     public ProglangService() {
     }
 
-    public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
-        return proglangDao.findProgquizzesByProglangId(proglang_id);
+    public Proglang findProglang(Integer proglang_id) {
+        return proglangDao.findByProglangId(proglang_id);
     }
 
     /**

@@ -70,22 +70,4 @@ public class HandlersManager {
                 throw new RuntimeException("Error in state manager");
         }
     }
-
-    /**
-     * Метод, который создает сообщения для клавиатуры в зависимости от состояния пользователя
-     * @param currentUser пользователь
-     * @return Сообщения для клавиатуры
-     */
-    public String[] keyboardTextInitializer(User currentUser) {
-        State state = currentUser.getState();
-
-        switch (state) {
-            case IDLE:
-                return new String[] {"/help", "/quiz"};
-            case QUIZ:
-                return new String[] {"/stop"};
-            default:
-                throw new RuntimeException("Error in keyboard text initializer");
-        }
-    }
 }
