@@ -63,8 +63,8 @@ public class QuizHandler {
             keyboardMessages.add("/quiz");
             response =  new Response("Тест завершен, чтобы начать заново введите /quiz", keyboardMessages);
         } else if (solvedCounter == -1) {
-            if (proglangService.checkExistenceOfProglang(message) != -1) {
-                quizProglang = proglangService.checkExistenceOfProglang(message);
+            if (proglangService.getProglangIdByName(message) != -1) {
+                quizProglang = proglangService.getProglangIdByName(message);
             } else {
                 return new Response("Язык программирования не найден", proglangService.getAllProglangNames());
             }

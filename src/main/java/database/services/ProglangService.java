@@ -40,11 +40,11 @@ public class ProglangService {
     }
 
     /**
-     * Проверка на существование в БД выбранного ЯП
+     * Получение id ЯП по его имени
      * @param proglang_name имя ЯП
      * @return id ЯП, либо -1 если ЯП не существует
      */
-    public int checkExistenceOfProglang(String proglang_name) {
+    public int getProglangIdByName(String proglang_name) {
         final List<Proglang> proglangs = proglangDao.findAll();
         for(Proglang lang : proglangs) {
             if (lang.getName().toLowerCase().equals(proglang_name)) {

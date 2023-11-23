@@ -25,12 +25,11 @@ import database.models.User;
  */
 public class TelegramBot extends TelegramLongPollingBot implements IBot {
     final private Config config = new Config();
+    final private Logger logger = Logger.getLogger(TelegramBot.class.getName());
     final private String BOT_TOKEN = config.getTelegramBotToken();
     final private String BOT_USERNAME = config.getTelegramBotUsername();
     final private HandlersManager handlersManager = new HandlersManager();
-
     final private Plathform plathform = Plathform.TG;
-
     final private UserService userService = new UserService();
 
 
@@ -51,7 +50,6 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        Logger logger = Logger.getLogger(TelegramBot.class.getName());
         try {
             if (update.hasMessage() && update.getMessage().hasText()) {
                 Message inMess = update.getMessage();
@@ -82,7 +80,6 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             }
         } catch (TelegramApiException e) {
             logger.severe(e.toString());
-            e.printStackTrace();
         }
     }
 
@@ -103,9 +100,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             keyboardMessages.add("/help");
             keyboardMessages.add("/quiz");
             response = new Response("Произошла ошибка попробуйте позже", keyboardMessages);
-            System.out.println(e.getMessage());
             logger.severe(e.toString());
-            e.printStackTrace();
         }
         return response;
     }

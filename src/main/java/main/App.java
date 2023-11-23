@@ -22,7 +22,6 @@ public class  App
             telegramBotsApi.registerBot(new TelegramBot());
         } catch (TelegramApiException e) {
             logger.severe(e.toString());
-            e.printStackTrace();
         }
     }
 }

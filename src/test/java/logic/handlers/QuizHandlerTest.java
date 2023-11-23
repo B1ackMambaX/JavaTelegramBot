@@ -39,8 +39,8 @@ public class QuizHandlerTest {
         Mockito.when(proglangService.getQuestionByLang(1, 0)).thenReturn(questions.get(0));
         Mockito.when(proglangService.getQuestionByLang(1, 1)).thenReturn(questions.get(1));
         Mockito.when(proglangService.getAllProglangNames()).thenReturn(proglangNames);
-        Mockito.when(proglangService.checkExistenceOfProglang("javascript")).thenReturn(1);
-        Mockito.when(proglangService.checkExistenceOfProglang("aboba")).thenReturn(-1);
+        Mockito.when(proglangService.getProglangIdByName("javascript")).thenReturn(1);
+        Mockito.when(proglangService.getProglangIdByName("aboba")).thenReturn(-1);
         Mockito.when(proglangService.findProglang(1)).thenReturn(new Proglang("JavaScript", 1));
         Mockito.when(proglangService.getSizeOfProglang(1)).thenReturn(2);
     }
