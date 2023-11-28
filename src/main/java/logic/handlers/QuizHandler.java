@@ -17,6 +17,8 @@ public class QuizHandler {
     private final ProglangService proglangService;
     private final UserService userService;
 
+    Quizstate userState;
+
     public QuizHandler() {
         proglangService = new ProglangService();
         userService = new UserService();
@@ -28,9 +30,10 @@ public class QuizHandler {
      * @param proglangService мок сервиса ЯП
      * @param userService мок сервиса пользователя
      */
-    public QuizHandler(ProglangService proglangService, UserService userService) {
+    public QuizHandler(ProglangService proglangService, UserService userService, Quizstate userState) {
         this.proglangService = proglangService;
         this.userService = userService;
+        this.userState = userState;
     }
     /**
      * Получение ответа на сообщение в состоянии QUIZ
@@ -39,8 +42,9 @@ public class QuizHandler {
      * @return правильность ответа и следующий вопрос ИЛИ конец квиза
      */
     public Response getResponse(String message, User currentUser) {
+        userState = userService.getQuizState(currentUser.getId());
         message = message.toLowerCase();
-        Quizstate userState = userService.getQuizState(currentUser.getId());
+
 
         Integer solvedCounter = userState.getCurrentQuestionIndex();
         Integer quizStat = userState.getCurrentQuizStats();
@@ -49,7 +53,6 @@ public class QuizHandler {
         List<String> keyboardMessages = new ArrayList<>();
         Response response;
 
-        System.out.println(userState);
         if (solvedCounter != -1) {
             currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
         }
