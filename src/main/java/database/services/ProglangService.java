@@ -22,21 +22,22 @@ public class ProglangService {
 
     /**
      * Получение количества вопросов в зависимости от ЯП
+     *
      * @param proglang_id id языка программирования
      * @return количество вопросов по выбранному ЯП
      */
-    public int getSizeOfProglang(Integer proglang_id) {
-        return proglangDao.findProgquizzesByProglangId(proglang_id).size();
+    public Integer getSizeOfProglang(Integer proglang_id) {
+        return proglangDao.countProgquizzesByProglangId(proglang_id);
     }
 
     /**
      * Получение конкретного вопроса по ЯП
-     * @param progalng_id id ЯП
+     * @param proglang_id id ЯП
      * @param index номер вопроса
      * @return вопрос
      */
-    public Progquiz getQuestionByLang(Integer progalng_id, int index) {
-        return proglangDao.findProgquizzesByProglangId(progalng_id).get(index);
+    public Progquiz getQuestionByLang(Integer proglang_id, int index) {
+        return proglangDao.findProgquizzesByProglangId(proglang_id).get(index);
     }
 
     /**

@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Progquiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int progquiz_id;
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proglang_id")

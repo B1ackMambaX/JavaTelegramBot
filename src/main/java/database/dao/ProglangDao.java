@@ -2,9 +2,6 @@ package database.dao;
 
 import database.models.Proglang;
 import database.models.Progquiz;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import database.utils.HibernateSessionFactoryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +34,29 @@ public class ProglangDao extends BaseDao<Proglang> {
         progquizzes = processSession(session -> session.createQuery(
                      "select p " +
                              "from Progquiz p " +
-                             "where p.proglang.proglang_id = :proglang_id",
+                             "where p.proglang.id = :proglang_id",
                      Progquiz.class)
                          .setParameter("proglang_id", proglang_id)
                          .getResultList());
 
         return progquizzes;
+    }
+
+    /**
+     * Подсчитать количество вопросов по языку программирования
+     * @param proglang_id id ЯП
+     * @return количество вопросов
+     */
+    public Integer countProgquizzesByProglangId(Integer proglang_id)
+    {
+        Integer count = processSession(session -> session.createQuery(
+                        "select count(p) " +
+                                "from Progquiz p " +
+                                "where p.proglang.id = :proglang_id",
+                        Integer.class)
+                .setParameter("proglang_id", proglang_id)
+                .getSingleResult());
+
+        return count;
     }
 }

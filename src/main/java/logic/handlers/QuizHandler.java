@@ -1,5 +1,6 @@
 package logic.handlers;
 
+import database.models.Quizstate;
 import database.models.User;
 import database.models.Progquiz;
 import database.services.ProglangService;
@@ -39,15 +40,16 @@ public class QuizHandler {
      */
     public Response getResponse(String message, User currentUser) {
         message = message.toLowerCase();
+        Quizstate userState = userService.getQuizState(currentUser.getId());
 
-        Integer solvedCounter = Integer.parseInt(currentUser.getQurrentQuestion());
-        Integer quizStat = Integer.parseInt(currentUser.getCurrentQuizStats());
-        Integer quizProglang = Integer.parseInt(currentUser.getCurrentProglang());
+        Integer solvedCounter = userState.getCurrentQuestionIndex();
+        Integer quizStat = userState.getCurrentQuizStats();
+        Integer quizProglang = userState.getCurrentProglangId();
         Progquiz currentQuestion = null;
         List<String> keyboardMessages = new ArrayList<>();
         Response response;
 
-
+        System.out.println(userState);
         if (solvedCounter != -1) {
             currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
         }
@@ -109,10 +111,12 @@ public class QuizHandler {
             throw new RuntimeException("Error in quiz logic");
         }
 
-        currentUser.setQurrentQuestion(Integer.toString(solvedCounter));
-        currentUser.setCurrentQuizStats(Integer.toString(quizStat));
-        currentUser.setCurrentProglang(Integer.toString(quizProglang));
+        userState.setCurrentQuestionIndex(solvedCounter);
+        userState.setCurrentQuizStats(quizStat);
+        userState.setCurrentProglangId(quizProglang);
+
         userService.update(currentUser);
+        userService.updateQuizState(userState);
         return  response;
     }
 
