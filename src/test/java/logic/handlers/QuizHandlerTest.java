@@ -109,11 +109,19 @@ public class QuizHandlerTest {
         Assertions.assertEquals(quizstate.getCurrentProglangId(), -1,
                 "Проверка на сброс значения текущего ЯП");
         Assertions.assertEquals(quizstate.getCurrentQuizStats(), -1,
-                "Проверка на сброс значения текущего ЯП");
+                "Проверка на сброс значения статистики юзера");
     }
 
+    /**
+     * Проверка на команду стоп и выбор второго ЯП
+     */
     @Test
     void chooseAnotherProglangAndStopCommand() {
+
+        List<String> keyboardFinal = new ArrayList<>();
+        keyboardFinal.add("/help");
+        keyboardFinal.add("/quiz");
+
         User testUser = new User(Plathform.TG, 0L, State.QUIZ);
         Quizstate quizstate = new Quizstate(testUser);
 
@@ -147,7 +155,8 @@ public class QuizHandlerTest {
         Assertions.assertEquals(quizstate.getCurrentProglangId(), -1,
                 "Проверка на сброс значения текущего ЯП");
         Assertions.assertEquals(quizstate.getCurrentQuizStats(), -1,
-                "Проверка на сброс значения текущего ЯП");
+                "Проверка на сброс значения текущей статистики юзера");
+        Assertions.assertEquals(stopCommand.keyboardMessages(), keyboardFinal);
     }
 
     /**
