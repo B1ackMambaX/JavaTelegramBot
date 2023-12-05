@@ -47,13 +47,7 @@ public class ProglangService {
      * @return id ЯП, либо -1 если ЯП не существует
      */
     public int getProglangIdByName(String proglang_name) {
-        final List<Proglang> proglangs = proglangDao.findAll();
-        for(Proglang lang : proglangs) {
-            if (lang.getName().toLowerCase().equals(proglang_name)) {
-                return lang.getId();
-            }
-        }
-        return -1;
+        return proglangDao.getIdByName(proglang_name);
     }
 
     /**
@@ -61,11 +55,6 @@ public class ProglangService {
      * @return список имен ЯП
      */
     public List<String> getAllProglangNames() {
-        final List<Proglang> proglangs = proglangDao.findAll();
-        final List<String> names = new ArrayList<>();
-        for(Proglang lang: proglangs) {
-            names.add(lang.getName());
-        }
-        return names;
+        return proglangDao.getAllNames();
     }
 }

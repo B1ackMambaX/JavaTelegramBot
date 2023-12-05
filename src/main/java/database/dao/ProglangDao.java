@@ -3,6 +3,7 @@ package database.dao;
 import database.models.Proglang;
 import database.models.Progquiz;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +26,47 @@ public class ProglangDao extends BaseDao<Proglang> {
     }
 
     /**
+     * Получение ID ЯП по имени
+     * @param proglang_name имя языка программирования
+     * @return ID языка программирования
+     */
+    public int getIdByName(String proglang_name) {
+        try {
+            return processSession(session -> session.createQuery(
+                            "select p.id " +
+                                    "from Proglang p " +
+                                    "where lower(p.proglang_name) = :proglang_name",
+                            Integer.class)
+                    .setParameter("proglang_name", proglang_name)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return -1;
+        }
+    }
+
+    /**
+     * Получение имен всех ЯП в БД
+     * @return список имен ЯП
+     */
+    public List<String> getAllNames() {
+        List<String> names = new ArrayList<String>();
+        names.addAll(
+                processSession(session -> session.createQuery(
+                        "select p.proglang_name " +
+                                "from Proglang p ",
+                        String.class)
+                .getResultList()));
+        return names;
+    }
+
+    /**
      * Найти вопросы по языку программирования
      * @param proglang_id id ЯП
      * @param offset отступ
      * @return лист вопросов
      */
     public Progquiz findProgquizByProglangId(Integer proglang_id, Integer offset) {
-        return (Progquiz) processSession(session -> session.createQuery(
+        return processSession(session -> session.createQuery(
                         "select p " +
                                 "from Progquiz p " +
                                 "where p.proglang.id = :proglang_id",
@@ -39,7 +74,7 @@ public class ProglangDao extends BaseDao<Proglang> {
                 .setParameter("proglang_id", proglang_id)
                 .setFirstResult(offset)
                 .setMaxResults(1)
-                .getResultList());
+                .getSingleResult());
     }
     /**
      * Подсчитать количество вопросов по языку программирования
