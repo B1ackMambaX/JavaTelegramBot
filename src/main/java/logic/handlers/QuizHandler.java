@@ -54,7 +54,7 @@ public class QuizHandler {
         Response response;
 
         if (solvedCounter != -1) {
-            currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter, 1).get(0);
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
         }
 
         if (quizProglang == -1) {
@@ -76,7 +76,7 @@ public class QuizHandler {
 
             solvedCounter = 0;
             quizStat = 0;
-            currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter, 1).get(0);
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
             String resonseText = "Тест по ЯП " +
                     proglangService.findProglang(quizProglang).getName() + ", состоит из " +
                     proglangService.getSizeOfProglang(quizProglang)
@@ -90,7 +90,7 @@ public class QuizHandler {
             if (checkResponse.contains("Вы ответили правильно!")) {
                 quizStat++;
             }
-            currentQuestion = proglangService.getQuestionByLang(quizProglang, ++solvedCounter, 1).get(0);
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, ++solvedCounter);
             String responseText =  checkResponse + currentQuestion.getQuestion();
             keyboardMessages.add("/stop");
             response = new Response(responseText, keyboardMessages);

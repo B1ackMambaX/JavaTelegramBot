@@ -37,8 +37,8 @@ public class ProglangService {
      * @param limit сколько вопросов(может быть null)
      * @return вопрос
      */
-    public List<Progquiz> getQuestionByLang(Integer proglang_id, int offset, int limit) {
-        return proglangDao.findProgquizByProglangId(proglang_id, offset, limit);
+    public Progquiz getQuestionByLang(Integer proglang_id, int offset) {
+        return proglangDao.findProgquizByProglangId(proglang_id, offset);
     }
 
     /**

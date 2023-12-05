@@ -28,22 +28,18 @@ public class ProglangDao extends BaseDao<Proglang> {
      * Найти вопросы по языку программирования
      * @param proglang_id id ЯП
      * @param offset отступ
-     * @param limit сколько вопросов брать
      * @return лист вопросов
      */
-    public List<Progquiz> findProgquizByProglangId(Integer proglang_id, Integer offset, Integer limit) {
-        List<Progquiz> progquizzes = new ArrayList<Progquiz>();
-        progquizzes.addAll(processSession(session -> session.createQuery(
+    public Progquiz findProgquizByProglangId(Integer proglang_id, Integer offset) {
+        return (Progquiz) processSession(session -> session.createQuery(
                         "select p " +
                                 "from Progquiz p " +
                                 "where p.proglang.id = :proglang_id",
                         Progquiz.class)
                 .setParameter("proglang_id", proglang_id)
                 .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList()));
-
-        return progquizzes;
+                .setMaxResults(1)
+                .getResultList());
     }
     /**
      * Подсчитать количество вопросов по языку программирования
