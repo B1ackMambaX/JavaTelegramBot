@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS public.quizstate(
     current_question_index INTEGER,
     current_quiz_stats INTEGER,
 
-
     FOREIGN KEY (user_id) REFERENCES public.user (id) ON DELETE CASCADE
 );
 
