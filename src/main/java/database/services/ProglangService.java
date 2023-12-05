@@ -26,18 +26,19 @@ public class ProglangService {
      * @param proglang_id id языка программирования
      * @return количество вопросов по выбранному ЯП
      */
-    public Integer getSizeOfProglang(Integer proglang_id) {
+    public Long getSizeOfProglang(Integer proglang_id) {
         return proglangDao.countProgquizzesByProglangId(proglang_id);
     }
 
     /**
      * Получение конкретного вопроса по ЯП
      * @param proglang_id id ЯП
-     * @param index номер вопроса
+     * @param offset отступ(начиная с 0, может быть null)
+     * @param limit сколько вопросов(может быть null)
      * @return вопрос
      */
-    public Progquiz getQuestionByLang(Integer proglang_id, int index) {
-        return proglangDao.findProgquizzesByProglangId(proglang_id).get(index);
+    public List<Progquiz> getQuestionByLang(Integer proglang_id, int offset, int limit) {
+        return proglangDao.findProgquizByProglangId(proglang_id, offset, limit);
     }
 
     /**

@@ -25,35 +25,37 @@ public class ProglangDao extends BaseDao<Proglang> {
     }
 
     /**
-     * Найти все вопросы по языку программирования
+     * Найти вопросы по языку программирования
      * @param proglang_id id ЯП
+     * @param offset отступ
+     * @param limit сколько вопросов брать
      * @return лист вопросов
      */
-    public List<Progquiz> findProgquizzesByProglangId(Integer proglang_id) {
+    public List<Progquiz> findProgquizByProglangId(Integer proglang_id, Integer offset, Integer limit) {
         List<Progquiz> progquizzes = new ArrayList<Progquiz>();
-        progquizzes = processSession(session -> session.createQuery(
-                     "select p " +
-                             "from Progquiz p " +
-                             "where p.proglang.id = :proglang_id",
-                     Progquiz.class)
-                         .setParameter("proglang_id", proglang_id)
-                         .getResultList());
+        progquizzes.addAll(processSession(session -> session.createQuery(
+                        "select p " +
+                                "from Progquiz p " +
+                                "where p.proglang.id = :proglang_id",
+                        Progquiz.class)
+                .setParameter("proglang_id", proglang_id)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList()));
 
         return progquizzes;
     }
-
     /**
      * Подсчитать количество вопросов по языку программирования
      * @param proglang_id id ЯП
      * @return количество вопросов
      */
-    public Integer countProgquizzesByProglangId(Integer proglang_id)
-    {
-        Integer count = processSession(session -> session.createQuery(
+    public Long countProgquizzesByProglangId(Integer proglang_id) {
+        Long count = processSession(session -> session.createQuery(
                         "select count(p) " +
                                 "from Progquiz p " +
                                 "where p.proglang.id = :proglang_id",
-                        Integer.class)
+                        Long.class)
                 .setParameter("proglang_id", proglang_id)
                 .getSingleResult());
 

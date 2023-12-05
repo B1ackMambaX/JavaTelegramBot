@@ -5,6 +5,7 @@ services:
     container_name: javabot_database
     volumes:
       - javabot_database_data:/var/lib/postgresql/data
+      - ./src/sql:/docker-entrypoint-initdb.d
     env_file: &env
       - .env
     networks: &network
