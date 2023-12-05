@@ -15,6 +15,4 @@ down:
 	docker compose down
 
 init_db:
-	docker compose exec database
-	psql -U $DB_USER -d $DB_NAME -f /docker-entrypoint-initdb.d/init.sql
-	exit
+	docker compose exec -it database psql -U $DB_USER -d $DB_NAME -f /docker-entrypoint-initdb.d/init.sql
