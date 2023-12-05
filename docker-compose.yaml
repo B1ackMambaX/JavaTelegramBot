@@ -3,7 +3,7 @@ services:
   database:
     image: postgres:15
     container_name: javabot_database
-    command: --init-file /docker-entrypoint-initdb.d/init.sql
+    command: --init-file init.sql
     volumes:
       - ./src/main/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - javabot_database_data:/var/lib/postgresql/data

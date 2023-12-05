@@ -24,17 +24,25 @@
 #### Запуск
 Сделать билд, запустить проект и радоваться!
 
-### Docker
+### Deploy
 #### Docker Compose
-1. Настройка networks и volums
+
+1. Клонировать репозиторий
+2. Клонировать .env.example и заполнить его
+```shell
+cp .env.example .env
+```
+```shell
+nano .env
+```
+3. Настройка networks и volumes
 ```shell
 docker network create javabot_net
 ```
 ```shell
 docker volume create javabot_database_data
 ```
-2. Запуск
+4. Запуск
 ```shell
 docker compose up -d
 ```
-#### Docker, каждый контейнер по отдельности
