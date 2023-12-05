@@ -2,6 +2,8 @@ package bot;
 
 import database.models.types.Plathform;
 import database.services.UserService;
+import logic.Response;
+import main.App;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -14,19 +16,20 @@ import main.Config;
 import logic.handlersManager.HandlersManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
 import database.models.User;
 
 /**
  * Класс реализации телеграмм бота
  */
 public class TelegramBot extends TelegramLongPollingBot implements IBot {
-    final private  Config config = new Config();
+    final private Config config = new Config();
+    final private Logger logger = Logger.getLogger(TelegramBot.class.getName());
     final private String BOT_TOKEN = config.getTelegramBotToken();
     final private String BOT_USERNAME = config.getTelegramBotUsername();
     final private HandlersManager handlersManager = new HandlersManager();
-
     final private Plathform plathform = Plathform.TG;
-
     final private UserService userService = new UserService();
 
 
@@ -51,63 +54,54 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
             if (update.hasMessage() && update.getMessage().hasText()) {
                 Message inMess = update.getMessage();
                 long chatId = inMess.getChatId();
+                logger.info("Get new message from: " + chatId + " message: " + inMess);
                 User currentUser = userService.login(plathform, chatId);
 
-
-                String response = getResponse(inMess.getText(), currentUser);
+                Response response = getResponse(inMess.getText(), currentUser);
                 SendMessage outMess = new SendMessage();
+
+                ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+                keyboard.setResizeKeyboard(true);
+                keyboard.setOneTimeKeyboard(true);
+                List<KeyboardRow> rows = new ArrayList<>();
+                KeyboardRow row = new KeyboardRow();
+                rows.add(row);
+
+                for (String text : response.keyboardMessages()) {
+                    row.add(new KeyboardButton(text));
+                }
+                keyboard.setKeyboard(rows);
+
+                outMess.setReplyMarkup(keyboard);
                 outMess.setChatId(chatId);
-                outMess.setText(response);
-                outMess.setReplyMarkup(initKeyboard(currentUser));
+                outMess.setText(response.message());
+                logger.info("Response to: " + chatId + ", message: " + outMess.getText());
                 execute(outMess);
             }
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.severe(e.toString());
         }
     }
 
     /**
      * Метод, который получает ответ на сообщение от пользователя
-     * @param message сообщение
+     *
+     * @param message     сообщение
      * @param currentUser пользователь, от которого пришло сообщение
      * @return ответ на сообщение
      */
-    public String getResponse(String message, User currentUser) {
-        String response;
+    public Response getResponse(String message, User currentUser) {
+        Logger logger = Logger.getLogger(TelegramBot.class.getName());
+        Response response;
         try {
             response = handlersManager.getResponseFromHandler(message, currentUser);
         } catch (RuntimeException e) {
-            response = "Произошла ошибка, попробуйте позже...";
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            List<String> keyboardMessages = new ArrayList<>();
+            keyboardMessages.add("/help");
+            keyboardMessages.add("/quiz");
+            response = new Response("Произошла ошибка попробуйте позже", keyboardMessages);
+            logger.severe(e.toString());
         }
         return response;
-    }
-
-    /**
-     * Инициализация разметки клавиатуры для бота
-     * @return Объект разметки клавиатуры
-     */
-    public ReplyKeyboardMarkup initKeyboard(User currentUser) {
-        try {
-            String[] keyboardText = handlersManager.keyboardTextInitializer(currentUser);
-
-            ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
-            keyboard.setResizeKeyboard(true);
-            keyboard.setOneTimeKeyboard(true);
-            List<KeyboardRow> rows = new ArrayList<>();
-            KeyboardRow row = new KeyboardRow();
-            rows.add(row);
-
-            for (String text : keyboardText) {
-                row.add(new KeyboardButton(text));
-            }
-            keyboard.setKeyboard(rows);
-            return keyboard;
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
     }
 }

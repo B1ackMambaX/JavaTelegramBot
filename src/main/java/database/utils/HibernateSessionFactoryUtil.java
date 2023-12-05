@@ -1,5 +1,6 @@
 package database.utils;
 
+import database.models.Quizstate;
 import main.Config;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -29,6 +30,7 @@ public class HibernateSessionFactoryUtil {
                 configuration.addAnnotatedClass(Proglang.class);
                 configuration.addAnnotatedClass(Progquiz.class);
                 configuration.addAnnotatedClass(User.class);
+                configuration.addAnnotatedClass(Quizstate.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());
             } catch (Exception e) {

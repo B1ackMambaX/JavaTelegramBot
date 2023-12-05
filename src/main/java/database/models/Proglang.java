@@ -11,26 +11,29 @@ import java.util.List;
 public class Proglang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int proglang_id;
+    private int id;
 
     @Column(name = "proglang_name")
     private String proglang_name;
 
-    @OneToMany(mappedBy = "proglang", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "proglang", cascade = CascadeType.ALL)
     private List<Progquiz> progquizs;
 
     public Proglang() {
     }
 
     /**
-     * @param proglang_name
+     * Конструктор для тестов
+     * @param proglang_name имя ЯП
+     * @param id id ЯП
      */
-    public Proglang(String proglang_name) {
+    public Proglang(String proglang_name, int id) {
+        this.id = id;
         this.proglang_name = proglang_name;
     }
 
     public Integer getId() {
-        return proglang_id;
+        return id;
     }
 
     public String getName(){
@@ -43,6 +46,6 @@ public class Proglang {
 
     @Override
     public String toString() {
-        return "Proglang:" + proglang_id + " " + proglang_name;
+        return "Proglang:" + id + " " + proglang_name;
     }
 }

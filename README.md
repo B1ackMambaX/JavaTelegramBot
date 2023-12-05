@@ -8,6 +8,8 @@
 
 2. [Task 2](https://github.com/B1ackMambaX/JavaTelegramBot/issues/5) - Переработка архитектуры и подключение базы данных.
 
+3. [Task 3](https://github.com/B1ackMambaX/JavaTelegramBot/issues/11) - Реализованы квизы по другим ЯП и подсчет статистики после квиза.
+
 ## How to run bot
 
 ### Local
@@ -17,22 +19,30 @@
 - Запустить `install` в жизненном цикле Maven.
 
 #### Настройка базы данных
-- Создать базу данных PostgreSQL и необходимые таблицы(файлы `sql/init_without_enum.sql` `sql/quiz.sql`)
+- Создать базу данных PostgreSQL и необходимые таблицы(файлы `sql/init.sql` `sql/quiz.sql`)
 
 #### Запуск
 Сделать билд, запустить проект и радоваться!
 
-### Docker
+### Deploy
 #### Docker Compose
-1. Настройка networks и volums
+
+1. Клонировать репозиторий
+2. Клонировать .env.example и заполнить его
+```shell
+cp .env.example .env
+```
+```shell
+nano .env
+```
+3. Настройка networks и volumes
 ```shell
 docker network create javabot_net
 ```
 ```shell
 docker volume create javabot_database_data
 ```
-2. Запуск
+4. Запуск
 ```shell
 docker compose up -d
 ```
-#### Docker, каждый контейнер по отдельности

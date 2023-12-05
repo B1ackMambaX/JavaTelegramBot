@@ -1,9 +1,11 @@
 package logic.handlers;
 
+import database.models.Quizstate;
 import database.models.User;
 import database.models.Progquiz;
 import database.services.ProglangService;
 import database.services.UserService;
+import logic.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,66 +16,110 @@ import java.util.List;
 public class QuizHandler {
     private final ProglangService proglangService;
     private final UserService userService;
-    private List<Progquiz> progquizStorage;
 
+    Quizstate userState;
 
     public QuizHandler() {
         proglangService = new ProglangService();
         userService = new UserService();
-        progquizStorage = proglangService.findProgquizzesByProglangId(1);
     }
+
 
     /**
-     * Конструктор который используется только в тестах
-     * @param proglangService мок сервиса proglang
-     * @param userService мок сервиса user
+     * Конструктор для тестов
+     * @param proglangService мок сервиса ЯП
+     * @param userService мок сервиса пользователя
      */
-    protected QuizHandler(ProglangService proglangService, UserService userService) {
+    public QuizHandler(ProglangService proglangService, UserService userService, Quizstate userState) {
         this.proglangService = proglangService;
         this.userService = userService;
-        this.progquizStorage = proglangService.findProgquizzesByProglangId(1);
+        this.userState = userState;
     }
-
     /**
      * Получение ответа на сообщение в состоянии QUIZ
      * @param message сообщение пользователя
      * @param currentUser пользователь который отправил сообщение
      * @return правильность ответа и следующий вопрос ИЛИ конец квиза
      */
-    public String getResponse(String message, User currentUser) {
+    public Response getResponse(String message, User currentUser) {
+        userState = userService.getQuizState(currentUser.getId());
         message = message.toLowerCase();
 
-        Integer solvedCounter = Integer.parseInt(currentUser.getQurrentQuestion());
+
+        Integer solvedCounter = userState.getCurrentQuestionIndex();
+        Integer quizStat = userState.getCurrentQuizStats();
+        Integer quizProglang = userState.getCurrentProglangId();
         Progquiz currentQuestion = null;
-        String response;
+        List<String> keyboardMessages = new ArrayList<>();
+        Response response;
 
         if (solvedCounter != -1) {
-            currentQuestion = progquizStorage.get(solvedCounter);
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
         }
 
-        if(message.equals("/stop")) {
+        if (quizProglang == -1) {
+            response = new Response("Выберите язык программирования", proglangService.getAllProglangNames());
+            quizProglang = 0;
+        } else if (message.equals("/stop")) {
             solvedCounter = -1;
-            response =  "Тест завершен, чтобы начать заново введите /quiz";
+            quizStat = -1;
+            quizProglang = -1;
+            keyboardMessages.add("/help");
+            keyboardMessages.add("/quiz");
+            response =  new Response("Тест завершен, чтобы начать заново введите /quiz", keyboardMessages);
         } else if (solvedCounter == -1) {
+            if (proglangService.getProglangIdByName(message) != -1) {
+                quizProglang = proglangService.getProglangIdByName(message);
+            } else {
+                return new Response("Язык программирования не найден", proglangService.getAllProglangNames());
+            }
+
             solvedCounter = 0;
-            currentQuestion = progquizStorage.get(solvedCounter);
-            response = "Тест по ЯП JavaScript, состоит из " + progquizStorage.size()
+            quizStat = 0;
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, solvedCounter);
+            String resonseText = "Тест по ЯП " +
+                    proglangService.findProglang(quizProglang).getName() + ", состоит из " +
+                    proglangService.getSizeOfProglang(quizProglang)
                     + " вопросов\n\n" + currentQuestion.getQuestion();
 
-        } else if (solvedCounter < progquizStorage.size() - 1) {
+            keyboardMessages.add("/stop");
+            response = new Response(resonseText, keyboardMessages);
+
+        } else if (solvedCounter < proglangService.getSizeOfProglang(quizProglang) - 1) {
             String checkResponse = checkCorrectness(message, currentQuestion);
-            currentQuestion = progquizStorage.get(++solvedCounter);
-            response =  checkResponse + currentQuestion.getQuestion();
-        } else if (solvedCounter == progquizStorage.size() - 1) {
+            if (checkResponse.contains("Вы ответили правильно!")) {
+                quizStat++;
+            }
+            currentQuestion = proglangService.getQuestionByLang(quizProglang, ++solvedCounter);
+            String responseText =  checkResponse + currentQuestion.getQuestion();
+            keyboardMessages.add("/stop");
+            response = new Response(responseText, keyboardMessages);
+        } else if (solvedCounter == proglangService.getSizeOfProglang(quizProglang) - 1) {
+            String checkResponse = checkCorrectness(message, currentQuestion);
+            if(checkResponse.contains("Вы ответили правильно!")) {
+                quizStat ++;
+            }
+            String testStats = "Количество правильных ответов:" +
+                    quizStat + "/" +
+                    proglangService.getSizeOfProglang(quizProglang);
+            String responseText =  checkResponse + "Тест закончен!\n" + testStats;
+            keyboardMessages.add("/help");
+            keyboardMessages.add("/quiz");
+            response = new Response(responseText, keyboardMessages);
+
             solvedCounter = -1;
-            String checkResponse = checkCorrectness(message, currentQuestion);
-            response =  checkResponse + "Тест закончен!";
+            quizStat = -1;
+            quizProglang = -1;
         } else {
             throw new RuntimeException("Error in quiz logic");
         }
 
-        currentUser.setQurrentQuestion(Integer.toString(solvedCounter));
+        userState.setCurrentQuestionIndex(solvedCounter);
+        userState.setCurrentQuizStats(quizStat);
+        userState.setCurrentProglangId(quizProglang);
+
         userService.update(currentUser);
+        userService.updateQuizState(userState);
         return  response;
     }
 

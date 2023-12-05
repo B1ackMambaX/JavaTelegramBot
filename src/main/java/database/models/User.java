@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer user_id;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column (name = "plathform")
@@ -35,20 +35,8 @@ public class User {
     @Column (name = "state")
     private State state;
 
-    @Column (name = "setting_field_1")
-    private String currentQuestion;
-
-    @Column (name = "setting_field_2")
-    private String setting_field_2;
-
-    @Column (name = "setting_field_3")
-    private String setting_field_3;
-
-    @Column (name = "setting_field_4")
-    private String setting_field_4;
-
-    @Column (name = "setting_field_5")
-    private String setting_field_5;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Quizstate quizstate;
 
     public User(){
     }
@@ -57,21 +45,22 @@ public class User {
         this.plathform = plathform;
         this.plathform_id = plathform_id;
         this.state = State.IDLE;
-        this.currentQuestion = "-1";
     }
 
     /**
      * Конструктор для тестов
      * @param plathform платформа
      * @param plathform_id id пользователя на платформе
-     * @param currentQuestion текущий вопрос
      * @param state состояние пользователя
      */
-    public User(Plathform plathform, Long plathform_id, State state, String currentQuestion) {
+    public User(Plathform plathform, Long plathform_id, State state) {
         this.plathform = plathform;
         this.plathform_id = plathform_id;
         this.state = state;
-        this.currentQuestion = currentQuestion;
+    }
+
+    public Integer getId() {
+        return this.id;
     }
 
     public Plathform getPlathform() {
@@ -83,7 +72,7 @@ public class User {
     }
 
     public Long getPlathform_id() {
-        return plathform_id;
+        return this.plathform_id;
     }
 
     public void setPlathform_id(Long plathform_id) {
@@ -120,46 +109,6 @@ public class User {
 
     public void setState(State state) {
         this.state = state;
-    }
-
-    public String getQurrentQuestion() {
-        return currentQuestion;
-    }
-
-    public void setQurrentQuestion(String qurrentQuestion) {
-        this.currentQuestion = qurrentQuestion;
-    }
-
-    public String getSettingField2() {
-        return setting_field_2;
-    }
-
-    public void setSettingField2(String setting_field_2) {
-        this.setting_field_2 = setting_field_2;
-    }
-
-    public String getSettingField3() {
-        return setting_field_3;
-    }
-
-    public void setSettingField3(String setting_field_3) {
-        this.setting_field_3 = setting_field_3;
-    }
-
-    public String getSettingField4() {
-        return setting_field_4;
-    }
-
-    public void setSettingField4(String setting_field_4) {
-        this.setting_field_4 = setting_field_4;
-    }
-
-    public String getSettingField5() {
-        return setting_field_5;
-    }
-
-    public void setSettingField5(String setting_field_5) {
-        this.setting_field_5 = setting_field_5;
     }
 }
 

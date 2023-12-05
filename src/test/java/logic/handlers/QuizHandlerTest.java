@@ -1,12 +1,15 @@
 package logic.handlers;
 
+import database.models.Proglang;
 import database.models.Progquiz;
+import database.models.Quizstate;
 import database.models.User;
 import database.models.types.Plathform;
+import database.models.types.State;
 import database.services.ProglangService;
 import database.services.UserService;
+import logic.Response;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,66 +21,114 @@ import java.util.List;
  * Тестирование обработчика квиза
  */
 public class QuizHandlerTest {
-    private List<Progquiz> questions;
-    private UserService userService;
-    private ProglangService proglangService;
+    UserService userService;
+    ProglangService proglangService;
+    List<Progquiz> questions = new ArrayList<>();
+    List<String> proglangNames = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
-        questions = new ArrayList<>();
         questions.add(new Progquiz("Какой метод используется для фильтрации массива?", "filter"));
         questions.add(new Progquiz("Какое ключевое слово используется для обозначения наследования классов?",
                 "extends"));
+        proglangNames.add("JavaScript");
+        proglangNames.add("Python");
 
         userService = Mockito.mock(UserService.class);
         proglangService = Mockito.mock(ProglangService.class);
 
-        Mockito.when(proglangService.findProgquizzesByProglangId(1)).thenReturn(questions);
+        Mockito.when(proglangService.getQuestionByLang(1, 0)).thenReturn(questions.get(0));
+        Mockito.when(proglangService.getQuestionByLang(1, 1)).thenReturn(questions.get(1));
+        Mockito.when(proglangService.getAllProglangNames()).thenReturn(proglangNames);
+        Mockito.when(proglangService.getProglangIdByName("javascript")).thenReturn(1);
+        Mockito.when(proglangService.getProglangIdByName("aboba")).thenReturn(-1);
+        Mockito.when(proglangService.findProglang(1)).thenReturn(new Proglang("JavaScript", 1));
+        Mockito.when(proglangService.getSizeOfProglang(1)).thenReturn(2L);
     }
 
     /**
-     * Тестирование различных вариантов ответа
+     * Тестирование различных вариантов ответа и выбора ЯП
      */
     @Test
-    void quizCommandsAndAnswersTest() {
-        User testUser = new User(Plathform.TG, 0L);
+    void answer() {
+        User testUser = new User(Plathform.TG, 0L, State.QUIZ);
+        Quizstate quizstate = new Quizstate(testUser);
+
         Mockito.doNothing().when(userService).update(testUser);
+        Mockito.when(userService.getQuizState(testUser.getId())).thenReturn(quizstate);
+        Mockito.doNothing().when(userService).updateQuizState(quizstate);
+        QuizHandler quizHandler = new QuizHandler(proglangService, userService, quizstate);
 
-        QuizHandler quizHandler = new QuizHandler(proglangService , userService);
 
-        String quizCommand = quizHandler.getResponse("/quiz", testUser);
+        Response quizCommand = quizHandler.getResponse("/quiz", testUser);
+        Assertions.assertEquals(
+                "Выберите язык программирования",
+                quizCommand.message(), "Проверка на команду /quiz");
+
+        Response wrongLang = quizHandler.getResponse("aboba", testUser);
+        Assertions.assertEquals("Язык программирования не найден", wrongLang.message(),
+                "Проверка на неизвестный ЯП");
+
+        Response chooseJs = quizHandler.getResponse("JavaScript", testUser);
         Assertions.assertEquals(
                 "Тест по ЯП JavaScript, состоит из 2 вопросов\n\nКакой метод используется для фильтрации массива?",
-                quizCommand, "Проверка на команду /quiz");
+                chooseJs.message(), "Выбор ЯП");
+        Assertions.assertEquals(1, quizstate.getCurrentProglangId(), "Проверка на смену ЯП у юзера");
 
-        String questionRight = quizHandler.getResponse("filter", testUser);
+        Response questionRight = quizHandler.getResponse("filter", testUser);
         Assertions.assertEquals(
                 "Вы ответили правильно!\nКакое ключевое слово используется для обозначения наследования классов?",
-                questionRight, "Проверка на правильный ответ");
+                questionRight.message(), "Проверка на правильный ответ");
 
-        String questionWrong = quizHandler.getResponse("fgdhgfdh", testUser);
-        Assertions.assertEquals(
-                "Вы ответили неправильно! Правильный ответ:extends\nТест закончен!",
-                questionWrong, "Проверка на неправильный ответ и конец квиза");
+        Response questionWrong = quizHandler.getResponse("hfdjhf", testUser);
+        Assertions.assertEquals("Вы ответили неправильно! Правильный ответ:extends\nТест закончен!\nКоличество правильных ответов:1/2",
+                questionWrong.message(), "Проверка на неправильный ответ + конец + статистика");
     }
 
     /**
-     * Тестирование команды /stop
+     * Тестирование разметки клавиатуры в различных ситуациях
      */
     @Test
-    void stopCommand() {
-        User testUser = new User(Plathform.TG, 0L);
+    void keyboardMarkup() {
+        List<String> keyboardStop = new ArrayList<>();
+        keyboardStop.add("/stop");
+
+        List<String> keyboardLangs = new ArrayList<>();
+        keyboardLangs.add("JavaScript");
+        keyboardLangs.add("Python");
+
+        List<String> keyboardFinal = new ArrayList<>();
+        keyboardFinal.add("/help");
+        keyboardFinal.add("/quiz");
+
+        User testUser = new User(Plathform.TG, 0L, State.QUIZ);
+        Quizstate quizstate = new Quizstate(testUser);
+
         Mockito.doNothing().when(userService).update(testUser);
+        Mockito.when(userService.getQuizState(testUser.getId())).thenReturn(quizstate);
+        Mockito.doNothing().when(userService).updateQuizState(quizstate);
+        QuizHandler quizHandler = new QuizHandler(proglangService, userService, quizstate);
 
-        QuizHandler quizHandler = new QuizHandler(proglangService , userService);
+        Response quizCommand = quizHandler.getResponse("/quiz", testUser);
+        Assertions.assertEquals(
+                keyboardLangs,
+                quizCommand.keyboardMessages(), "Проверка клавиатуры на команду /quiz");
 
-        String quizCommand = quizHandler.getResponse("/quiz", testUser);
-        Assertions.assertEquals(
-                "Тест по ЯП JavaScript, состоит из 2 вопросов\n\nКакой метод используется для фильтрации массива?",
-                quizCommand, "Проверка на команду /quiz");
-        String stopCommand = quizHandler.getResponse("/stop", testUser);
-        Assertions.assertEquals(
-                "Тест завершен, чтобы начать заново введите /quiz",
-                stopCommand, "Проверка на команду /stop");
+        Response wrongLang = quizHandler.getResponse("aboba", testUser);
+        Assertions.assertEquals(keyboardLangs, wrongLang.keyboardMessages(),
+                "Проверка клавиатуры на неизвестный ЯП");
+
+        Response chooseJs = quizHandler.getResponse("JavaScript", testUser);
+        Assertions.assertEquals(keyboardStop, chooseJs.keyboardMessages()
+                ,"Проверка клавиатуры при выборе ЯП");
+
+        Response questionRight = quizHandler.getResponse("filter", testUser);
+        Assertions.assertEquals(keyboardStop,
+                questionRight.keyboardMessages(), "Проверка клавиатуры на правильный ответ");
+
+        Response questionWrong = quizHandler.getResponse("hfdjhf", testUser);
+        Assertions.assertEquals(keyboardFinal, questionWrong.keyboardMessages(),
+                "Проверка на неправильный ответ + конец + статистика");
     }
 }
+
