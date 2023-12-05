@@ -13,7 +13,8 @@ import java.util.List;
  */
 class IdleHandlerTest {
     private IdleHandler idleHandler;
-    private List<String> keyboardCommands = new ArrayList<>();
+    List<String> keyboardCommands = new ArrayList<>();
+
     @BeforeEach
     void setUp() {
         idleHandler = new IdleHandler();
@@ -22,10 +23,10 @@ class IdleHandlerTest {
     }
 
     /**
-     * Команда /start
+     * Ответ на команду /start
      */
     @Test
-    void start() {
+    void startMessage() {
         Response response = idleHandler.getResponse("/start");
         Assertions.assertEquals("""
                     Привет, я помогу тебе поднять теорию по языкам программирования!
@@ -33,6 +34,14 @@ class IdleHandlerTest {
                     В ответ на вопрос присылай мне одно слово.
                     Для начала введи /quiz
                     Чтобы остановить тест введи /stop""", response.message());
+    }
+
+    /**
+     * Разметка клавиатуры при команде /start
+     */
+    @Test
+    void startMessageKeyboard() {
+        Response response = idleHandler.getResponse("/start");
         Assertions.assertEquals(keyboardCommands, response.keyboardMessages());
     }
 
@@ -48,6 +57,14 @@ class IdleHandlerTest {
                     В ответ на вопрос присылай мне одно слово.
                     Для начала введи /quiz
                     Чтобы остановить тест введи /stop""", response.message());
+    }
+
+    /**
+     * Разметка клавиатуры при команде /help
+     */
+    @Test
+    void helpKeyboard() {
+        Response response = idleHandler.getResponse("/help");
         Assertions.assertEquals(keyboardCommands, response.keyboardMessages());
     }
 
@@ -59,6 +76,15 @@ class IdleHandlerTest {
         Response response = idleHandler.getResponse("/fhdhfjdshfd");
         Assertions.assertEquals("Я не понимаю вас, посмотреть список доступных комманд можно с помощью /help",
                 response.message());
+        Assertions.assertEquals(keyboardCommands, response.keyboardMessages());
+    }
+
+    /**
+     * Клавиатура при неизвестной команде
+     */
+    @Test
+    void unknownCommandKeyboard() {
+        Response response = idleHandler.getResponse("/fhdhfjdshfd");
         Assertions.assertEquals(keyboardCommands, response.keyboardMessages());
     }
 }

@@ -24,14 +24,13 @@ public class HandlersManagerTest {
     }
 
     /**
-     * Проверка на переход в состояение QUIZ из состояния IDLE
+     * Проверка на переход пользователя в состояение QUIZ из состояния IDLE
      */
     @Test
     void testChangingStateToQuiz() {
         User testUser = new User(Plathform.TG, 0L, State.IDLE);
         Mockito.doNothing().when(userService).update(testUser);
-        Mockito.when(idleHandler.getResponse("/quiz")).thenReturn(new Response("123", null));
-        Mockito.when(quizHandler.getResponse("/quiz", testUser)).thenReturn(new Response("123", null));
+        Mockito.when(quizHandler.getResponse("/quiz", testUser)).thenReturn(new Response("Выберите язык программирования", null));
 
         HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService);
         Response response = handlersManager.getResponseFromHandler("/quiz", testUser);
@@ -39,24 +38,68 @@ public class HandlersManagerTest {
     }
 
     /**
-     * Проверка перехода в состояние IDLE из состояния QUIZ при команде /stop либо конце квиза
+     * Проверка перехода пользователя в состояние IDLE из состояния QUIZ при команде /stop
      */
     @Test
-    void testChangingStateToIdle() {
+    void testChangingStateToIdleOnStop() {
         User testUser = new User(Plathform.TG, 0L, State.QUIZ);
         Mockito.doNothing().when(userService).update(testUser);
-        Mockito.when(idleHandler.getResponse("/stop")).thenReturn(new Response("123", null));
-        Mockito.when(quizHandler.getResponse("/stop", testUser)).thenReturn(new Response("123", null));
-        Mockito.when(quizHandler.getResponse("End test", testUser)).thenReturn(new Response("Тест закончен!", null));
+        Mockito.when(quizHandler.getResponse("/stop", testUser)).thenReturn(
+                new Response("Тест завершен, чтобы начать заново введите /quiz", null));
 
         HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService);
 
         Response responseStop = handlersManager.getResponseFromHandler("/stop", testUser);
         Assertions.assertEquals(testUser.getState(), State.IDLE, "Тест на команду /stop");
+    }
 
-        testUser.setState(State.QUIZ);
+    /**
+     * Проверка перехода пользователя в состояние IDLE из состояния QUIZ при конце квиза
+     */
+    @Test
+    void testChangingStateToIdleOnQuizEnd() {
+        User testUser = new User(Plathform.TG, 0L, State.QUIZ);
+        Mockito.doNothing().when(userService).update(testUser);
+        Mockito.when(quizHandler.getResponse("End test", testUser)).thenReturn(
+                new Response("Вы ответили неправильно! Правильный ответ:split\nТест закончен!\n" +
+                "Количество правильных ответов:4/5", null));
+
+        HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService);
 
         Response responseEndOfTest = handlersManager.getResponseFromHandler("End test", testUser);
         Assertions.assertEquals(testUser.getState(), State.IDLE, "Тест на конец квиза");
+    }
+
+    /**
+     * Проверка отсутствия мутаций стейта во время квиза
+     */
+    @Test
+    void testStateMutationDuringQuiz() {
+        User testUser = new User(Plathform.TG, 0L, State.QUIZ);
+        Mockito.doNothing().when(userService).update(testUser);
+        Mockito.when(quizHandler.getResponse("extends", testUser)).thenReturn(
+                new Response("Вы ответили правильно!\n" +
+                        "Какой метод добавляет элемент в конец массива?", null));
+
+        HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService);
+        Response responseEndOfTest = handlersManager.getResponseFromHandler("extends", testUser);
+        Assertions.assertEquals(testUser.getState(), State.QUIZ, "Проверка отсутствия мутаций стейта во время квиза");
+    }
+
+    /**
+     * Проверка отсутствия мутации стейта при неизвестной команде
+     */
+    @Test
+    void testStateMutationWithUnknownCommand() {
+        User testUser = new User(Plathform.TG, 0L, State.IDLE);
+        Mockito.when(idleHandler.getResponse("/aboba")).thenReturn(
+                new Response(
+                        "Я не понимаю вас, посмотреть список доступных комманд можно с помощью /help",
+                        null));
+
+        HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService);
+        Response responseEndOfTest = handlersManager.getResponseFromHandler("/aboba", testUser);
+        Assertions.assertEquals(testUser.getState(), State.IDLE,
+                "Проверка отсутствия мутаций стейта при неизвестной команде");
     }
 }

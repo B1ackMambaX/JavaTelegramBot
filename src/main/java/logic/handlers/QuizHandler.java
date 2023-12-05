@@ -16,8 +16,7 @@ import java.util.List;
 public class QuizHandler {
     private final ProglangService proglangService;
     private final UserService userService;
-
-    Quizstate userState;
+    private  Quizstate userState;
 
     public QuizHandler() {
         proglangService = new ProglangService();

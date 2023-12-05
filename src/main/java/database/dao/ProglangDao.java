@@ -39,7 +39,7 @@ public class ProglangDao extends BaseDao<Proglang> {
                             Integer.class)
                     .setParameter("proglang_name", proglang_name)
                     .getSingleResult());
-        } catch (NoResultException e) {
+        } catch (Exception e) {
             return -1;
         }
     }

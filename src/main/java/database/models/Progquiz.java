@@ -34,8 +34,8 @@ public class Progquiz {
      * @param question Вопрос
      * @param answer_value Ответ
      */
-    public Progquiz(String question, String answer_value) {
-        proglang = new Proglang();
+    public Progquiz(String question, String answer_value, Proglang proglang) {
+        this.proglang = proglang;
         this.question = question;
         answer_type = AnswerType.TEXT;
         this.answer_value = answer_value;
