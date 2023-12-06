@@ -1,21 +1,33 @@
 package database.services;
 
+import database.dao.ProglangDao;
 import database.dao.QuizstateDao;
 import database.dao.UserDao;
 import database.models.Quizstate;
 import database.models.User;
 import database.models.types.Plathform;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
  * Слой сервиса который предоставляет CRUD операции для таблицы польщователей
  */
 public class UserService {
-    private final UserDao userDao = new UserDao();
-    private final QuizstateDao quizstateDao = new QuizstateDao();
+    private UserDao userDao = new UserDao();
+    private QuizstateDao quizstateDao = new QuizstateDao();
 
     public UserService() {
+    }
+
+    /**
+     * Конструктор для тестов
+     * @param userDao мок экземпляра UserDao
+     * @param quizstateDao мок экземпляра quizstateDao
+     */
+    public UserService(UserDao userDao, QuizstateDao quizstateDao) {
+        this.userDao = userDao;
+        this.quizstateDao = quizstateDao;
     }
 
     /**

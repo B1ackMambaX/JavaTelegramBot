@@ -4,6 +4,7 @@ import database.models.types.Plathform;
 import database.models.types.State;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * Модель, отражающая сущности таблицы user
@@ -109,6 +110,19 @@ public class User {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return plathform == user.plathform && Objects.equals(plathform_id, user.plathform_id) && state == user.state;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(plathform, plathform_id, state);
     }
 }
 
