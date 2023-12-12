@@ -14,7 +14,7 @@
 
 ### Local
 #### Настройка окружения
-- Создать файл `.env` в корне проекта. 
+- Создать файл `.env` в корне проекта.
 - Заполнить по образцу `.env-example`
 - Запустить `install` в жизненном цикле Maven.
 
@@ -46,3 +46,10 @@ docker volume create javabot_database_data
 ```shell
 docker compose up -d
 ```
+
+5. Иницилизация базы данных
+```shell
+docker compose run database psql -U $DB_USER -d $DB_NAME -f init.sql
+```
+
+
