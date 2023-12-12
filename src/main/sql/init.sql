@@ -33,6 +33,16 @@ CREATE TABLE IF NOT EXISTS public.quizstate(
     FOREIGN KEY (user_id) REFERENCES public.user (id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS public.statistics(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER,
+    proglang_id INTEGER,
+    score INTEGER,
+
+    FOREIGN KEY (user_id) REFERENCES public.user (id) ON DELETE CASCADE,
+    FOREIGN KEY (proglang_id) REFERENCES public.proglang (id) ON DELETE CASCADE
+);
+
 INSERT INTO public.proglang(proglang_name)
 VALUES
     ('JavaScript'),
