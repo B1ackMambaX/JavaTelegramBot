@@ -1,8 +1,7 @@
 package logic.handlers;
 
-import database.models.Quizstate;
-import database.models.User;
-import database.models.Progquiz;
+import database.dao.StatisticsDao;
+import database.models.*;
 import database.services.ProglangService;
 import database.services.UserService;
 import logic.Response;
@@ -16,12 +15,14 @@ import java.util.List;
 public class QuizHandler {
     private final ProglangService proglangService;
     private final UserService userService;
+    private final StatisticsDao statisticsDao;
 
     Quizstate userState;
 
     public QuizHandler() {
         proglangService = new ProglangService();
         userService = new UserService();
+        statisticsDao = new StatisticsDao();
     }
 
 
@@ -34,6 +35,7 @@ public class QuizHandler {
         this.proglangService = proglangService;
         this.userService = userService;
         this.userState = userState;
+        this.statisticsDao = new StatisticsDao();
     }
     /**
      * Получение ответа на сообщение в состоянии QUIZ
@@ -106,6 +108,7 @@ public class QuizHandler {
             keyboardMessages.add("/help");
             keyboardMessages.add("/quiz");
             response = new Response(responseText, keyboardMessages);
+            saveStatistics(currentUser, quizStat, proglangService.findProglang(quizProglang));
 
             solvedCounter = -1;
             quizStat = -1;
@@ -133,6 +136,23 @@ public class QuizHandler {
         return answer.equals(currentQuestion.getAnswerValue())
             ? "Вы ответили правильно!\n"
             : "Вы ответили неправильно! Правильный ответ:" + currentQuestion.getAnswerValue() + '\n';
+    }
+
+    /**
+     * Сохранение статистики в конце квиза
+     * @param user объект пользователя
+     * @param count счетчик статистики
+     * @param proglang объект ЯП
+     */
+    private void saveStatistics(User user, Integer count, Proglang proglang) {
+        try {
+            Statistics statistics = statisticsDao.findByProglangIdAndUserId(user.getId(), proglang.getId());
+            statistics.setScore(count);
+            statisticsDao.update(statistics);
+        } catch (Exception e) {
+            Statistics statistics = new Statistics(user, proglang, count);
+            statisticsDao.save(statistics);
+        }
     }
 }
 

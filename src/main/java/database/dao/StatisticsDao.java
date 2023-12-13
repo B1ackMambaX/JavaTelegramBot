@@ -47,4 +47,22 @@ public class StatisticsDao extends BaseDao<Statistics> {
                         .getResultList()));
         return statistics;
     }
+
+    /**
+     * Получение статистики пользователя по одному из ЯП
+     * @param proglang_id id ЯП в БД
+     * @param user_id id пользователя в БД
+     * @return статистика пользователя по выбранному ЯП
+     */
+    public Statistics findByProglangIdAndUserId(Integer proglang_id, Integer user_id) {
+        Statistics statistics = processSession(session -> session.createQuery(
+                        "select s " +
+                                "from Statistics s " +
+                                "where s.proglang.id = :proglang_id and s.user.id = :user_id",
+                        Statistics.class)
+                .setParameter("proglang_id", proglang_id)
+                .setParameter("user_id", user_id)
+                .uniqueResult());
+        return statistics;
+    }
 }

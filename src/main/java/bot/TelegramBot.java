@@ -54,7 +54,6 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
                 Message inMess = update.getMessage();
                 String username = inMess.getFrom().getUserName();
                 long chatId = inMess.getChatId();
-                System.out.println(username);
                 logger.info("Get new message from: " + chatId + " message: " + inMess);
                 User currentUser = userService.login(plathform, chatId, username);
 
