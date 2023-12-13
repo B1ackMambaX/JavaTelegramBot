@@ -145,12 +145,17 @@ public class QuizHandler {
      * @param proglang объект ЯП
      */
     private void saveStatistics(User user, Integer count, Proglang proglang) {
-        try {
-            Statistics statistics = statisticsDao.findByProglangIdAndUserId(user.getId(), proglang.getId());
+        Statistics statistics = statisticsDao.findByProglangIdAndUserId(proglang.getId(), user.getId());
+
+        System.out.println(user.getId());
+        System.out.println(proglang.getId());
+
+
+        if (statistics != null) {
             statistics.setScore(count);
             statisticsDao.update(statistics);
-        } catch (Exception e) {
-            Statistics statistics = new Statistics(user, proglang, count);
+        } else {
+            statistics = new Statistics(user, proglang, count);
             statisticsDao.save(statistics);
         }
     }

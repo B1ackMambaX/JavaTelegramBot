@@ -62,7 +62,7 @@ public class StatisticsDao extends BaseDao<Statistics> {
                         Statistics.class)
                 .setParameter("proglang_id", proglang_id)
                 .setParameter("user_id", user_id)
-                .uniqueResult());
+                .getSingleResult());
         return statistics;
     }
 }

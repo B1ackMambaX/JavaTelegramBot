@@ -11,7 +11,7 @@ import org.hibernate.cfg.Configuration;
  * Фабрика сессий
  */
 public class HibernateSessionFactoryUtil {
-    private SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
     private Config config = new Config();
 
     public HibernateSessionFactoryUtil() {}

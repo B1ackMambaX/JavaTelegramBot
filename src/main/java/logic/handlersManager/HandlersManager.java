@@ -6,6 +6,7 @@ import logic.Response;
 import logic.handlers.IdleHandler;
 import logic.handlers.QuizHandler;
 import database.models.types.State;
+import logic.handlers.StatisticHandler;
 
 /**
  * Класс, который реализует выбор обработчика сообщения в зависимости от состояния пользователя
@@ -14,11 +15,13 @@ public class HandlersManager {
     private final UserService userService;
     private final IdleHandler idleHandler;
     private final  QuizHandler quizHandler;
+    private final StatisticHandler statisticHandler;
 
     public HandlersManager() {
         idleHandler = new IdleHandler();
         quizHandler = new QuizHandler();
         userService = new UserService();
+        statisticHandler = new StatisticHandler();
     }
 
     /**
@@ -31,6 +34,7 @@ public class HandlersManager {
         this.idleHandler = idleHandler;
         this.quizHandler = quizHandler;
         this.userService = userService;
+        this.statisticHandler = new StatisticHandler();
     }
 
     /**
@@ -49,6 +53,8 @@ public class HandlersManager {
                     currentUser.setState(State.QUIZ);
                     userService.update(currentUser);
                     response = quizHandler.getResponse(message, currentUser);
+                } else if (message.equals("/mystats")) {
+                    response = statisticHandler.getUserStatistic(currentUser);
                 } else {
                     response = idleHandler.getResponse(message);
                 }
