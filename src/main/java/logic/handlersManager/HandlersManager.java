@@ -30,11 +30,12 @@ public class HandlersManager {
      * @param quizHandler мок обработчика состояния QUIZ
      * @param userService мок сервиса пользователя
      */
-    public HandlersManager(IdleHandler idleHandler, QuizHandler quizHandler, UserService userService) {
+    public HandlersManager(IdleHandler idleHandler, QuizHandler quizHandler, UserService userService,
+                           StatisticHandler statisticHandler) {
         this.idleHandler = idleHandler;
         this.quizHandler = quizHandler;
         this.userService = userService;
-        this.statisticHandler = new StatisticHandler();
+        this.statisticHandler = statisticHandler;
     }
 
     /**
@@ -55,6 +56,10 @@ public class HandlersManager {
                     response = quizHandler.getResponse(message, currentUser);
                 } else if (message.equals("/mystats")) {
                     response = statisticHandler.getUserStatistic(currentUser);
+                } else if (message.equals("/leaderboard")) {
+                    currentUser.setState(State.LEADERBOARD);
+                    userService.update(currentUser);
+                    response = statisticHandler.getLeaderboard(currentUser, message);
                 } else {
                     response = idleHandler.getResponse(message);
                 }
@@ -72,6 +77,8 @@ public class HandlersManager {
                     }
                 }
                 return response;
+            case LEADERBOARD:
+                return statisticHandler.getLeaderboard(currentUser, message);
             default:
                 throw new RuntimeException("Error in state manager");
         }

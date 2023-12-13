@@ -19,6 +19,8 @@ class IdleHandlerTest {
         idleHandler = new IdleHandler();
         keyboardCommands.add("/help");
         keyboardCommands.add("/quiz");
+        keyboardCommands.add("/mystats");
+        keyboardCommands.add("/leaderboard");
     }
 
     /**

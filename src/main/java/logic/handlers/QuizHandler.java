@@ -31,11 +31,11 @@ public class QuizHandler {
      * @param proglangService мок сервиса ЯП
      * @param userService мок сервиса пользователя
      */
-    public QuizHandler(ProglangService proglangService, UserService userService, Quizstate userState) {
+    public QuizHandler(ProglangService proglangService, UserService userService, Quizstate userState, StatisticsDao statisticsDao) {
         this.proglangService = proglangService;
         this.userService = userService;
         this.userState = userState;
-        this.statisticsDao = new StatisticsDao();
+        this.statisticsDao = statisticsDao;
     }
     /**
      * Получение ответа на сообщение в состоянии QUIZ
@@ -68,6 +68,8 @@ public class QuizHandler {
             quizProglang = -1;
             keyboardMessages.add("/help");
             keyboardMessages.add("/quiz");
+            keyboardMessages.add("/mystats");
+            keyboardMessages.add("/leaderboard");
             response =  new Response("Тест завершен, чтобы начать заново введите /quiz", keyboardMessages);
         } else if (solvedCounter == -1) {
             if (proglangService.getProglangIdByName(message) != -1) {
@@ -107,6 +109,8 @@ public class QuizHandler {
             String responseText =  checkResponse + "Тест закончен!\n" + testStats;
             keyboardMessages.add("/help");
             keyboardMessages.add("/quiz");
+            keyboardMessages.add("/mystats");
+            keyboardMessages.add("/leaderboard");
             response = new Response(responseText, keyboardMessages);
             saveStatistics(currentUser, quizStat, proglangService.findProglang(quizProglang));
 
@@ -123,7 +127,7 @@ public class QuizHandler {
 
         userService.update(currentUser);
         userService.updateQuizState(userState);
-        return  response;
+        return response;
     }
 
     /**
@@ -145,19 +149,16 @@ public class QuizHandler {
      * @param proglang объект ЯП
      */
     private void saveStatistics(User user, Integer count, Proglang proglang) {
-        Statistics statistics = statisticsDao.findByProglangIdAndUserId(proglang.getId(), user.getId());
-
-        System.out.println(user.getId());
-        System.out.println(proglang.getId());
-
-
-        if (statistics != null) {
+        try {
+            Statistics statistics = statisticsDao.findByProglangIdAndUserId(proglang.getId(), user.getId());
+            if (statistics.getScore() > count) {
+                return;
+            }
             statistics.setScore(count);
             statisticsDao.update(statistics);
-        } else {
-            statistics = new Statistics(user, proglang, count);
+        } catch (Exception e) {
+            Statistics statistics = new Statistics(user, proglang, count);
             statisticsDao.save(statistics);
         }
     }
 }
-
