@@ -51,10 +51,10 @@ public class UserService {
      * @param plathform платформа с которой пользователь использует бота
      * @return пользователь
      */
-    public User login(Plathform plathform, long plathformId) {
+    public User login(Plathform plathform, long plathformId, String username) {
         User currentUser = userDao.findOneByPlathformAndId(plathform, plathformId);
         if (currentUser == null) {
-            currentUser = new User(plathform, plathformId);
+            currentUser = new User(plathform, plathformId, username);
             userDao.save(currentUser);
 
             Quizstate currentQuizStateUser = new Quizstate(currentUser);

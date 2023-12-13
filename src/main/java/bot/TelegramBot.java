@@ -3,7 +3,6 @@ package bot;
 import database.models.types.Plathform;
 import database.services.UserService;
 import logic.Response;
-import main.App;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -53,9 +52,11 @@ public class TelegramBot extends TelegramLongPollingBot implements IBot {
         try {
             if (update.hasMessage() && update.getMessage().hasText()) {
                 Message inMess = update.getMessage();
+                String username = inMess.getFrom().getUserName();
                 long chatId = inMess.getChatId();
+                System.out.println(username);
                 logger.info("Get new message from: " + chatId + " message: " + inMess);
-                User currentUser = userService.login(plathform, chatId);
+                User currentUser = userService.login(plathform, chatId, username);
 
                 Response response = getResponse(inMess.getText(), currentUser);
                 SendMessage outMess = new SendMessage();
