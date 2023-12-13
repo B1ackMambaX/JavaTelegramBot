@@ -4,6 +4,7 @@ import database.models.types.Plathform;
 import database.models.types.State;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Модель, отражающая сущности таблицы user
@@ -38,8 +39,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Quizstate quizstate;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Statistics statistics;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Statistics> statistics;
 
     public User(){
     }

@@ -19,8 +19,8 @@ public class Proglang {
     @OneToMany(mappedBy = "proglang", cascade = CascadeType.ALL)
     private List<Progquiz> progquizs;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Statistics statistics;
+    @OneToMany(mappedBy = "proglang", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Statistics> statistics;
 
     public Proglang() {
     }
