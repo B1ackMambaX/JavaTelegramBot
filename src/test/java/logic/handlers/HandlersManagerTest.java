@@ -31,7 +31,7 @@ public class HandlersManagerTest {
      */
     @Test
     void testChangingStateToQuiz() {
-        User testUser = new User(Plathform.TG, 0L, State.IDLE, "111");
+        User testUser = new User(1, Plathform.TG, 0L, State.IDLE, "111");
         Mockito.doNothing().when(userService).update(testUser);
         Mockito.when(idleHandler.getResponse("/quiz")).thenReturn(new Response("123", null));
         Mockito.when(quizHandler.getResponse("/quiz", testUser)).thenReturn(new Response("123", null));
@@ -46,7 +46,7 @@ public class HandlersManagerTest {
      */
     @Test
     void testChangingStateToIdle() {
-        User testUser = new User(Plathform.TG, 0L, State.QUIZ, "111");
+        User testUser = new User(1, Plathform.TG, 0L, State.QUIZ, "111");
         Mockito.doNothing().when(userService).update(testUser);
         Mockito.when(idleHandler.getResponse("/stop")).thenReturn(new Response("123", null));
         Mockito.when(quizHandler.getResponse("/stop", testUser)).thenReturn(new Response("123", null));
@@ -65,7 +65,7 @@ public class HandlersManagerTest {
 
     @Test
     void testChangingStateToLeaderboard() {
-        User testUser = new User(Plathform.TG, 0L, State.IDLE, "111");
+        User testUser = new User(1, Plathform.TG, 0L, State.IDLE, "111");
         Mockito.doNothing().when(userService).update(testUser);
         Mockito.when(statisticHandler.getUserStatistic(testUser)).thenReturn(new Response("Ваша статистика:\n" +
                 "JavaScript: 5/5\n" +

@@ -54,7 +54,7 @@ public class QuizHandlerTest {
      */
     @Test
     void answer() {
-        User testUser = new User(Plathform.TG, 0L, State.QUIZ, "111");
+        User testUser = new User(1, Plathform.TG, 0L, State.QUIZ, "111");
         Quizstate quizstate = new Quizstate(testUser);
 
         Mockito.doNothing().when(userService).update(testUser);
@@ -106,7 +106,7 @@ public class QuizHandlerTest {
         keyboardFinal.add("/mystats");
         keyboardFinal.add("/leaderboard");
 
-        User testUser = new User(Plathform.TG, 0L, State.QUIZ, "111");
+        User testUser = new User(1, Plathform.TG, 0L, State.QUIZ, "111");
         Quizstate quizstate = new Quizstate(testUser);
 
         Mockito.doNothing().when(userService).update(testUser);
