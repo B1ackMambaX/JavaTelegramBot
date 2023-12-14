@@ -12,19 +12,24 @@ public class Statistics {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "proglang_id")
     private Proglang proglang;
 
     @Column(name = "score")
     private Integer score;
 
-    public Statistics() {
+    public Statistics(User user, Proglang proglang, Integer score) {
+        this.score = score;
+        this.user = user;
+        this.proglang = proglang;
     }
+
+    public Statistics() {}
 
     public Integer getId() {
         return id;

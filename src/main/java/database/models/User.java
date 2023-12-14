@@ -45,10 +45,11 @@ public class User {
     public User(){
     }
 
-    public User(Plathform plathform, Long plathform_id) {
+    public User(Plathform plathform, Long plathform_id, String plathform_username) {
         this.plathform = plathform;
         this.plathform_id = plathform_id;
         this.state = State.IDLE;
+        this.plathform_username = plathform_username;
     }
 
     /**
@@ -57,7 +58,9 @@ public class User {
      * @param plathform_id id пользователя на платформе
      * @param state состояние пользователя
      */
-    public User(Plathform plathform, Long plathform_id, State state) {
+    public User(Integer id, Plathform plathform, Long plathform_id, State state, String plathform_username) {
+        this.plathform_username = plathform_username;
+        this.id = id;
         this.plathform = plathform;
         this.plathform_id = plathform_id;
         this.state = state;

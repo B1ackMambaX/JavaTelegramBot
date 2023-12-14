@@ -19,6 +19,8 @@ public class IdleHandler {
         List<String> keyboardMessages = new ArrayList<>();
         keyboardMessages.add("/help");
         keyboardMessages.add("/quiz");
+        keyboardMessages.add("/mystats");
+        keyboardMessages.add("/leaderboard");
 
          if (message.equals("/start") || message.equals("/help")) {
             return new Response("""
