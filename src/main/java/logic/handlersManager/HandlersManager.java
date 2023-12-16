@@ -6,7 +6,7 @@ import logic.Response;
 import logic.handlers.IdleHandler;
 import logic.handlers.QuizHandler;
 import database.models.types.State;
-import logic.handlers.StatisticHandler;
+import logic.handlers.StatisticsHandler;
 
 /**
  * Класс, который реализует выбор обработчика сообщения в зависимости от состояния пользователя
@@ -15,13 +15,13 @@ public class HandlersManager {
     private final UserService userService;
     private final IdleHandler idleHandler;
     private final  QuizHandler quizHandler;
-    private final StatisticHandler statisticHandler;
+    private final StatisticsHandler statisticsHandler;
 
     public HandlersManager() {
         idleHandler = new IdleHandler();
         quizHandler = new QuizHandler();
         userService = new UserService();
-        statisticHandler = new StatisticHandler();
+        statisticsHandler = new StatisticsHandler();
     }
 
     /**
@@ -31,11 +31,11 @@ public class HandlersManager {
      * @param userService мок сервиса пользователя
      */
     public HandlersManager(IdleHandler idleHandler, QuizHandler quizHandler, UserService userService,
-                           StatisticHandler statisticHandler) {
+                           StatisticsHandler statisticsHandler) {
         this.idleHandler = idleHandler;
         this.quizHandler = quizHandler;
         this.userService = userService;
-        this.statisticHandler = statisticHandler;
+        this.statisticsHandler = statisticsHandler;
     }
 
     /**
@@ -55,11 +55,11 @@ public class HandlersManager {
                     userService.update(currentUser);
                     response = quizHandler.getResponse(message, currentUser);
                 } else if (message.equals("/mystats")) {
-                    response = statisticHandler.getUserStatistic(currentUser);
+                    response = statisticsHandler.getUserStatistic(currentUser);
                 } else if (message.equals("/leaderboard")) {
                     currentUser.setState(State.LEADERBOARD);
                     userService.update(currentUser);
-                    response = statisticHandler.getLeaderboard(currentUser, message);
+                    response = statisticsHandler.getLeaderboard(currentUser, message);
                 } else {
                     response = idleHandler.getResponse(message);
                 }
@@ -78,7 +78,7 @@ public class HandlersManager {
                 }
                 return response;
             case LEADERBOARD:
-                return statisticHandler.getLeaderboard(currentUser, message);
+                return statisticsHandler.getLeaderboard(currentUser, message);
             default:
                 throw new RuntimeException("Error in state manager");
         }

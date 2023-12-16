@@ -10,20 +10,18 @@ import database.services.UserService;
 import logic.Response;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * Отвечает за статистику и лидерборд по квизам
  */
-public class StatisticHandler {
+public class StatisticsHandler {
     private final StatisticsDao statisticsDao;
     private final ProglangDao proglangDao;
     private final UserService userService;
     private final List<String> keyboardMessagesIdle;
 
-    public StatisticHandler() {
+    public StatisticsHandler() {
         this.statisticsDao = new StatisticsDao();
         this.proglangDao = new ProglangDao();
         this.keyboardMessagesIdle = new ArrayList<>();
@@ -37,7 +35,7 @@ public class StatisticHandler {
     /**
      * Конструктор для тестов
      */
-    public StatisticHandler(StatisticsDao statisticsDao, ProglangDao proglangDao, UserService userService) {
+    public StatisticsHandler(StatisticsDao statisticsDao, ProglangDao proglangDao, UserService userService) {
         this.statisticsDao = statisticsDao;
         this.proglangDao = proglangDao;
         this.keyboardMessagesIdle = new ArrayList<>();
