@@ -29,7 +29,7 @@ public class Statistics {
         this.proglang = proglang;
     }
 
-    public Statistics() {}
+    private Statistics() {}
 
     public long getId() {
         return id;
