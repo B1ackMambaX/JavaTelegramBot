@@ -1,7 +1,6 @@
 package logic.handlersManager;
 
 import database.models.User;
-import database.services.UserService;
 import logic.Response;
 import logic.handlers.IdleHandler;
 import logic.handlers.QuizHandler;
@@ -12,7 +11,6 @@ import logic.handlers.StatisticsHandler;
  * Класс, который реализует выбор обработчика сообщения в зависимости от состояния пользователя
  */
 public class HandlersManager {
-    private final UserService userService;
     private final IdleHandler idleHandler;
     private final  QuizHandler quizHandler;
     private final StatisticsHandler statisticsHandler;
@@ -20,7 +18,6 @@ public class HandlersManager {
     public HandlersManager() {
         idleHandler = new IdleHandler();
         quizHandler = new QuizHandler();
-        userService = new UserService();
         statisticsHandler = new StatisticsHandler();
     }
 
@@ -28,13 +25,10 @@ public class HandlersManager {
      * Конструктор для тестов
      * @param idleHandler мок обработчика состояния IDLE
      * @param quizHandler мок обработчика состояния QUIZ
-     * @param userService мок сервиса пользователя
      */
-    public HandlersManager(IdleHandler idleHandler, QuizHandler quizHandler, UserService userService,
-                           StatisticsHandler statisticsHandler) {
+    public HandlersManager(IdleHandler idleHandler, QuizHandler quizHandler, StatisticsHandler statisticsHandler) {
         this.idleHandler = idleHandler;
         this.quizHandler = quizHandler;
-        this.userService = userService;
         this.statisticsHandler = statisticsHandler;
     }
 
