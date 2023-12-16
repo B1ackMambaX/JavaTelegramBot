@@ -23,9 +23,11 @@ public class StatisticsDao extends BaseDao<Statistics> {
                 processSession(session -> session.createQuery(
                                 "select s " +
                                         "from Statistics s " +
-                                    "where s.proglang.id = :proglang_id",
+                                        "where s.proglang.id = :proglang_id " +
+                                        "order by s.score desc",
                                 Statistics.class)
                         .setParameter("proglang_id", proglang_id)
+                        .setMaxResults(10) // добавляем лимит в 10 сущностей
                         .getResultList()));
         return statistics;
     }

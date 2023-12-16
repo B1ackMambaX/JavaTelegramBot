@@ -90,27 +90,18 @@ public class StatisticHandler {
         } else if (keyboardMessages.contains(message)) {
             String responseMessage;
             Integer proglangId = proglangDao.getIdByName(message.toLowerCase());
-            List<Statistics> rawStats = statisticsDao.findAllByProglangId(proglangId);
-            if (rawStats.isEmpty()) {
+            List<Statistics> stats = statisticsDao.findAllByProglangId(proglangId);
+            if (stats.isEmpty()) {
                 currentUser.setState(State.IDLE);
                 userService.update(currentUser);
                 return new Response("Нет статистики по выбранному ЯП", keyboardMessagesIdle);
             }
             Long totalQuestions = proglangDao.countProgquizzesByProglangId(proglangId);
-            rawStats.sort(new Comparator<Statistics>() {
-                @Override
-                public int compare(Statistics o1, Statistics o2) {
-                    return o2.getScore() - o1.getScore();
-                }
-            });
-            if (rawStats.size() > 10) {
-                rawStats = rawStats.subList(0, 10);
-            }
 
             responseMessage = "Топ по языку " + message + "\n";
-            for (int i = 0; i < rawStats.size(); i++) {
-                String username = rawStats.get(i).getUser().getPlathform_username();
-                responseMessage += (i + 1) + ". " + username + " " + rawStats.get(i).getScore() + "/"
+            for (int i = 0; i < stats.size(); i++) {
+                String username = stats.get(i).getUser().getPlathform_username();
+                responseMessage += (i + 1) + ". " + username + " " + stats.get(i).getScore() + "/"
                         + totalQuestions + "\n";
             }
             currentUser.setState(State.IDLE);
