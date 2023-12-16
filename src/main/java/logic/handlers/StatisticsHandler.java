@@ -25,12 +25,8 @@ public class StatisticsHandler {
     public StatisticsHandler() {
         this.statisticsDao = new StatisticsDao();
         this.proglangDao = new ProglangDao();
-        this.keyboardMessagesIdle = new ArrayList<>();
         this.userService = new UserService();
-        keyboardMessagesIdle.add("/help");
-        keyboardMessagesIdle.add("/quiz");
-        keyboardMessagesIdle.add("/mystats");
-        keyboardMessagesIdle.add("/leaderboard");
+        this.keyboardMessagesIdle = new ArrayList<>(Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard"));
     }
 
     /**
@@ -82,6 +78,8 @@ public class StatisticsHandler {
     public Response getLeaderboard(User currentUser, String message) {
         List<String> keyboardMessages = proglangDao.getAllNames();
         if (message.equals("/leaderboard")) {
+            currentUser.setState(State.LEADERBOARD);
+            userService.update(currentUser);
             return new Response("Выберите ЯП:", keyboardMessages);
         } else if (keyboardMessages.contains(message)) {
             StringBuilder responseMessage;

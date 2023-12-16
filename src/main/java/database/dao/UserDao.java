@@ -35,10 +35,10 @@ public class UserDao extends BaseDao<User> {
         return processSession(session -> session.createQuery(
                         "select u " +
                                 "from User u " +
-                                "where u.plathform = :plathform and u.plathform_id = :plathform_id",
+                                "where u.plathform = :plathform and u.plathformId = :plathformId",
                         User.class)
                             .setParameter("plathform", plathform)
-                            .setParameter("plathform_id", plathformId)
+                            .setParameter("plathformId", plathformId)
                             .getSingleResult());
     }
 

@@ -23,11 +23,11 @@ public class StatisticsDao extends BaseDao<Statistics> {
                 processSession(session -> session.createQuery(
                                 "select s " +
                                         "from Statistics s " +
-                                        "where s.proglang.id = :proglang_id " +
+                                        "where s.proglang.id = :proglangId " +
                                         "order by s.score desc",
                                 Statistics.class)
-                        .setParameter("proglang_id", proglangId)
-                        .setMaxResults(10) // добавляем лимит в 10 сущностей
+                        .setParameter("proglangId", proglangId)
+                        .setMaxResults(10)
                         .getResultList()));
         return statistics;
     }
@@ -43,9 +43,9 @@ public class StatisticsDao extends BaseDao<Statistics> {
                 processSession(session -> session.createQuery(
                                 "select s " +
                                         "from Statistics s " +
-                                        "where s.user.id = :user_id",
+                                        "where s.user.id = :userId",
                                 Statistics.class)
-                        .setParameter("user_id", userId)
+                        .setParameter("userId", userId)
                         .getResultList()));
         return statistics;
     }
@@ -60,10 +60,10 @@ public class StatisticsDao extends BaseDao<Statistics> {
         Statistics statistics = processSession(session -> session.createQuery(
                         "select s " +
                                 "from Statistics s " +
-                                "where s.proglang.id = :proglang_id and s.user.id = :user_id",
+                                "where s.proglang.id = :proglangId and s.user.id = :userId",
                         Statistics.class)
-                .setParameter("proglang_id", proglangId)
-                .setParameter("user_id", userId)
+                .setParameter("proglangId", proglangId)
+                .setParameter("userId", userId)
                 .getSingleResult());
         return statistics;
     }

@@ -12,7 +12,7 @@ public class Proglang {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "proglang_name")
+    @Column(name = "proglangName")
     private String proglangName;
 
     public Proglang() {

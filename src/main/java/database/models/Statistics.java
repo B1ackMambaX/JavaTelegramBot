@@ -13,11 +13,11 @@ public class Statistics {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "proglang_id")
+    @JoinColumn(name = "proglangId")
     private Proglang proglang;
 
     @Column(name = "score")

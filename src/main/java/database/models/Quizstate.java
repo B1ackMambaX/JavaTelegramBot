@@ -9,16 +9,16 @@ public class Quizstate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column (name = "current_proglang_id")
+    @Column (name = "currentProglangId")
     private long currentProglangId;
-    @Column (name = "current_question_index")
+    @Column (name = "currentQuestionIndex")
     private int currentQuestionIndex;
 
-    @Column (name = "current_quiz_stats")
+    @Column (name = "currentQuizStats")
     private int currentQuizStats;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 
     public Quizstate(){

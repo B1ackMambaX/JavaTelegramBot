@@ -35,9 +35,9 @@ public class ProglangDao extends BaseDao<Proglang> {
             return processSession(session -> session.createQuery(
                             "select p.id " +
                                     "from Proglang p " +
-                                    "where lower(p.proglang_name) = :proglang_name",
+                                    "where lower(p.proglangName) = :proglangName",
                             Long.class)
-                    .setParameter("proglang_name", proglangName)
+                    .setParameter("proglangName", proglangName)
                     .getSingleResult());
         } catch (NoResultException e) {
             return -1;
@@ -52,7 +52,7 @@ public class ProglangDao extends BaseDao<Proglang> {
         List<String> names = new ArrayList<String>();
         names.addAll(
                 processSession(session -> session.createQuery(
-                        "select p.proglang_name " +
+                        "select p.proglangName " +
                                 "from Proglang p ",
                         String.class)
                 .getResultList()));
@@ -69,9 +69,9 @@ public class ProglangDao extends BaseDao<Proglang> {
         return processSession(session -> session.createQuery(
                         "select p " +
                                 "from Progquiz p " +
-                                "where p.proglang.id = :proglang_id",
+                                "where p.proglang.id = :proglangId",
                         Progquiz.class)
-                .setParameter("proglang_id", proglangId)
+                .setParameter("proglangId", proglangId)
                 .setFirstResult(offset)
                 .setMaxResults(1)
                 .getSingleResult());
@@ -85,9 +85,9 @@ public class ProglangDao extends BaseDao<Proglang> {
         long count = processSession(session -> session.createQuery(
                         "select count(p) " +
                                 "from Progquiz p " +
-                                "where p.proglang.id = :proglang_id",
+                                "where p.proglang.id = :proglangId",
                         Long.class)
-                .setParameter("proglang_id", proglangId)
+                .setParameter("proglangId", proglangId)
                 .getSingleResult());
 
         return count;

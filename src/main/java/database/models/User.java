@@ -19,16 +19,16 @@ public class User {
     @Column (name = "plathform")
     private Plathform plathform;
 
-    @Column (name = "plathform_id")
+    @Column (name = "plathformId")
     private long plathformId;
 
-    @Column (name = "plathform_username")
+    @Column (name = "plathformUsername")
     private String plathformUsername;
 
-    @Column (name = "plathform_phone")
+    @Column (name = "plathformPhone")
     private String plathformPhone;
 
-    @Column (name = "plathform_email")
+    @Column (name = "plathformEmail")
     private String plathformEmail;
 
     @Enumerated(EnumType.STRING)

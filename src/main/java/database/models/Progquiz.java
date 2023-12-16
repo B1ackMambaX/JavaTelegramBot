@@ -15,16 +15,16 @@ public class Progquiz {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "proglang_id")
+    @JoinColumn(name = "proglangId")
     private Proglang proglang;
 
     @Column (name = "question")
     private String question;
 
     @Enumerated(EnumType.STRING)
-    @Column (name = "answer_type")
+    @Column (name = "answerType")
     private AnswerType answerType;
-    @Column (name = "answer_value")
+    @Column (name = "answerValue")
     private String answerValue;
 
     public Progquiz() {}

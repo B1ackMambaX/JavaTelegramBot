@@ -50,33 +50,15 @@ public class HandlersManager {
         State state = currentUser.getState();
         switch (state) {
             case IDLE:
-                if (message.equals("/quiz")) {
-                    currentUser.setState(State.QUIZ);
-                    userService.update(currentUser);
-                    response = quizHandler.getResponse(message, currentUser);
-                } else if (message.equals("/mystats")) {
-                    response = statisticsHandler.getUserStatistic(currentUser);
-                } else if (message.equals("/leaderboard")) {
-                    currentUser.setState(State.LEADERBOARD);
-                    userService.update(currentUser);
-                    response = statisticsHandler.getLeaderboard(currentUser, message);
-                } else {
-                    response = idleHandler.getResponse(message);
-                }
+                response = switch (message) {
+                    case "/quiz" -> quizHandler.getResponse(message, currentUser);
+                    case "/mystats" -> statisticsHandler.getUserStatistic(currentUser);
+                    case "/leaderboard" -> statisticsHandler.getLeaderboard(currentUser, message);
+                    default -> idleHandler.getResponse(message);
+                };
                 return response;
             case QUIZ:
-                if (message.equals("/stop")) {
-                    currentUser.setState(State.IDLE);
-                    userService.update(currentUser);
-                    response = quizHandler.getResponse(message, currentUser);
-                } else {
-                    response = quizHandler.getResponse(message, currentUser);
-                    if (response.message().contains("Тест закончен!")) {
-                        currentUser.setState(State.IDLE);
-                        userService.update(currentUser);
-                    }
-                }
-                return response;
+                    return quizHandler.getResponse(message, currentUser);
             case LEADERBOARD:
                 return statisticsHandler.getLeaderboard(currentUser, message);
             default:

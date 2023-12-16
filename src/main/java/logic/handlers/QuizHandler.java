@@ -1,12 +1,14 @@
 package logic.handlers;
 
 import database.models.*;
+import database.models.types.State;
 import database.services.ProglangService;
 import database.services.StatisticsService;
 import database.services.UserService;
 import logic.Response;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,17 +62,16 @@ public class QuizHandler {
         }
 
         if (quizProglang == -1) {
+            currentUser.setState(State.QUIZ);
             response = new Response("Выберите язык программирования", proglangService.getAllProglangNames());
             quizProglang = 0;
         } else if (message.equals("/stop")) {
             solvedCounter = -1;
             quizStat = -1;
             quizProglang = -1;
-            keyboardMessages.add("/help");
-            keyboardMessages.add("/quiz");
-            keyboardMessages.add("/mystats");
-            keyboardMessages.add("/leaderboard");
+            keyboardMessages = Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard");
             response =  new Response("Тест завершен, чтобы начать заново введите /quiz", keyboardMessages);
+            currentUser.setState(State.IDLE);
         } else if (solvedCounter == -1) {
             if (proglangService.getProglangIdByName(message) != -1) {
                 quizProglang = proglangService.getProglangIdByName(message);
@@ -107,11 +108,9 @@ public class QuizHandler {
                     quizStat + "/" +
                     proglangService.getSizeOfProglang(quizProglang);
             String responseText =  checkResponse + "Тест закончен!\n" + testStats;
-            keyboardMessages.add("/help");
-            keyboardMessages.add("/quiz");
-            keyboardMessages.add("/mystats");
-            keyboardMessages.add("/leaderboard");
+            keyboardMessages = Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard");
             response = new Response(responseText, keyboardMessages);
+            currentUser.setState(State.IDLE);
             statisticsService.saveStatistics(currentUser, quizStat, proglangService.findProglang(quizProglang));
 
             solvedCounter = -1;
