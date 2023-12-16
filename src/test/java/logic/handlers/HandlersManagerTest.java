@@ -9,72 +9,92 @@ import logic.handlersManager.HandlersManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 public class HandlersManagerTest {
-    private UserService userService;
     private IdleHandler idleHandler;
     private QuizHandler quizHandler;
-
-    private StatisticHandler statisticHandler;
+    private StatisticsHandler statisticsHandler;
+    private HandlersManager handlersManager;
 
     @BeforeEach
     void setUp() {
-        userService = Mockito.mock(UserService.class);
         idleHandler = Mockito.mock(IdleHandler.class);
         quizHandler = Mockito.mock(QuizHandler.class);
-        statisticHandler = Mockito.mock(StatisticHandler.class);
+        statisticsHandler = Mockito.mock(StatisticsHandler.class);
+        Mockito.when(quizHandler.getResponse(Mockito.anyString(), Mockito.isA(User.class))).thenReturn(
+                new Response("Message sended to QuizHandler", null));
+        Mockito.when(idleHandler.getResponse(Mockito.anyString())).thenReturn(
+                new Response("Message sended to IdleHandler", null));
+        Mockito.when(statisticsHandler.getUserStatistic(Mockito.isA(User.class))).thenReturn(
+                new Response("Message sended to StatisticHadnler.getUserStatistics", null));
+        Mockito.when(statisticsHandler.getLeaderboard(Mockito.isA(User.class), Mockito.anyString())).thenReturn(
+                new Response("Message sended to StatisticHadnler.getLeaderboard", null));
+        handlersManager = new HandlersManager(idleHandler, quizHandler, statisticsHandler);
     }
 
     /**
-     * Проверка на переход в состояение QUIZ из состояния IDLE
+     * Проверка отправления команды /quiz в QuizHandler из состояния IDLE
      */
     @Test
-    void testChangingStateToQuiz() {
+    void checkQuizCommandOnIDLE() {
         User testUser = new User(1, Plathform.TG, 0L, State.IDLE, "111");
-        Mockito.doNothing().when(userService).update(testUser);
-        Mockito.when(idleHandler.getResponse("/quiz")).thenReturn(new Response("123", null));
-        Mockito.when(quizHandler.getResponse("/quiz", testUser)).thenReturn(new Response("123", null));
-
-        HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService, statisticHandler);
         Response response = handlersManager.getResponseFromHandler("/quiz", testUser);
-        Assertions.assertEquals(testUser.getState(), State.QUIZ, "Тест на переход в состояние QUIZ");
+        Assertions.assertEquals(response.message(), "Message sended to QuizHandler");
     }
 
     /**
-     * Проверка перехода в состояние IDLE из состояния QUIZ при команде /stop либо конце квиза
+     * Проверка отправления команды /mystats в StatisticsHandler из состояния IDLE
      */
     @Test
-    void testChangingStateToIdle() {
-        User testUser = new User(1, Plathform.TG, 0L, State.QUIZ, "111");
-        Mockito.doNothing().when(userService).update(testUser);
-        Mockito.when(idleHandler.getResponse("/stop")).thenReturn(new Response("123", null));
-        Mockito.when(quizHandler.getResponse("/stop", testUser)).thenReturn(new Response("123", null));
-        Mockito.when(quizHandler.getResponse("End test", testUser)).thenReturn(new Response("Тест закончен!", null));
-
-        HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService, statisticHandler);
-
-        Response responseStop = handlersManager.getResponseFromHandler("/stop", testUser);
-        Assertions.assertEquals(testUser.getState(), State.IDLE, "Тест на команду /stop");
-
-        testUser.setState(State.QUIZ);
-
-        Response responseEndOfTest = handlersManager.getResponseFromHandler("End test", testUser);
-        Assertions.assertEquals(testUser.getState(), State.IDLE, "Тест на конец квиза");
+    void checkMyStatCommandOnIDLE() {
+        User testUser = new User(1, Plathform.TG, 0L, State.IDLE, "111");
+        Response response = handlersManager.getResponseFromHandler("/mystats", testUser);
+        Assertions.assertEquals(response.message(), "Message sended to StatisticHadnler.getUserStatistics");
     }
 
+    /**
+     * Проверка отправления команды /leaderboard в StatisticsHandler из состояния IDLE
+     */
     @Test
-    void testChangingStateToLeaderboard() {
+    void checkLeaderboardCommandOnIDLE() {
         User testUser = new User(1, Plathform.TG, 0L, State.IDLE, "111");
-        Mockito.doNothing().when(userService).update(testUser);
-        Mockito.when(statisticHandler.getUserStatistic(testUser)).thenReturn(new Response("Ваша статистика:\n" +
-                "JavaScript: 5/5\n" +
-                "Python: 2/5\n" +
-                "Общая: 7/10", null));
+        Response response = handlersManager.getResponseFromHandler("/leaderboard", testUser);
+        Assertions.assertEquals(response.message(), "Message sended to StatisticHadnler.getLeaderboard");
+    }
 
-        HandlersManager handlersManager = new HandlersManager(idleHandler, quizHandler, userService, statisticHandler);
+    /**
+     * Проверка случаев отправки сообщения в IdleHandler
+     */
+    @Test
+    void checkCommandsAndMessagesOnIDLE() {
+        User testUser = new User(1, Plathform.TG, 0L, State.IDLE, "111");
+        Response response = handlersManager.getResponseFromHandler("/start", testUser);
+        Assertions.assertEquals(response.message(), "Message sended to IdleHandler");
+        response = handlersManager.getResponseFromHandler("/help", testUser);
+        Assertions.assertEquals(response.message(), "Message sended to IdleHandler");
+        response = handlersManager.getResponseFromHandler("fnshfjdhs", testUser);
+        Assertions.assertEquals(response.message(), "Message sended to IdleHandler");
+    }
 
-        Response responseLeaderboard = handlersManager.getResponseFromHandler("/leaderboard", testUser);
-        Assertions.assertEquals(testUser.getState(), State.LEADERBOARD, "Тест на команду /leaderboard");
+    /**
+     * Проверка отправки сообщений в QuizHandler в состоянии QUIZ
+     */
+    @Test
+    void checkMessagesOnQUIZ() {
+        User testUser = new User(1, Plathform.TG, 0L, State.QUIZ, "111");
+        Response response = handlersManager.getResponseFromHandler("JavaScript", testUser);
+        Assertions.assertEquals(response.message(), "Message sended to QuizHandler");
+    }
+
+    /**
+     * Проверка отправки сообщений в QuizHandler в состоянии QUIZ
+     */
+    @Test
+    void checkMessagesOnLEADERBOARD() {
+        User testUser = new User(1, Plathform.TG, 0L, State.LEADERBOARD, "111");
+        Response response = handlersManager.getResponseFromHandler("JavaScript", testUser);
+        Assertions.assertEquals(response.message(), "Message sended to StatisticHadnler.getLeaderboard");
     }
 }

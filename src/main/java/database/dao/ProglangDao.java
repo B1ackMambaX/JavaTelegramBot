@@ -17,27 +17,27 @@ public class ProglangDao extends BaseDao<Proglang> {
 
     /**
      * Найти язык программирования по его id в БД
-     * @param proglang_id id ЯП в БД
+     * @param proglangId id ЯП в БД
      * @return язык программирования
      */
-    public Proglang findByProglangId(Integer proglang_id) {
+    public Proglang findByProglangId(long proglangId) {
         return processSession(session ->
-                session.get(Proglang.class, proglang_id));
+                session.get(Proglang.class, proglangId));
     }
 
     /**
      * Получение ID ЯП по имени
-     * @param proglang_name имя языка программирования
+     * @param proglangName имя языка программирования
      * @return ID языка программирования
      */
-    public int getIdByName(String proglang_name) {
+    public long getIdByName(String proglangName) {
         try {
             return processSession(session -> session.createQuery(
                             "select p.id " +
                                     "from Proglang p " +
-                                    "where lower(p.proglang_name) = :proglang_name",
-                            Integer.class)
-                    .setParameter("proglang_name", proglang_name)
+                                    "where lower(p.proglangName) = :proglangName",
+                            Long.class)
+                    .setParameter("proglangName", proglangName)
                     .getSingleResult());
         } catch (NoResultException e) {
             return -1;
@@ -49,45 +49,42 @@ public class ProglangDao extends BaseDao<Proglang> {
      * @return список имен ЯП
      */
     public List<String> getAllNames() {
-        List<String> names = new ArrayList<String>();
-        names.addAll(
-                processSession(session -> session.createQuery(
-                        "select p.proglang_name " +
+        return new ArrayList<>(processSession(session -> session.createQuery(
+                        "select p.proglangName " +
                                 "from Proglang p ",
                         String.class)
                 .getResultList()));
-        return names;
     }
 
     /**
      * Найти вопросы по языку программирования
-     * @param proglang_id id ЯП
+     * @param proglangId id ЯП
      * @param offset отступ
      * @return лист вопросов
      */
-    public Progquiz findProgquizByProglangId(Integer proglang_id, Integer offset) {
+    public Progquiz findProgquizByProglangId(long proglangId, int offset) {
         return processSession(session -> session.createQuery(
                         "select p " +
                                 "from Progquiz p " +
-                                "where p.proglang.id = :proglang_id",
+                                "where p.proglang.id = :proglangId",
                         Progquiz.class)
-                .setParameter("proglang_id", proglang_id)
+                .setParameter("proglangId", proglangId)
                 .setFirstResult(offset)
                 .setMaxResults(1)
                 .getSingleResult());
     }
     /**
      * Подсчитать количество вопросов по языку программирования
-     * @param proglang_id id ЯП
+     * @param proglangId id ЯП
      * @return количество вопросов
      */
-    public Long countProgquizzesByProglangId(Integer proglang_id) {
-        Long count = processSession(session -> session.createQuery(
+    public long countProgquizzesByProglangId(long proglangId) {
+        long count = processSession(session -> session.createQuery(
                         "select count(p) " +
                                 "from Progquiz p " +
-                                "where p.proglang.id = :proglang_id",
+                                "where p.proglang.id = :proglangId",
                         Long.class)
-                .setParameter("proglang_id", proglang_id)
+                .setParameter("proglangId", proglangId)
                 .getSingleResult());
 
         return count;

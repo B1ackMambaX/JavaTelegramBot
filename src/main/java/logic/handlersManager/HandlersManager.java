@@ -1,41 +1,35 @@
 package logic.handlersManager;
 
 import database.models.User;
-import database.services.UserService;
 import logic.Response;
 import logic.handlers.IdleHandler;
 import logic.handlers.QuizHandler;
 import database.models.types.State;
-import logic.handlers.StatisticHandler;
+import logic.handlers.StatisticsHandler;
 
 /**
  * Класс, который реализует выбор обработчика сообщения в зависимости от состояния пользователя
  */
 public class HandlersManager {
-    private final UserService userService;
     private final IdleHandler idleHandler;
     private final  QuizHandler quizHandler;
-    private final StatisticHandler statisticHandler;
+    private final StatisticsHandler statisticsHandler;
 
     public HandlersManager() {
         idleHandler = new IdleHandler();
         quizHandler = new QuizHandler();
-        userService = new UserService();
-        statisticHandler = new StatisticHandler();
+        statisticsHandler = new StatisticsHandler();
     }
 
     /**
      * Конструктор для тестов
      * @param idleHandler мок обработчика состояния IDLE
      * @param quizHandler мок обработчика состояния QUIZ
-     * @param userService мок сервиса пользователя
      */
-    public HandlersManager(IdleHandler idleHandler, QuizHandler quizHandler, UserService userService,
-                           StatisticHandler statisticHandler) {
+    public HandlersManager(IdleHandler idleHandler, QuizHandler quizHandler, StatisticsHandler statisticsHandler) {
         this.idleHandler = idleHandler;
         this.quizHandler = quizHandler;
-        this.userService = userService;
-        this.statisticHandler = statisticHandler;
+        this.statisticsHandler = statisticsHandler;
     }
 
     /**
@@ -50,35 +44,17 @@ public class HandlersManager {
         State state = currentUser.getState();
         switch (state) {
             case IDLE:
-                if (message.equals("/quiz")) {
-                    currentUser.setState(State.QUIZ);
-                    userService.update(currentUser);
-                    response = quizHandler.getResponse(message, currentUser);
-                } else if (message.equals("/mystats")) {
-                    response = statisticHandler.getUserStatistic(currentUser);
-                } else if (message.equals("/leaderboard")) {
-                    currentUser.setState(State.LEADERBOARD);
-                    userService.update(currentUser);
-                    response = statisticHandler.getLeaderboard(currentUser, message);
-                } else {
-                    response = idleHandler.getResponse(message);
-                }
+                response = switch (message) {
+                    case "/quiz" -> quizHandler.getResponse(message, currentUser);
+                    case "/mystats" -> statisticsHandler.getUserStatistic(currentUser);
+                    case "/leaderboard" -> statisticsHandler.getLeaderboard(currentUser, message);
+                    default -> idleHandler.getResponse(message);
+                };
                 return response;
             case QUIZ:
-                if (message.equals("/stop")) {
-                    currentUser.setState(State.IDLE);
-                    userService.update(currentUser);
-                    response = quizHandler.getResponse(message, currentUser);
-                } else {
-                    response = quizHandler.getResponse(message, currentUser);
-                    if (response.message().contains("Тест закончен!")) {
-                        currentUser.setState(State.IDLE);
-                        userService.update(currentUser);
-                    }
-                }
-                return response;
+                    return quizHandler.getResponse(message, currentUser);
             case LEADERBOARD:
-                return statisticHandler.getLeaderboard(currentUser, message);
+                return statisticsHandler.getLeaderboard(currentUser, message);
             default:
                 throw new RuntimeException("Error in state manager");
         }

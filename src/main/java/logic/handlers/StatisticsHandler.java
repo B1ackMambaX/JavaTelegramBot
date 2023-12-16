@@ -10,42 +10,33 @@ import database.services.UserService;
 import logic.Response;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Отвечает за статистику и лидерборд по квизам
  */
-public class StatisticHandler {
+public class StatisticsHandler {
     private final StatisticsDao statisticsDao;
     private final ProglangDao proglangDao;
     private final UserService userService;
     private final List<String> keyboardMessagesIdle;
 
-    public StatisticHandler() {
+    public StatisticsHandler() {
         this.statisticsDao = new StatisticsDao();
         this.proglangDao = new ProglangDao();
-        this.keyboardMessagesIdle = new ArrayList<>();
         this.userService = new UserService();
-        keyboardMessagesIdle.add("/help");
-        keyboardMessagesIdle.add("/quiz");
-        keyboardMessagesIdle.add("/mystats");
-        keyboardMessagesIdle.add("/leaderboard");
+        this.keyboardMessagesIdle = new ArrayList<>(Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard"));
     }
 
     /**
      * Конструктор для тестов
      */
-    public StatisticHandler(StatisticsDao statisticsDao, ProglangDao proglangDao, UserService userService) {
+    public StatisticsHandler(StatisticsDao statisticsDao, ProglangDao proglangDao, UserService userService) {
         this.statisticsDao = statisticsDao;
         this.proglangDao = proglangDao;
-        this.keyboardMessagesIdle = new ArrayList<>();
         this.userService = userService;
-        keyboardMessagesIdle.add("/help");
-        keyboardMessagesIdle.add("/quiz");
-        keyboardMessagesIdle.add("/mystats");
-        keyboardMessagesIdle.add("/leaderboard");
+        keyboardMessagesIdle = new ArrayList<>(Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard"));
     }
 
     /**
@@ -54,27 +45,28 @@ public class StatisticHandler {
      * @return статистика пользователя
      */
     public Response getUserStatistic(User currentUser) {
-        String responseMessage;
+        StringBuilder responseMessage;
         List<Statistics> userStatistics = statisticsDao.findAllByUserId(currentUser.getId());
 
         if (!userStatistics.isEmpty()) {
-            responseMessage = "Ваша статистика:\n";
-            Integer sumUser = 0;
-            Long sumTotal = 0L;
+            responseMessage = new StringBuilder("Ваша статистика:\n");
+            int sumUser = 0;
+            long sumTotal = 0L;
             for(Statistics stat : userStatistics) {
                 Proglang proglang = stat.getProglang();
-                Integer userQuestions = stat.getScore();
-                Long totalQuestions = proglangDao.countProgquizzesByProglangId(proglang.getId());
+                int userQuestions = stat.getScore();
+                long totalQuestions = proglangDao.countProgquizzesByProglangId(proglang.getId());
 
                 sumUser += userQuestions;
                 sumTotal += totalQuestions;
-                responseMessage += proglang.getName() + ": " + userQuestions + "/" + totalQuestions + "\n";
+                responseMessage.append(proglang.getName()).append(": ").append(userQuestions)
+                        .append("/").append(totalQuestions).append("\n");
             }
-            responseMessage += "Общая: " + sumUser + "/" + sumTotal + "\n";
+            responseMessage.append("Общая: ").append(sumUser).append("/").append(sumTotal).append("\n");
         } else {
-            responseMessage = "Статистика не найдена";
+            responseMessage = new StringBuilder("Статистика не найдена");
         }
-        return  new Response(responseMessage, keyboardMessagesIdle);
+        return  new Response(responseMessage.toString(), keyboardMessagesIdle);
     }
 
     /**
@@ -86,36 +78,29 @@ public class StatisticHandler {
     public Response getLeaderboard(User currentUser, String message) {
         List<String> keyboardMessages = proglangDao.getAllNames();
         if (message.equals("/leaderboard")) {
+            currentUser.setState(State.LEADERBOARD);
+            userService.update(currentUser);
             return new Response("Выберите ЯП:", keyboardMessages);
         } else if (keyboardMessages.contains(message)) {
-            String responseMessage;
-            Integer proglangId = proglangDao.getIdByName(message.toLowerCase());
-            List<Statistics> rawStats = statisticsDao.findAllByProglangId(proglangId);
-            if (rawStats.isEmpty()) {
+            StringBuilder responseMessage;
+            long proglangId = proglangDao.getIdByName(message.toLowerCase());
+            List<Statistics> stats = statisticsDao.findAllByProglangId(proglangId);
+            if (stats.isEmpty()) {
                 currentUser.setState(State.IDLE);
                 userService.update(currentUser);
                 return new Response("Нет статистики по выбранному ЯП", keyboardMessagesIdle);
             }
-            Long totalQuestions = proglangDao.countProgquizzesByProglangId(proglangId);
-            rawStats.sort(new Comparator<Statistics>() {
-                @Override
-                public int compare(Statistics o1, Statistics o2) {
-                    return o2.getScore() - o1.getScore();
-                }
-            });
-            if (rawStats.size() > 10) {
-                rawStats = rawStats.subList(0, 10);
-            }
+            long totalQuestions = proglangDao.countProgquizzesByProglangId(proglangId);
 
-            responseMessage = "Топ по языку " + message + "\n";
-            for (int i = 0; i < rawStats.size(); i++) {
-                String username = rawStats.get(i).getUser().getPlathform_username();
-                responseMessage += (i + 1) + ". " + username + " " + rawStats.get(i).getScore() + "/"
-                        + totalQuestions + "\n";
+            responseMessage = new StringBuilder("Топ по языку " + message + "\n");
+            for (int i = 0; i < stats.size(); i++) {
+                String username = stats.get(i).getUser().getPlathformUsername();
+                responseMessage.append((i + 1)).append(". ").append(username).append(" ")
+                        .append(stats.get(i).getScore()).append("/").append(totalQuestions).append("\n");
             }
             currentUser.setState(State.IDLE);
             userService.update(currentUser);
-            return new Response(responseMessage, keyboardMessagesIdle);
+            return new Response(responseMessage.toString(), keyboardMessagesIdle);
         }
         return new Response("Язык не найден", keyboardMessages);
     }

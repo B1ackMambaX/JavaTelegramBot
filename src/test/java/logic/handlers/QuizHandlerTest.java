@@ -5,6 +5,7 @@ import database.models.*;
 import database.models.types.Plathform;
 import database.models.types.State;
 import database.services.ProglangService;
+import database.services.StatisticsService;
 import database.services.UserService;
 import logic.Response;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +22,7 @@ import java.util.List;
 public class QuizHandlerTest {
     UserService userService;
     ProglangService proglangService;
-    StatisticsDao statisticsDao;
+    StatisticsService statisticsService;
     List<Progquiz> questions = new ArrayList<>();
     List<String> proglangNames = new ArrayList<>();
 
@@ -35,18 +36,16 @@ public class QuizHandlerTest {
 
         userService = Mockito.mock(UserService.class);
         proglangService = Mockito.mock(ProglangService.class);
-        statisticsDao = Mockito.mock(StatisticsDao.class);
+        statisticsService = Mockito.mock(StatisticsService.class);
 
         Mockito.when(proglangService.getQuestionByLang(1, 0)).thenReturn(questions.get(0));
         Mockito.when(proglangService.getQuestionByLang(1, 1)).thenReturn(questions.get(1));
         Mockito.when(proglangService.getAllProglangNames()).thenReturn(proglangNames);
-        Mockito.when(proglangService.getProglangIdByName("javascript")).thenReturn(1);
-        Mockito.when(proglangService.getProglangIdByName("aboba")).thenReturn(-1);
+        Mockito.when(proglangService.getProglangIdByName("javascript")).thenReturn(1L);
+        Mockito.when(proglangService.getProglangIdByName("aboba")).thenReturn(-1L);
         Mockito.when(proglangService.findProglang(1)).thenReturn(new Proglang("JavaScript", 1));
         Mockito.when(proglangService.getSizeOfProglang(1)).thenReturn(2L);
-        Mockito.when(statisticsDao.findByProglangIdAndUserId(1, 1)).thenReturn(new Statistics());
-        Mockito.doNothing().when(statisticsDao).save(new Statistics());
-        Mockito.doNothing().when(statisticsDao).update(new Statistics());
+        Mockito.doNothing().when(statisticsService).saveStatistics(new User(), 1, new Proglang());
     }
 
     /**
@@ -60,7 +59,7 @@ public class QuizHandlerTest {
         Mockito.doNothing().when(userService).update(testUser);
         Mockito.when(userService.getQuizState(testUser.getId())).thenReturn(quizstate);
         Mockito.doNothing().when(userService).updateQuizState(quizstate);
-        QuizHandler quizHandler = new QuizHandler(proglangService, userService, quizstate, statisticsDao);
+        QuizHandler quizHandler = new QuizHandler(proglangService, userService, quizstate, statisticsService);
 
 
         Response quizCommand = quizHandler.getResponse("/quiz", testUser);
@@ -112,7 +111,7 @@ public class QuizHandlerTest {
         Mockito.doNothing().when(userService).update(testUser);
         Mockito.when(userService.getQuizState(testUser.getId())).thenReturn(quizstate);
         Mockito.doNothing().when(userService).updateQuizState(quizstate);
-        QuizHandler quizHandler = new QuizHandler(proglangService, userService, quizstate, statisticsDao);
+        QuizHandler quizHandler = new QuizHandler(proglangService, userService, quizstate, statisticsService);
 
         Response quizCommand = quizHandler.getResponse("/quiz", testUser);
         Assertions.assertEquals(

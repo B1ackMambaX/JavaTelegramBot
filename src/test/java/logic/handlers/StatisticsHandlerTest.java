@@ -21,7 +21,7 @@ public class StatisticsHandlerTest {
     private StatisticsDao statisticsDao;
     private  ProglangDao proglangDao;
     private UserService userService;
-    private StatisticHandler statisticHandler;
+    private StatisticsHandler statisticsHandler;
 
     @BeforeEach
     void setUp() {
@@ -29,8 +29,8 @@ public class StatisticsHandlerTest {
         proglangDao = Mockito.mock(ProglangDao.class);
         userService = Mockito.mock(UserService.class);
 
-        Mockito.when(proglangDao.getIdByName("python")).thenReturn(2);
-        Mockito.when(proglangDao.getIdByName("javascript")).thenReturn(1);
+        Mockito.when(proglangDao.getIdByName("python")).thenReturn(2L);
+        Mockito.when(proglangDao.getIdByName("javascript")).thenReturn(1L);
         Mockito.when(proglangDao.countProgquizzesByProglangId(1)).thenReturn(5L);
         Mockito.when(proglangDao.countProgquizzesByProglangId(2)).thenReturn(5L);
     }
@@ -43,8 +43,8 @@ public class StatisticsHandlerTest {
         User testUser = new User(1, Plathform.TG, 1L, State.IDLE, "b1ackmambax");
         Mockito.when(statisticsDao.findAllByUserId(1)).thenReturn(new ArrayList<Statistics>());
 
-        statisticHandler = new StatisticHandler(statisticsDao, proglangDao, userService);
-        Response response = statisticHandler.getUserStatistic(testUser);
+        statisticsHandler = new StatisticsHandler(statisticsDao, proglangDao, userService);
+        Response response = statisticsHandler.getUserStatistic(testUser);
 
         Assertions.assertEquals(response.message(), "Статистика не найдена");
     }
@@ -61,8 +61,8 @@ public class StatisticsHandlerTest {
 
         Mockito.when(statisticsDao.findAllByUserId(1)).thenReturn(testStatistics);
 
-        statisticHandler = new StatisticHandler(statisticsDao, proglangDao, userService);
-        Response response = statisticHandler.getUserStatistic(testUser);
+        statisticsHandler = new StatisticsHandler(statisticsDao, proglangDao, userService);
+        Response response = statisticsHandler.getUserStatistic(testUser);
 
         Assertions.assertEquals(response.message(), "Ваша статистика:\n" +
                 "JavaScript: 3/5\n" +
@@ -94,19 +94,19 @@ public class StatisticsHandlerTest {
         Mockito.when(statisticsDao.findAllByProglangId(2)).thenReturn(new ArrayList<>());
         Mockito.doNothing().when(userService).update(testUser);
 
-        statisticHandler = new StatisticHandler(statisticsDao, proglangDao, userService);
+        statisticsHandler = new StatisticsHandler(statisticsDao, proglangDao, userService);
 
-        Response responseCommand = statisticHandler.getLeaderboard(testUser, "/leaderboard");
+        Response responseCommand = statisticsHandler.getLeaderboard(testUser, "/leaderboard");
         Assertions.assertEquals(responseCommand.message(), "Выберите ЯП:");
-        Response chooseUnknownLang = statisticHandler.getLeaderboard(testUser, "C++");
+        Response chooseUnknownLang = statisticsHandler.getLeaderboard(testUser, "C++");
         Assertions.assertEquals(chooseUnknownLang.message(), "Язык не найден");
-        Response statistics = statisticHandler.getLeaderboard(testUser, "JavaScript");
+        Response statistics = statisticsHandler.getLeaderboard(testUser, "JavaScript");
         Assertions.assertEquals(statistics.message(), "Топ по языку JavaScript\n" +
                 "1. begenFys 5/5\n" +
                 "2. b1ackmambax 3/5\n" +
                 "3. sssenji 2/5\n");
         testUser.setState(State.LEADERBOARD);
-        Response noLeaderboard = statisticHandler.getLeaderboard(testUser, "Python");
+        Response noLeaderboard = statisticsHandler.getLeaderboard(testUser, "Python");
         Assertions.assertEquals(noLeaderboard.message(), "Нет статистики по выбранному ЯП");
     }
 }

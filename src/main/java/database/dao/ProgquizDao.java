@@ -20,10 +20,10 @@ public class ProgquizDao extends BaseDao<Progquiz> {
 
     /**
      * Нахождение вопроса по его id в БД
-     * @param progquiz_id id вопроса в БД
+     * @param progquizId id вопроса в БД
      * @return вопрос
      */
-    public Progquiz findByProgquizId(Integer progquiz_id) {
-        return processSession(session -> session.get(Progquiz.class, progquiz_id));
+    public Progquiz findByProgquizId(long progquizId) {
+        return processSession(session -> session.get(Progquiz.class, progquizId));
     }
 }

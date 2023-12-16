@@ -1,12 +1,14 @@
 package logic.handlers;
 
-import database.dao.StatisticsDao;
 import database.models.*;
+import database.models.types.State;
 import database.services.ProglangService;
+import database.services.StatisticsService;
 import database.services.UserService;
 import logic.Response;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,14 +17,14 @@ import java.util.List;
 public class QuizHandler {
     private final ProglangService proglangService;
     private final UserService userService;
-    private final StatisticsDao statisticsDao;
+    private final StatisticsService statisticsService;
 
     Quizstate userState;
 
     public QuizHandler() {
         proglangService = new ProglangService();
         userService = new UserService();
-        statisticsDao = new StatisticsDao();
+        statisticsService = new StatisticsService();
     }
 
 
@@ -31,11 +33,11 @@ public class QuizHandler {
      * @param proglangService мок сервиса ЯП
      * @param userService мок сервиса пользователя
      */
-    public QuizHandler(ProglangService proglangService, UserService userService, Quizstate userState, StatisticsDao statisticsDao) {
+    public QuizHandler(ProglangService proglangService, UserService userService, Quizstate userState, StatisticsService statisticsService) {
         this.proglangService = proglangService;
         this.userService = userService;
         this.userState = userState;
-        this.statisticsDao = statisticsDao;
+        this.statisticsService = statisticsService;
     }
     /**
      * Получение ответа на сообщение в состоянии QUIZ
@@ -48,9 +50,9 @@ public class QuizHandler {
         message = message.toLowerCase();
 
 
-        Integer solvedCounter = userState.getCurrentQuestionIndex();
-        Integer quizStat = userState.getCurrentQuizStats();
-        Integer quizProglang = userState.getCurrentProglangId();
+        int solvedCounter = userState.getCurrentQuestionIndex();
+        int quizStat = userState.getCurrentQuizStats();
+        long quizProglang = userState.getCurrentProglangId();
         Progquiz currentQuestion = null;
         List<String> keyboardMessages = new ArrayList<>();
         Response response;
@@ -60,17 +62,16 @@ public class QuizHandler {
         }
 
         if (quizProglang == -1) {
+            currentUser.setState(State.QUIZ);
             response = new Response("Выберите язык программирования", proglangService.getAllProglangNames());
             quizProglang = 0;
         } else if (message.equals("/stop")) {
             solvedCounter = -1;
             quizStat = -1;
             quizProglang = -1;
-            keyboardMessages.add("/help");
-            keyboardMessages.add("/quiz");
-            keyboardMessages.add("/mystats");
-            keyboardMessages.add("/leaderboard");
+            keyboardMessages = Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard");
             response =  new Response("Тест завершен, чтобы начать заново введите /quiz", keyboardMessages);
+            currentUser.setState(State.IDLE);
         } else if (solvedCounter == -1) {
             if (proglangService.getProglangIdByName(message) != -1) {
                 quizProglang = proglangService.getProglangIdByName(message);
@@ -107,12 +108,10 @@ public class QuizHandler {
                     quizStat + "/" +
                     proglangService.getSizeOfProglang(quizProglang);
             String responseText =  checkResponse + "Тест закончен!\n" + testStats;
-            keyboardMessages.add("/help");
-            keyboardMessages.add("/quiz");
-            keyboardMessages.add("/mystats");
-            keyboardMessages.add("/leaderboard");
+            keyboardMessages = Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard");
             response = new Response(responseText, keyboardMessages);
-            saveStatistics(currentUser, quizStat, proglangService.findProglang(quizProglang));
+            currentUser.setState(State.IDLE);
+            statisticsService.saveStatistics(currentUser, quizStat, proglangService.findProglang(quizProglang));
 
             solvedCounter = -1;
             quizStat = -1;
@@ -140,25 +139,5 @@ public class QuizHandler {
         return answer.equals(currentQuestion.getAnswerValue())
             ? "Вы ответили правильно!\n"
             : "Вы ответили неправильно! Правильный ответ:" + currentQuestion.getAnswerValue() + '\n';
-    }
-
-    /**
-     * Сохранение статистики в конце квиза
-     * @param user объект пользователя
-     * @param count счетчик статистики
-     * @param proglang объект ЯП
-     */
-    private void saveStatistics(User user, Integer count, Proglang proglang) {
-        try {
-            Statistics statistics = statisticsDao.findByProglangIdAndUserId(proglang.getId(), user.getId());
-            if (statistics.getScore() > count) {
-                return;
-            }
-            statistics.setScore(count);
-            statisticsDao.update(statistics);
-        } catch (Exception e) {
-            Statistics statistics = new Statistics(user, proglang, count);
-            statisticsDao.save(statistics);
-        }
     }
 }

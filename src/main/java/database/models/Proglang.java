@@ -1,7 +1,6 @@
 package database.models;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Модель, отражающая сущности таблицы proglang
@@ -11,44 +10,38 @@ import java.util.List;
 public class Proglang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
-    @Column(name = "proglang_name")
-    private String proglang_name;
-
-    @OneToMany(mappedBy = "proglang", cascade = CascadeType.ALL)
-    private List<Progquiz> progquizs;
-
-    @OneToMany(mappedBy = "proglang", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Statistics> statistics;
+    @Column(name = "proglangName")
+    private String proglangName;
 
     public Proglang() {
     }
 
     /**
      * Конструктор для тестов
-     * @param proglang_name имя ЯП
+     * @param proglangName имя ЯП
      * @param id id ЯП
      */
-    public Proglang(String proglang_name, int id) {
+    public Proglang(String proglangName, int id) {
         this.id = id;
-        this.proglang_name = proglang_name;
+        this.proglangName = proglangName;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
     public String getName(){
-        return proglang_name;
+        return proglangName;
     }
 
     public void setName(String name){
-        this.proglang_name = name;
+        this.proglangName = name;
     }
 
     @Override
     public String toString() {
-        return "Proglang:" + id + " " + proglang_name;
+        return "Proglang:" + id + " " + proglangName;
     }
 }
