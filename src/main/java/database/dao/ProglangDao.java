@@ -20,7 +20,7 @@ public class ProglangDao extends BaseDao<Proglang> {
      * @param proglang_id id ЯП в БД
      * @return язык программирования
      */
-    public Proglang findByProglangId(Integer proglang_id) {
+    public Proglang findByProglangId(long proglang_id) {
         return processSession(session ->
                 session.get(Proglang.class, proglang_id));
     }
@@ -30,13 +30,13 @@ public class ProglangDao extends BaseDao<Proglang> {
      * @param proglang_name имя языка программирования
      * @return ID языка программирования
      */
-    public int getIdByName(String proglang_name) {
+    public long getIdByName(String proglang_name) {
         try {
             return processSession(session -> session.createQuery(
                             "select p.id " +
                                     "from Proglang p " +
                                     "where lower(p.proglang_name) = :proglang_name",
-                            Integer.class)
+                            Long.class)
                     .setParameter("proglang_name", proglang_name)
                     .getSingleResult());
         } catch (NoResultException e) {
@@ -65,7 +65,7 @@ public class ProglangDao extends BaseDao<Proglang> {
      * @param offset отступ
      * @return лист вопросов
      */
-    public Progquiz findProgquizByProglangId(Integer proglang_id, Integer offset) {
+    public Progquiz findProgquizByProglangId(long proglang_id, int offset) {
         return processSession(session -> session.createQuery(
                         "select p " +
                                 "from Progquiz p " +
@@ -81,8 +81,8 @@ public class ProglangDao extends BaseDao<Proglang> {
      * @param proglang_id id ЯП
      * @return количество вопросов
      */
-    public Long countProgquizzesByProglangId(Integer proglang_id) {
-        Long count = processSession(session -> session.createQuery(
+    public long countProgquizzesByProglangId(long proglang_id) {
+        long count = processSession(session -> session.createQuery(
                         "select count(p) " +
                                 "from Progquiz p " +
                                 "where p.proglang.id = :proglang_id",

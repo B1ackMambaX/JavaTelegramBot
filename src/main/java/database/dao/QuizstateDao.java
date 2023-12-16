@@ -14,7 +14,7 @@ public class QuizstateDao extends BaseDao<Quizstate> {
      * @param user_id user_id в БД
      * @return Сущность пользователя
      */
-    public Quizstate getByUserId(Integer user_id) {
+    public Quizstate getByUserId(long user_id) {
         return processSession(session ->
                 session.createQuery(
                         "from Quizstate q where q.user.id = :user_id", Quizstate.class)

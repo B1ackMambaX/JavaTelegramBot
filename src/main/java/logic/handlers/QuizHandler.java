@@ -48,9 +48,9 @@ public class QuizHandler {
         message = message.toLowerCase();
 
 
-        Integer solvedCounter = userState.getCurrentQuestionIndex();
-        Integer quizStat = userState.getCurrentQuizStats();
-        Integer quizProglang = userState.getCurrentProglangId();
+        int solvedCounter = userState.getCurrentQuestionIndex();
+        int quizStat = userState.getCurrentQuizStats();
+        long quizProglang = userState.getCurrentProglangId();
         Progquiz currentQuestion = null;
         List<String> keyboardMessages = new ArrayList<>();
         Response response;

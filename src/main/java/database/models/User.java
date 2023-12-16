@@ -14,14 +14,14 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private long id;
 
     @Enumerated(EnumType.STRING)
     @Column (name = "plathform")
     private Plathform plathform;
 
     @Column (name = "plathform_id")
-    private Long plathform_id;
+    private long plathform_id;
 
     @Column (name = "plathform_username")
     private String plathform_username;
@@ -36,16 +36,10 @@ public class User {
     @Column (name = "state")
     private State state;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Quizstate quizstate;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Statistics> statistics;
-
     public User(){
     }
 
-    public User(Plathform plathform, Long plathform_id, String plathform_username) {
+    public User(Plathform plathform, long plathform_id, String plathform_username) {
         this.plathform = plathform;
         this.plathform_id = plathform_id;
         this.state = State.IDLE;
@@ -58,7 +52,7 @@ public class User {
      * @param plathform_id id пользователя на платформе
      * @param state состояние пользователя
      */
-    public User(Integer id, Plathform plathform, Long plathform_id, State state, String plathform_username) {
+    public User(long id, Plathform plathform, long plathform_id, State state, String plathform_username) {
         this.plathform_username = plathform_username;
         this.id = id;
         this.plathform = plathform;
@@ -66,7 +60,7 @@ public class User {
         this.state = state;
     }
 
-    public Integer getId() {
+    public long getId() {
         return this.id;
     }
 
@@ -78,11 +72,11 @@ public class User {
         this.plathform = plathform;
     }
 
-    public Long getPlathform_id() {
+    public long getPlathform_id() {
         return this.plathform_id;
     }
 
-    public void setPlathform_id(Long plathform_id) {
+    public void setPlathform_id(long plathform_id) {
         this.plathform_id = plathform_id;
     }
 

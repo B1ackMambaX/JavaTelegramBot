@@ -11,16 +11,10 @@ import java.util.List;
 public class Proglang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "proglang_name")
     private String proglang_name;
-
-    @OneToMany(mappedBy = "proglang", cascade = CascadeType.ALL)
-    private List<Progquiz> progquizs;
-
-    @OneToMany(mappedBy = "proglang", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Statistics> statistics;
 
     public Proglang() {
     }
@@ -35,7 +29,7 @@ public class Proglang {
         this.proglang_name = proglang_name;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 

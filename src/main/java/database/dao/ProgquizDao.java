@@ -23,7 +23,7 @@ public class ProgquizDao extends BaseDao<Progquiz> {
      * @param progquiz_id id вопроса в БД
      * @return вопрос
      */
-    public Progquiz findByProgquizId(Integer progquiz_id) {
+    public Progquiz findByProgquizId(long progquiz_id) {
         return processSession(session -> session.get(Progquiz.class, progquiz_id));
     }
 }

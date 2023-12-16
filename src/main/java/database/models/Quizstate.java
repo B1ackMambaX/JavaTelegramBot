@@ -7,15 +7,15 @@ import javax.persistence.*;
 public class Quizstate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private long id;
 
     @Column (name = "current_proglang_id")
-    private Integer currentProglangId;
+    private long currentProglangId;
     @Column (name = "current_question_index")
-    private Integer currentQuestionIndex;
+    private int currentQuestionIndex;
 
     @Column (name = "current_quiz_stats")
-    private Integer currentQuizStats;
+    private int currentQuizStats;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -31,27 +31,27 @@ public class Quizstate {
         this.currentQuizStats = -1;
     }
 
-    public Integer getCurrentProglangId() {
+    public long getCurrentProglangId() {
         return currentProglangId;
     }
 
-    public void setCurrentProglangId(Integer currentProglangId) {
+    public void setCurrentProglangId(long currentProglangId) {
         this.currentProglangId = currentProglangId;
     }
 
-    public Integer getCurrentQuestionIndex() {
+    public int getCurrentQuestionIndex() {
         return currentQuestionIndex;
     }
 
-    public void setCurrentQuestionIndex(Integer currentQuestionIndex) {
+    public void setCurrentQuestionIndex(int currentQuestionIndex) {
         this.currentQuestionIndex = currentQuestionIndex;
     }
 
-    public Integer getCurrentQuizStats() {
+    public int getCurrentQuizStats() {
         return currentQuizStats;
     }
 
-    public void setCurrentQuizStats(Integer currentQuizStats) {
+    public void setCurrentQuizStats(int currentQuizStats) {
         this.currentQuizStats = currentQuizStats;
     }
 }

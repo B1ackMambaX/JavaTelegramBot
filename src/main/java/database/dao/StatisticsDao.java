@@ -17,7 +17,7 @@ public class StatisticsDao extends BaseDao<Statistics> {
      * @param proglang_id id ЯП в БД
      * @return статистики
      */
-    public List<Statistics> findAllByProglangId(Integer proglang_id) {
+    public List<Statistics> findAllByProglangId(long proglang_id) {
         List<Statistics> statistics = new ArrayList<Statistics>();
         statistics.addAll(
                 processSession(session -> session.createQuery(
@@ -37,7 +37,7 @@ public class StatisticsDao extends BaseDao<Statistics> {
      * @param user_id id ЯП в БД
      * @return статистики
      */
-    public List<Statistics> findAllByUserId(Integer user_id) {
+    public List<Statistics> findAllByUserId(long user_id) {
         List<Statistics> statistics = new ArrayList<Statistics>();
         statistics.addAll(
                 processSession(session -> session.createQuery(
@@ -56,7 +56,7 @@ public class StatisticsDao extends BaseDao<Statistics> {
      * @param user_id id пользователя в БД
      * @return статистика пользователя по выбранному ЯП
      */
-    public Statistics findByProglangIdAndUserId(Integer proglang_id, Integer user_id) {
+    public Statistics findByProglangIdAndUserId(long proglang_id, long user_id) {
         Statistics statistics = processSession(session -> session.createQuery(
                         "select s " +
                                 "from Statistics s " +

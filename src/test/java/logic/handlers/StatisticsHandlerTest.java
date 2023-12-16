@@ -29,8 +29,8 @@ public class StatisticsHandlerTest {
         proglangDao = Mockito.mock(ProglangDao.class);
         userService = Mockito.mock(UserService.class);
 
-        Mockito.when(proglangDao.getIdByName("python")).thenReturn(2);
-        Mockito.when(proglangDao.getIdByName("javascript")).thenReturn(1);
+        Mockito.when(proglangDao.getIdByName("python")).thenReturn(2L);
+        Mockito.when(proglangDao.getIdByName("javascript")).thenReturn(1L);
         Mockito.when(proglangDao.countProgquizzesByProglangId(1)).thenReturn(5L);
         Mockito.when(proglangDao.countProgquizzesByProglangId(2)).thenReturn(5L);
     }

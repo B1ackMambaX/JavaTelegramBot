@@ -31,7 +31,7 @@ public class UserService {
      * @param user_id user_id в БД
      * @return Quizstate
      */
-    public Quizstate getQuizState(Integer user_id) {
+    public Quizstate getQuizState(long user_id) {
         return quizstateDao.getByUserId(user_id);
     }
 

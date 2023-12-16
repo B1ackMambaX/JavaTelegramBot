@@ -22,7 +22,7 @@ public class UserDao extends BaseDao<User> {
      * @param user_id id пользователя в БД
      * @return нужный пользователь
      */
-    public User findByUserId(Integer user_id) {
+    public User findByUserId(long user_id) {
         return processSession(session -> session.get(User.class, user_id));
     }
 
@@ -31,7 +31,7 @@ public class UserDao extends BaseDao<User> {
      * @param plathform_id id пользователя на этой плафторме
      * @return нужный пользователь
      */
-    public User findOneByPlathformAndId(Plathform plathform, Long plathform_id) {
+    public User findOneByPlathformAndId(Plathform plathform, long plathform_id) {
         return processSession(session -> session.createQuery(
                         "select u " +
                                 "from User u " +

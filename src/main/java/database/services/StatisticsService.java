@@ -20,7 +20,7 @@ public class StatisticsService {
      * @param count счетчик статистики
      * @param proglang объект ЯП
      */
-    public void saveStatistics(User user, Integer count, Proglang proglang) {
+    public void saveStatistics(User user, int count, Proglang proglang) {
         try {
             Statistics statistics = statisticsDao.findByProglangIdAndUserId(proglang.getId(), user.getId());
             if (statistics.getScore() > count) {

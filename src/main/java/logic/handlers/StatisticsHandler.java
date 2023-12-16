@@ -57,12 +57,12 @@ public class StatisticsHandler {
 
         if (!userStatistics.isEmpty()) {
             responseMessage = "Ваша статистика:\n";
-            Integer sumUser = 0;
-            Long sumTotal = 0L;
+            int sumUser = 0;
+            long sumTotal = 0L;
             for(Statistics stat : userStatistics) {
                 Proglang proglang = stat.getProglang();
-                Integer userQuestions = stat.getScore();
-                Long totalQuestions = proglangDao.countProgquizzesByProglangId(proglang.getId());
+                int userQuestions = stat.getScore();
+                long totalQuestions = proglangDao.countProgquizzesByProglangId(proglang.getId());
 
                 sumUser += userQuestions;
                 sumTotal += totalQuestions;
@@ -87,14 +87,14 @@ public class StatisticsHandler {
             return new Response("Выберите ЯП:", keyboardMessages);
         } else if (keyboardMessages.contains(message)) {
             String responseMessage;
-            Integer proglangId = proglangDao.getIdByName(message.toLowerCase());
+            long proglangId = proglangDao.getIdByName(message.toLowerCase());
             List<Statistics> stats = statisticsDao.findAllByProglangId(proglangId);
             if (stats.isEmpty()) {
                 currentUser.setState(State.IDLE);
                 userService.update(currentUser);
                 return new Response("Нет статистики по выбранному ЯП", keyboardMessagesIdle);
             }
-            Long totalQuestions = proglangDao.countProgquizzesByProglangId(proglangId);
+            long totalQuestions = proglangDao.countProgquizzesByProglangId(proglangId);
 
             responseMessage = "Топ по языку " + message + "\n";
             for (int i = 0; i < stats.size(); i++) {
