@@ -28,11 +28,11 @@ public class UserService {
 
     /**
      * Получение Quizstate по user_id в БД
-     * @param user_id user_id в БД
+     * @param userId userId в БД
      * @return Quizstate
      */
-    public Quizstate getQuizState(long user_id) {
-        return quizstateDao.getByUserId(user_id);
+    public Quizstate getQuizState(long userId) {
+        return quizstateDao.getByUserId(userId);
     }
 
     /**

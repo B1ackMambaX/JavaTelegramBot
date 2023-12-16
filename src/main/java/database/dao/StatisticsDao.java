@@ -14,10 +14,10 @@ public class StatisticsDao extends BaseDao<Statistics> {
 
     /**
      * Найти всю статистику по языку программирования по его id в БД
-     * @param proglang_id id ЯП в БД
+     * @param proglangId id ЯП в БД
      * @return статистики
      */
-    public List<Statistics> findAllByProglangId(long proglang_id) {
+    public List<Statistics> findAllByProglangId(long proglangId) {
         List<Statistics> statistics = new ArrayList<Statistics>();
         statistics.addAll(
                 processSession(session -> session.createQuery(
@@ -26,7 +26,7 @@ public class StatisticsDao extends BaseDao<Statistics> {
                                         "where s.proglang.id = :proglang_id " +
                                         "order by s.score desc",
                                 Statistics.class)
-                        .setParameter("proglang_id", proglang_id)
+                        .setParameter("proglang_id", proglangId)
                         .setMaxResults(10) // добавляем лимит в 10 сущностей
                         .getResultList()));
         return statistics;
@@ -34,10 +34,10 @@ public class StatisticsDao extends BaseDao<Statistics> {
 
     /**
      * Найти всю статистику по пользователю по его id в БД
-     * @param user_id id ЯП в БД
+     * @param userId id ЯП в БД
      * @return статистики
      */
-    public List<Statistics> findAllByUserId(long user_id) {
+    public List<Statistics> findAllByUserId(long userId) {
         List<Statistics> statistics = new ArrayList<Statistics>();
         statistics.addAll(
                 processSession(session -> session.createQuery(
@@ -45,25 +45,25 @@ public class StatisticsDao extends BaseDao<Statistics> {
                                         "from Statistics s " +
                                         "where s.user.id = :user_id",
                                 Statistics.class)
-                        .setParameter("user_id", user_id)
+                        .setParameter("user_id", userId)
                         .getResultList()));
         return statistics;
     }
 
     /**
      * Получение статистики пользователя по одному из ЯП
-     * @param proglang_id id ЯП в БД
-     * @param user_id id пользователя в БД
+     * @param proglangId id ЯП в БД
+     * @param userId id пользователя в БД
      * @return статистика пользователя по выбранному ЯП
      */
-    public Statistics findByProglangIdAndUserId(long proglang_id, long user_id) {
+    public Statistics findByProglangIdAndUserId(long proglangId, long userId) {
         Statistics statistics = processSession(session -> session.createQuery(
                         "select s " +
                                 "from Statistics s " +
                                 "where s.proglang.id = :proglang_id and s.user.id = :user_id",
                         Statistics.class)
-                .setParameter("proglang_id", proglang_id)
-                .setParameter("user_id", user_id)
+                .setParameter("proglang_id", proglangId)
+                .setParameter("user_id", userId)
                 .getSingleResult());
         return statistics;
     }

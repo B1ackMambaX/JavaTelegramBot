@@ -11,14 +11,14 @@ public class QuizstateDao extends BaseDao<Quizstate> {
 
     /**
      * Найти состояние по user id в БД
-     * @param user_id user_id в БД
+     * @param userId user_id в БД
      * @return Сущность пользователя
      */
-    public Quizstate getByUserId(long user_id) {
+    public Quizstate getByUserId(long userId) {
         return processSession(session ->
                 session.createQuery(
                         "from Quizstate q where q.user.id = :user_id", Quizstate.class)
-                .setParameter("user_id", user_id)
+                .setParameter("user_id", userId)
                 .getSingleResult()
         );
     }

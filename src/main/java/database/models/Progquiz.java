@@ -23,22 +23,22 @@ public class Progquiz {
 
     @Enumerated(EnumType.STRING)
     @Column (name = "answer_type")
-    private AnswerType answer_type;
+    private AnswerType answerType;
     @Column (name = "answer_value")
-    private String answer_value;
+    private String answerValue;
 
     public Progquiz() {}
 
     /**
      * Конструктор для тестов
      * @param question Вопрос
-     * @param answer_value Ответ
+     * @param answerValue Ответ
      */
-    public Progquiz(String question, String answer_value) {
+    public Progquiz(String question, String answerValue) {
         proglang = new Proglang();
         this.question = question;
-        answer_type = AnswerType.TEXT;
-        this.answer_value = answer_value;
+        answerType = AnswerType.TEXT;
+        this.answerValue = answerValue;
     }
 
     public Proglang getProglang() {
@@ -58,18 +58,18 @@ public class Progquiz {
     }
 
     public AnswerType getAnswerType() {
-        return answer_type;
+        return answerType;
     }
 
-    public void setAnswerType(AnswerType answer_type) {
-        this.answer_type = answer_type;
+    public void setAnswerType(AnswerType answerType) {
+        this.answerType = answerType;
     }
 
     public String getAnswerValue() {
-        return answer_value;
+        return answerValue;
     }
 
-    public void setAnswerValue(String answer_value) {
-        this.answer_value = answer_value;
+    public void setAnswerValue(String answerValue) {
+        this.answerValue = answerValue;
     }
 }

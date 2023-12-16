@@ -1,7 +1,6 @@
 package database.models;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Модель, отражающая сущности таблицы proglang
@@ -14,19 +13,19 @@ public class Proglang {
     private long id;
 
     @Column(name = "proglang_name")
-    private String proglang_name;
+    private String proglangName;
 
     public Proglang() {
     }
 
     /**
      * Конструктор для тестов
-     * @param proglang_name имя ЯП
+     * @param proglangName имя ЯП
      * @param id id ЯП
      */
-    public Proglang(String proglang_name, int id) {
+    public Proglang(String proglangName, int id) {
         this.id = id;
-        this.proglang_name = proglang_name;
+        this.proglangName = proglangName;
     }
 
     public long getId() {
@@ -34,15 +33,15 @@ public class Proglang {
     }
 
     public String getName(){
-        return proglang_name;
+        return proglangName;
     }
 
     public void setName(String name){
-        this.proglang_name = name;
+        this.proglangName = name;
     }
 
     @Override
     public String toString() {
-        return "Proglang:" + id + " " + proglang_name;
+        return "Proglang:" + id + " " + proglangName;
     }
 }

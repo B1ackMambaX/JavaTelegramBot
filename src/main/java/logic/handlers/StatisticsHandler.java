@@ -10,6 +10,7 @@ import database.services.UserService;
 import logic.Response;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,12 +39,8 @@ public class StatisticsHandler {
     public StatisticsHandler(StatisticsDao statisticsDao, ProglangDao proglangDao, UserService userService) {
         this.statisticsDao = statisticsDao;
         this.proglangDao = proglangDao;
-        this.keyboardMessagesIdle = new ArrayList<>();
         this.userService = userService;
-        keyboardMessagesIdle.add("/help");
-        keyboardMessagesIdle.add("/quiz");
-        keyboardMessagesIdle.add("/mystats");
-        keyboardMessagesIdle.add("/leaderboard");
+        keyboardMessagesIdle = new ArrayList<>(Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard"));
     }
 
     /**
@@ -52,11 +49,11 @@ public class StatisticsHandler {
      * @return статистика пользователя
      */
     public Response getUserStatistic(User currentUser) {
-        String responseMessage;
+        StringBuilder responseMessage;
         List<Statistics> userStatistics = statisticsDao.findAllByUserId(currentUser.getId());
 
         if (!userStatistics.isEmpty()) {
-            responseMessage = "Ваша статистика:\n";
+            responseMessage = new StringBuilder("Ваша статистика:\n");
             int sumUser = 0;
             long sumTotal = 0L;
             for(Statistics stat : userStatistics) {
@@ -66,13 +63,14 @@ public class StatisticsHandler {
 
                 sumUser += userQuestions;
                 sumTotal += totalQuestions;
-                responseMessage += proglang.getName() + ": " + userQuestions + "/" + totalQuestions + "\n";
+                responseMessage.append(proglang.getName()).append(": ").append(userQuestions)
+                        .append("/").append(totalQuestions).append("\n");
             }
-            responseMessage += "Общая: " + sumUser + "/" + sumTotal + "\n";
+            responseMessage.append("Общая: ").append(sumUser).append("/").append(sumTotal).append("\n");
         } else {
-            responseMessage = "Статистика не найдена";
+            responseMessage = new StringBuilder("Статистика не найдена");
         }
-        return  new Response(responseMessage, keyboardMessagesIdle);
+        return  new Response(responseMessage.toString(), keyboardMessagesIdle);
     }
 
     /**
@@ -86,7 +84,7 @@ public class StatisticsHandler {
         if (message.equals("/leaderboard")) {
             return new Response("Выберите ЯП:", keyboardMessages);
         } else if (keyboardMessages.contains(message)) {
-            String responseMessage;
+            StringBuilder responseMessage;
             long proglangId = proglangDao.getIdByName(message.toLowerCase());
             List<Statistics> stats = statisticsDao.findAllByProglangId(proglangId);
             if (stats.isEmpty()) {
@@ -96,15 +94,15 @@ public class StatisticsHandler {
             }
             long totalQuestions = proglangDao.countProgquizzesByProglangId(proglangId);
 
-            responseMessage = "Топ по языку " + message + "\n";
+            responseMessage = new StringBuilder("Топ по языку " + message + "\n");
             for (int i = 0; i < stats.size(); i++) {
-                String username = stats.get(i).getUser().getPlathform_username();
-                responseMessage += (i + 1) + ". " + username + " " + stats.get(i).getScore() + "/"
-                        + totalQuestions + "\n";
+                String username = stats.get(i).getUser().getPlathformUsername();
+                responseMessage.append((i + 1)).append(". ").append(username).append(" ")
+                        .append(stats.get(i).getScore()).append("/").append(totalQuestions).append("\n");
             }
             currentUser.setState(State.IDLE);
             userService.update(currentUser);
-            return new Response(responseMessage, keyboardMessagesIdle);
+            return new Response(responseMessage.toString(), keyboardMessagesIdle);
         }
         return new Response("Язык не найден", keyboardMessages);
     }

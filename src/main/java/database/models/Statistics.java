@@ -47,15 +47,15 @@ public class Statistics {
         return score;
     }
 
-    public void setScore(int new_score) {
-        this.score = new_score;
+    public void setScore(int newScore) {
+        this.score = newScore;
     }
 
     @Override
     public String toString() {
         return "Statistics{" +
                 "id=" + id +
-                ", user=" + user.getPlathform_id() +
+                ", user=" + user.getPlathformId() +
                 ", proglang=" + proglang.getName() +
                 ", score=" + score +
                 '}';

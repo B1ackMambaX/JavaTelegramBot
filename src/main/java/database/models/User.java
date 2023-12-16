@@ -4,7 +4,6 @@ import database.models.types.Plathform;
 import database.models.types.State;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Модель, отражающая сущности таблицы user
@@ -21,16 +20,16 @@ public class User {
     private Plathform plathform;
 
     @Column (name = "plathform_id")
-    private long plathform_id;
+    private long plathformId;
 
     @Column (name = "plathform_username")
-    private String plathform_username;
+    private String plathformUsername;
 
     @Column (name = "plathform_phone")
-    private String plathform_phone;
+    private String plathformPhone;
 
     @Column (name = "plathform_email")
-    private String plathform_email;
+    private String plathformEmail;
 
     @Enumerated(EnumType.STRING)
     @Column (name = "state")
@@ -39,25 +38,27 @@ public class User {
     public User(){
     }
 
-    public User(Plathform plathform, long plathform_id, String plathform_username) {
+    public User(Plathform plathform, long plathformId, String plathformUsername) {
         this.plathform = plathform;
-        this.plathform_id = plathform_id;
+        this.plathformId = plathformId;
         this.state = State.IDLE;
-        this.plathform_username = plathform_username;
+        this.plathformUsername = plathformUsername;
     }
 
     /**
      * Конструктор для тестов
+     * @param id айди пользователя в БД
      * @param plathform платформа
-     * @param plathform_id id пользователя на платформе
+     * @param plathformId id пользователя на платформе
      * @param state состояние пользователя
+     * @param plathformUsername имя пользователя на платформе
      */
-    public User(long id, Plathform plathform, long plathform_id, State state, String plathform_username) {
-        this.plathform_username = plathform_username;
+    public User(long id, Plathform plathform, long plathformId, State state, String plathformUsername) {
         this.id = id;
         this.plathform = plathform;
-        this.plathform_id = plathform_id;
+        this.plathformId = plathformId;
         this.state = state;
+        this.plathformUsername = plathformUsername;
     }
 
     public long getId() {
@@ -72,36 +73,36 @@ public class User {
         this.plathform = plathform;
     }
 
-    public long getPlathform_id() {
-        return this.plathform_id;
+    public long getPlathformId() {
+        return this.plathformId;
     }
 
-    public void setPlathform_id(long plathform_id) {
-        this.plathform_id = plathform_id;
+    public void setPlathformId(long plathformId) {
+        this.plathformId = plathformId;
     }
 
-    public String getPlathform_username() {
-        return plathform_username;
+    public String getPlathformUsername() {
+        return plathformUsername;
     }
 
-    public void setPlathform_username(String plathform_username) {
-        this.plathform_username = plathform_username;
+    public void setPlathformUsername(String plathformUsername) {
+        this.plathformUsername = plathformUsername;
     }
 
-    public String getPlathform_phone() {
-        return plathform_phone;
+    public String getPlathformPhone() {
+        return plathformPhone;
     }
 
-    public void setPlathform_phone(String plathform_phone) {
-        this.plathform_phone = plathform_phone;
+    public void setPlathformPhone(String plathformPhone) {
+        this.plathformPhone = plathformPhone;
     }
 
-    public String getPlathform_email() {
-        return plathform_email;
+    public String getPlathformEmail() {
+        return plathformEmail;
     }
 
-    public void setPlathform_email(String plathform_email) {
-        this.plathform_email = plathform_email;
+    public void setPlathformEmail(String plathformEmail) {
+        this.plathformEmail = plathformEmail;
     }
 
     public State getState() {
