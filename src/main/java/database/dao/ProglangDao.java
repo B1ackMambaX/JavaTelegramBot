@@ -49,14 +49,11 @@ public class ProglangDao extends BaseDao<Proglang> {
      * @return список имен ЯП
      */
     public List<String> getAllNames() {
-        List<String> names = new ArrayList<String>();
-        names.addAll(
-                processSession(session -> session.createQuery(
+        return new ArrayList<>(processSession(session -> session.createQuery(
                         "select p.proglangName " +
                                 "from Proglang p ",
                         String.class)
                 .getResultList()));
-        return names;
     }
 
     /**

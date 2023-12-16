@@ -18,18 +18,15 @@ public class StatisticsDao extends BaseDao<Statistics> {
      * @return статистики
      */
     public List<Statistics> findAllByProglangId(long proglangId) {
-        List<Statistics> statistics = new ArrayList<Statistics>();
-        statistics.addAll(
-                processSession(session -> session.createQuery(
-                                "select s " +
-                                        "from Statistics s " +
-                                        "where s.proglang.id = :proglangId " +
-                                        "order by s.score desc",
-                                Statistics.class)
-                        .setParameter("proglangId", proglangId)
-                        .setMaxResults(10)
-                        .getResultList()));
-        return statistics;
+        return new ArrayList<>(processSession(session -> session.createQuery(
+                        "select s " +
+                                "from Statistics s " +
+                                "where s.proglang.id = :proglangId " +
+                                "order by s.score desc",
+                        Statistics.class)
+                .setParameter("proglangId", proglangId)
+                .setMaxResults(10)
+                .getResultList()));
     }
 
     /**
@@ -38,16 +35,13 @@ public class StatisticsDao extends BaseDao<Statistics> {
      * @return статистики
      */
     public List<Statistics> findAllByUserId(long userId) {
-        List<Statistics> statistics = new ArrayList<Statistics>();
-        statistics.addAll(
-                processSession(session -> session.createQuery(
-                                "select s " +
-                                        "from Statistics s " +
-                                        "where s.user.id = :userId",
-                                Statistics.class)
-                        .setParameter("userId", userId)
-                        .getResultList()));
-        return statistics;
+        return new ArrayList<>(processSession(session -> session.createQuery(
+                        "select s " +
+                                "from Statistics s " +
+                                "where s.user.id = :userId",
+                        Statistics.class)
+                .setParameter("userId", userId)
+                .getResultList()));
     }
 
     /**
