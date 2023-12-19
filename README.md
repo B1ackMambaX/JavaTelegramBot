@@ -9,7 +9,7 @@
 2. [Task 2](https://github.com/B1ackMambaX/JavaTelegramBot/issues/5) - Переработка архитектуры и подключение базы данных.
 
 3. [Task 3](https://github.com/B1ackMambaX/JavaTelegramBot/issues/11) - Реализованы квизы по другим ЯП и подсчет статистики после квиза. 
-4. [Task4](https://github.com/B1ackMambaX/JavaTelegramBot/issues/15) - Реализованы статистика и лидерборд.  
+4. [Task 4](https://github.com/B1ackMambaX/JavaTelegramBot/issues/15) - Реализованы статистика и лидерборд.  
 
 ## How to run bot
 
