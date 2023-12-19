@@ -13,11 +13,11 @@ public class StatisticsDao extends BaseDao<Statistics> {
     }
 
     /**
-     * Найти всю статистику по языку программирования по его id в БД
+     * Найти топ 10 по языку программирования по его id в БД
      * @param proglangId id ЯП в БД
-     * @return статистики
+     * @return топ 10
      */
-    public List<Statistics> findAllByProglangId(long proglangId) {
+    public List<Statistics> findTopByProglangId(long proglangId) {
         return new ArrayList<>(processSession(session -> session.createQuery(
                         "select s " +
                                 "from Statistics s " +

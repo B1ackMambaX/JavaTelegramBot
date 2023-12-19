@@ -69,7 +69,7 @@ public class QuizHandler {
             solvedCounter = -1;
             quizStat = -1;
             quizProglang = -1;
-            keyboardMessages = Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard");
+            keyboardMessages = List.of("/help", "/quiz", "/mystats", "/leaderboard");
             response =  new Response("Тест завершен, чтобы начать заново введите /quiz", keyboardMessages);
             currentUser.setState(State.IDLE);
         } else if (solvedCounter == -1) {
@@ -87,7 +87,7 @@ public class QuizHandler {
                     proglangService.getSizeOfProglang(quizProglang)
                     + " вопросов\n\n" + currentQuestion.getQuestion();
 
-            keyboardMessages.add("/stop");
+            keyboardMessages = List.of("/stop");
             response = new Response(resonseText, keyboardMessages);
 
         } else if (solvedCounter < proglangService.getSizeOfProglang(quizProglang) - 1) {
@@ -97,7 +97,7 @@ public class QuizHandler {
             }
             currentQuestion = proglangService.getQuestionByLang(quizProglang, ++solvedCounter);
             String responseText =  checkResponse + currentQuestion.getQuestion();
-            keyboardMessages.add("/stop");
+            keyboardMessages= List.of("/stop");
             response = new Response(responseText, keyboardMessages);
         } else if (solvedCounter == proglangService.getSizeOfProglang(quizProglang) - 1) {
             String checkResponse = checkCorrectness(message, currentQuestion);
@@ -108,7 +108,7 @@ public class QuizHandler {
                     quizStat + "/" +
                     proglangService.getSizeOfProglang(quizProglang);
             String responseText =  checkResponse + "Тест закончен!\n" + testStats;
-            keyboardMessages = Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard");
+            keyboardMessages = List.of("/help", "/quiz", "/mystats", "/leaderboard");
             response = new Response(responseText, keyboardMessages);
             currentUser.setState(State.IDLE);
             statisticsService.saveStatistics(currentUser, quizStat, proglangService.findProglang(quizProglang));

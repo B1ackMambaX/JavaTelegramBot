@@ -10,7 +10,6 @@ import database.services.UserService;
 import logic.Response;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,10 +22,7 @@ public class StatisticsHandler {
     private final List<String> keyboardMessagesIdle;
 
     public StatisticsHandler() {
-        this.statisticsDao = new StatisticsDao();
-        this.proglangDao = new ProglangDao();
-        this.userService = new UserService();
-        this.keyboardMessagesIdle = new ArrayList<>(Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard"));
+        this(new StatisticsDao(), new ProglangDao(), new UserService());
     }
 
     /**
@@ -36,8 +32,9 @@ public class StatisticsHandler {
         this.statisticsDao = statisticsDao;
         this.proglangDao = proglangDao;
         this.userService = userService;
-        keyboardMessagesIdle = new ArrayList<>(Arrays.asList("/help", "/quiz", "/mystats", "/leaderboard"));
+        keyboardMessagesIdle = new ArrayList<>(List.of("/help", "/quiz", "/mystats", "/leaderboard"));
     }
+
 
     /**
      * Выведение статистики пользователя
@@ -84,7 +81,7 @@ public class StatisticsHandler {
         } else if (keyboardMessages.contains(message)) {
             StringBuilder responseMessage;
             long proglangId = proglangDao.getIdByName(message.toLowerCase());
-            List<Statistics> stats = statisticsDao.findAllByProglangId(proglangId);
+            List<Statistics> stats = statisticsDao.findTopByProglangId(proglangId);
             if (stats.isEmpty()) {
                 currentUser.setState(State.IDLE);
                 userService.update(currentUser);

@@ -81,8 +81,8 @@ public class StatisticsHandlerTest {
         Proglang js = new Proglang("JavaScript", 1);
 
         List<Statistics> testStatistics = new ArrayList<>();
-        testStatistics.add(new Statistics(testUser, js, 3));
         testStatistics.add(new Statistics(statUser1, js, 5));
+        testStatistics.add(new Statistics(testUser, js, 3));
         testStatistics.add(new Statistics(statUser2, js, 2));
 
         List<String> proglangNames = new ArrayList<>();
@@ -90,8 +90,8 @@ public class StatisticsHandlerTest {
         proglangNames.add("Python");
 
         Mockito.when(proglangDao.getAllNames()).thenReturn(proglangNames);
-        Mockito.when(statisticsDao.findAllByProglangId(1)).thenReturn(testStatistics);
-        Mockito.when(statisticsDao.findAllByProglangId(2)).thenReturn(new ArrayList<>());
+        Mockito.when(statisticsDao.findTopByProglangId(1)).thenReturn(testStatistics);
+        Mockito.when(statisticsDao.findTopByProglangId(2)).thenReturn(new ArrayList<>());
         Mockito.doNothing().when(userService).update(testUser);
 
         statisticsHandler = new StatisticsHandler(statisticsDao, proglangDao, userService);
