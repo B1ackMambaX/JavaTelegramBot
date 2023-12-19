@@ -19,26 +19,26 @@ public class UserDao extends BaseDao<User> {
 
     /**
      * Нахождение пользователя по его id в БД
-     * @param user_id id пользователя в БД
+     * @param userId id пользователя в БД
      * @return нужный пользователь
      */
-    public User findByUserId(Integer user_id) {
-        return processSession(session -> session.get(User.class, user_id));
+    public User findByUserId(long userId) {
+        return processSession(session -> session.get(User.class, userId));
     }
 
     /**
      * @param plathform платформа на которой зарегистрирован пользователь
-     * @param plathform_id id пользователя на этой плафторме
+     * @param plathformId id пользователя на этой плафторме
      * @return нужный пользователь
      */
-    public User findOneByPlathformAndId(Plathform plathform, Long plathform_id) {
+    public User findOneByPlathformAndId(Plathform plathform, long plathformId) {
         return processSession(session -> session.createQuery(
                         "select u " +
                                 "from User u " +
-                                "where u.plathform = :plathform and u.plathform_id = :plathform_id",
+                                "where u.plathform = :plathform and u.plathformId = :plathformId",
                         User.class)
                             .setParameter("plathform", plathform)
-                            .setParameter("plathform_id", plathform_id)
+                            .setParameter("plathformId", plathformId)
                             .getSingleResult());
     }
 

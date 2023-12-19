@@ -16,9 +16,7 @@ public class IdleHandler {
      */
     public Response getResponse(String message) {
         message = message.toLowerCase();
-        List<String> keyboardMessages = new ArrayList<>();
-        keyboardMessages.add("/help");
-        keyboardMessages.add("/quiz");
+        List<String> keyboardMessages = new ArrayList<>(List.of("/help", "/quiz", "/mystats", "/leaderboard"));
 
          if (message.equals("/start") || message.equals("/help")) {
             return new Response("""

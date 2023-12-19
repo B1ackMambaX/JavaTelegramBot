@@ -12,33 +12,33 @@ import javax.persistence.*;
 public class Progquiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "proglang_id")
+    @JoinColumn(name = "proglangId")
     private Proglang proglang;
 
     @Column (name = "question")
     private String question;
 
     @Enumerated(EnumType.STRING)
-    @Column (name = "answer_type")
-    private AnswerType answer_type;
-    @Column (name = "answer_value")
-    private String answer_value;
+    @Column (name = "answerType")
+    private AnswerType answerType;
+    @Column (name = "answerValue")
+    private String answerValue;
 
     public Progquiz() {}
 
     /**
      * Конструктор для тестов
      * @param question Вопрос
-     * @param answer_value Ответ
+     * @param answerValue Ответ
      */
-    public Progquiz(String question, String answer_value) {
+    public Progquiz(String question, String answerValue) {
         proglang = new Proglang();
         this.question = question;
-        answer_type = AnswerType.TEXT;
-        this.answer_value = answer_value;
+        answerType = AnswerType.TEXT;
+        this.answerValue = answerValue;
     }
 
     public Proglang getProglang() {
@@ -58,18 +58,18 @@ public class Progquiz {
     }
 
     public AnswerType getAnswerType() {
-        return answer_type;
+        return answerType;
     }
 
-    public void setAnswerType(AnswerType answer_type) {
-        this.answer_type = answer_type;
+    public void setAnswerType(AnswerType answerType) {
+        this.answerType = answerType;
     }
 
     public String getAnswerValue() {
-        return answer_value;
+        return answerValue;
     }
 
-    public void setAnswerValue(String answer_value) {
-        this.answer_value = answer_value;
+    public void setAnswerValue(String answerValue) {
+        this.answerValue = answerValue;
     }
 }
